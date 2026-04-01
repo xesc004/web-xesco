@@ -697,12 +697,16 @@
           <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
         </div>
 
-        <!-- Formulario de contacto -->
-        <!-- Para activar: sustituye YOUR_FORM_ID por tu ID de Formspree (gratis en formspree.io) -->
+        <!-- Formulario de contacto (Web3Forms — web3forms.com) -->
         <form id="contact-form"
-          action="https://formspree.io/f/YOUR_FORM_ID"
+          action="https://api.web3forms.com/submit"
           method="POST"
           class="max-w-lg mx-auto text-left space-y-4">
+
+          <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+          <input type="hidden" name="subject" value="Nuevo contacto desde xescoalabau.com">
+          <input type="hidden" name="from_name" value="Web xescoalabau.com">
+          <input type="checkbox" name="botcheck" style="display:none;">
 
           <div class="grid sm:grid-cols-2 gap-4">
             <div>

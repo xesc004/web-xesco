@@ -103,20 +103,6 @@ function initContactForm() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Si el action aún tiene el placeholder → abrir mailto como fallback
-    if (form.action.includes('YOUR_FORM_ID')) {
-      const name    = document.getElementById('name')?.value || '';
-      const service = document.getElementById('service')?.value || '';
-      const message = document.getElementById('message')?.value || '';
-      const subject = encodeURIComponent(`Consulta de ${name} - ${service}`);
-      const body    = encodeURIComponent(
-        `Hola Xesco,\n\nMi nombre es ${name}.\n\nServicio de interés: ${service}\n\n${message}\n\nSaludos,\n${name}`
-      );
-      window.location.href = `mailto:xescoalabaucalatayud2@gmail.com?subject=${subject}&body=${body}`;
-      return;
-    }
-
-    // Envío real vía Formspree
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Enviando…';
@@ -129,11 +115,13 @@ function initContactForm() {
         headers: { Accept: 'application/json' },
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (data.success) {
         form.style.display = 'none';
         if (successMsg) successMsg.classList.add('visible');
       } else {
-        throw new Error('Error en la respuesta del servidor');
+        throw new Error(data.message || 'Error en el servidor');
       }
     } catch {
       alert('Hubo un error al enviar el mensaje. Por favor, escríbeme directamente a xescoalabaucalatayud2@gmail.com');
