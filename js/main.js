@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initSmoothScroll();
   initScrollProgress();
+  initStockChart();
 });
 
 /* ─── Navbar: efecto al hacer scroll ─────────────────────── */
@@ -90,6 +91,34 @@ function initScrollProgress() {
     bar.style.width = pct + '%';
   };
   window.addEventListener('scroll', update, { passive: true });
+}
+
+/* ─── Gráfico bursátil — sección Casos ──────────────────── */
+function initStockChart() {
+  const line = document.getElementById('stock-line');
+  const fill = document.getElementById('stock-fill');
+  const section = document.getElementById('casos');
+  if (!line || !section) return;
+
+  // Calcular longitud real del path para la animación dashoffset
+  const len = line.getTotalLength();
+  line.style.strokeDasharray = len;
+  line.style.strokeDashoffset = len;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Pequeño delay para que el usuario note el inicio
+        setTimeout(() => {
+          line.style.strokeDashoffset = '0';
+          if (fill) fill.classList.add('animate');
+        }, 150);
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(section);
 }
 
 /* ─── Formulario de contacto ─────────────────────────────── */

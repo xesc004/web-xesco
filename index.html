@@ -446,8 +446,42 @@
   <!-- ════════════════════════════════════════════════════════
        CASOS DE USO
   ═══════════════════════════════════════════════════════════ -->
-  <section id="casos" class="py-24 sm:py-32">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+  <section id="casos" class="py-24 sm:py-32" style="position:relative;overflow:hidden;">
+
+    <!-- Gráfico bursátil de fondo: esquina inferior-izquierda → superior-derecha -->
+    <svg class="stock-chart-svg" viewBox="0 0 1000 300" preserveAspectRatio="none"
+      aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="stock-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0071e3" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#0071e3" stop-opacity="0.01"/>
+        </linearGradient>
+        <marker id="stock-arrow" markerWidth="10" markerHeight="7"
+          refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#0071e3"/>
+        </marker>
+      </defs>
+      <!-- Área de relleno bajo la línea -->
+      <path id="stock-fill"
+        d="M 0,280 L 40,262 L 70,272 L 110,252 L 145,264
+           L 180,240 L 210,228 L 245,244 L 280,218 L 315,204
+           L 350,220 L 385,192 L 420,178 L 452,196 L 488,166
+           L 522,152 L 555,170 L 590,140 L 625,126 L 658,144
+           L 692,112 L 728,98  L 760,116 L 795,84  L 832,70
+           L 865,88  L 900,56  L 935,42  L 965,58  L 1000,20
+           L 1000,300 L 0,300 Z"/>
+      <!-- Línea del gráfico -->
+      <path id="stock-line"
+        d="M 0,280 L 40,262 L 70,272 L 110,252 L 145,264
+           L 180,240 L 210,228 L 245,244 L 280,218 L 315,204
+           L 350,220 L 385,192 L 420,178 L 452,196 L 488,166
+           L 522,152 L 555,170 L 590,140 L 625,126 L 658,144
+           L 692,112 L 728,98  L 760,116 L 795,84  L 832,70
+           L 865,88  L 900,56  L 935,42  L 965,58  L 1000,20"
+        marker-end="url(#stock-arrow)"/>
+    </svg>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6" style="position:relative;z-index:1;">
 
       <div class="text-center mb-16" data-aos="fade-up">
         <span class="section-label">Casos de uso</span>

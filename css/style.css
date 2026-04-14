@@ -459,6 +459,34 @@ body {
   filter: brightness(1.15);
 }
 
+/* ─── Stock Chart — Casos de uso ────────────────────────── */
+.stock-chart-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.42;
+}
+
+#stock-line {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 6px rgba(0, 113, 227, 0.55));
+  transition: stroke-dashoffset 2.8s cubic-bezier(0.15, 0, 0.4, 1);
+}
+
+#stock-fill {
+  fill: url(#stock-grad);
+  transition: opacity 0.6s ease 2.4s;
+  opacity: 0;
+}
+#stock-fill.animate { opacity: 1; }
+
 /* ─── Why Me Cards ───────────────────────────────────────── */
 .why-card {
   background: var(--bg-card);
