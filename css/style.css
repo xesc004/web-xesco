@@ -539,111 +539,113 @@ body {
 
 /* ─── Process Steps — Progressive Illumination ──────────── */
 
-/* Estado inicial: todo apagado */
+/* Estado inicial: tarjeta apagada — fondo casi negro */
 .process-step {
-  opacity: 0;
-  transform: translateX(-12px);
-  transition: opacity 1s ease, transform 1s ease;
+  background: #07111e;
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  transition: background 1.3s ease, box-shadow 1.3s ease;
 }
+.process-step .process-line { display: none; }
+.process-step > div:last-child { padding-bottom: 0 !important; padding-top: 0 !important; }
+
+/* Número apagado */
 .process-step .step-number {
-  transition: background 1.2s ease, box-shadow 1.2s ease, transform 0.3s ease;
+  background: #0d1f30;
+  color: rgba(255,255,255,0.25);
+  box-shadow: none;
+  transition: background 1.3s ease, box-shadow 1.3s ease,
+              color 1.3s ease, transform 0.3s ease;
 }
-.process-step h3 { transition: color 1.2s ease; }
-.process-step p   { transition: color 1.2s ease; }
 
-/* Línea conectora — arranca casi invisible */
-#process-line-connector {
-  opacity: 0.15;
-  transition: opacity 2.5s ease;
+/* Textos apagados */
+.process-step h3 {
+  color: rgba(255,255,255,0);
+  transition: color 1.1s ease;
 }
-#process-line-connector.lit { opacity: 1; }
+.process-step p {
+  color: rgba(255,255,255,0);
+  transition: color 1.1s ease;
+}
 
-/* ── PASO 1: primera chispa — tenue ────────────────────── */
-.process-step[data-step="1"] .step-number {
-  background: #0d2a4a;
-  box-shadow: 0 2px 8px rgba(13,42,74,0.3);
-}
+/* Línea conectora — oculta en este diseño */
+#process-line-connector { display: none; }
+
+/* ── PASO 1: primera chispa — azul muy oscuro ───────────── */
 .process-step[data-step="1"].lit {
-  opacity: 0.50;
-  transform: translateX(0);
+  background: #0d2a4a;
+  box-shadow: 0 4px 24px rgba(13,42,74,0.5);
 }
 .process-step[data-step="1"].lit .step-number {
-  background: #0d2a4a;
-  box-shadow: 0 3px 12px rgba(13,42,74,0.45);
+  background: #1a3d5c;
+  color: rgba(255,255,255,0.65);
+  box-shadow: 0 3px 12px rgba(13,42,74,0.5);
 }
-.process-step[data-step="1"].lit h3 { color: #4a6a8a; }
-.process-step[data-step="1"].lit p  { color: #6a8aaa; }
+.process-step[data-step="1"].lit h3 { color: rgba(255,255,255,0.55); }
+.process-step[data-step="1"].lit p  { color: rgba(160,190,215,0.55); }
 
-/* ── PASO 2: más brillo ─────────────────────────────────── */
-.process-step[data-step="2"] .step-number {
-  background: #003d80;
-  box-shadow: 0 2px 8px rgba(0,61,128,0.3);
-}
+/* ── PASO 2: navy más brillante ─────────────────────────── */
 .process-step[data-step="2"].lit {
-  opacity: 0.70;
-  transform: translateX(0);
+  background: #003d80;
+  box-shadow: 0 4px 30px rgba(0,61,128,0.5);
 }
 .process-step[data-step="2"].lit .step-number {
-  background: #003d80;
-  box-shadow: 0 4px 16px rgba(0,61,128,0.5);
+  background: #0052ab;
+  color: rgba(255,255,255,0.82);
+  box-shadow: 0 4px 16px rgba(0,61,128,0.55);
 }
-.process-step[data-step="2"].lit h3 { color: #1a4a8a; }
-.process-step[data-step="2"].lit p  { color: #4a6a8a; }
+.process-step[data-step="2"].lit h3 { color: rgba(255,255,255,0.78); }
+.process-step[data-step="2"].lit p  { color: rgba(180,210,240,0.72); }
 
-/* ── PASO 3: animaciones activas ────────────────────────── */
-.process-step[data-step="3"] .step-number {
-  background: #0055c0;
-  box-shadow: 0 2px 8px rgba(0,85,192,0.3);
-}
+/* ── PASO 3: azul activo + pulso en número ──────────────── */
 .process-step[data-step="3"].lit {
-  opacity: 0.88;
-  transform: translateX(0);
+  background: #0055c0;
+  box-shadow: 0 4px 36px rgba(0,85,192,0.55);
 }
 .process-step[data-step="3"].lit .step-number {
-  background: #0055c0;
-  box-shadow: 0 4px 20px rgba(0,85,192,0.55);
+  background: #006ae0;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,85,192,0.6);
   animation: stepPulse3 2.2s ease-in-out infinite 0.4s;
 }
-.process-step[data-step="3"].lit h3 { color: #0a3a7a; }
-.process-step[data-step="3"].lit p  { color: #3a5a8a; }
+.process-step[data-step="3"].lit h3 { color: rgba(255,255,255,0.92); }
+.process-step[data-step="3"].lit p  { color: rgba(200,220,248,0.85); }
 
 @keyframes stepPulse3 {
-  0%, 100% { transform: scale(1);    box-shadow: 0 4px 20px rgba(0,85,192,0.55); }
-  50%       { transform: scale(1.07); box-shadow: 0 4px 28px rgba(0,85,192,0.8); }
+  0%, 100% { transform: scale(1);    box-shadow: 0 4px 20px rgba(0,85,192,0.6); }
+  50%       { transform: scale(1.07); box-shadow: 0 4px 30px rgba(0,85,192,0.9); }
 }
 
-/* ── PASO 4: fully illuminated + microinteracciones ─────── */
-.process-step[data-step="4"] .step-number {
-  background: #00477a;
-  box-shadow: 0 2px 8px rgba(0,71,122,0.3);
-}
+/* ── PASO 4: azul primario pleno + microinteracciones ───── */
 .process-step[data-step="4"].lit {
-  opacity: 1;
-  transform: translateX(0);
+  background: #0071e3;
+  box-shadow: 0 6px 44px rgba(0,113,227,0.6);
 }
 .process-step[data-step="4"].lit .step-number {
-  background: var(--primary);
-  box-shadow: 0 4px 20px rgba(0,113,227,0.55);
+  background: rgba(255,255,255,0.22);
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,113,227,0.5);
   animation: stepGlow4 2s ease-in-out infinite;
+  backdrop-filter: blur(4px);
 }
-.process-step[data-step="4"].lit h3 { color: var(--text); }
-.process-step[data-step="4"].lit p  { color: var(--text-secondary); }
+.process-step[data-step="4"].lit h3 { color: white; }
+.process-step[data-step="4"].lit p  { color: rgba(255,255,255,0.88); }
 
 @keyframes stepGlow4 {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 20px rgba(0,113,227,0.55), 0 0 0 0 rgba(0,113,227,0.35);
+    box-shadow: 0 4px 20px rgba(255,255,255,0.2), 0 0 0 0 rgba(255,255,255,0.25);
   }
   50% {
     transform: scale(1.08);
-    box-shadow: 0 4px 28px rgba(0,113,227,0.8), 0 0 0 10px rgba(0,113,227,0);
+    box-shadow: 0 4px 28px rgba(255,255,255,0.35), 0 0 0 10px rgba(255,255,255,0);
   }
 }
 
-/* Microinteracción: hover en paso 4 número */
+/* Microinteracción hover — número paso 4 */
 .process-step[data-step="4"].lit .step-number:hover {
   transform: scale(1.14) rotate(-4deg);
-  box-shadow: 0 6px 32px rgba(0,113,227,0.75);
+  box-shadow: 0 6px 32px rgba(255,255,255,0.4);
   transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
 }
 
