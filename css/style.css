@@ -609,7 +609,7 @@ body {
   animation: stepPulse3 2.2s ease-in-out infinite 0.4s;
 }
 .process-step[data-step="3"].lit h3 { color: white; }
-.process-step[data-step="3"].lit p  { color: rgba(220,235,255,0.93); }
+.process-step[data-step="3"].lit p  { color: white; }
 
 @keyframes stepPulse3 {
   0%, 100% { transform: scale(1);    box-shadow: 0 4px 20px rgba(0,85,192,0.6); }
