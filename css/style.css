@@ -559,14 +559,8 @@ body {
 }
 
 /* Textos apagados */
-.process-step h3 {
-  color: rgba(255,255,255,0);
-  transition: color 1.1s ease;
-}
-.process-step p {
-  color: rgba(255,255,255,0);
-  transition: color 1.1s ease;
-}
+.process-step h3 { color: white; }
+.process-step p  { color: white; }
 
 /* Línea conectora — oculta en este diseño */
 #process-line-connector { display: none; }
