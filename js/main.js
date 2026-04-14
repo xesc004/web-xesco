@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initScrollProgress();
   initStockChart();
+  initProcessSteps();
 });
 
 /* ─── Navbar: efecto al hacer scroll ─────────────────────── */
@@ -91,6 +92,37 @@ function initScrollProgress() {
     bar.style.width = pct + '%';
   };
   window.addEventListener('scroll', update, { passive: true });
+}
+
+/* ─── Process Steps — Progressive Illumination ──────────── */
+function initProcessSteps() {
+  const section   = document.getElementById('proceso');
+  const steps     = section ? section.querySelectorAll('.process-step') : [];
+  const connector = document.getElementById('process-line-connector');
+  if (!section || steps.length === 0) return;
+
+  let fired = false;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !fired) {
+        fired = true;
+
+        // Encender la línea conectora al instante
+        if (connector) connector.classList.add('lit');
+
+        // Encender cada paso con delay progresivo
+        const delays = [0, 700, 1400, 2100];
+        steps.forEach((step, i) => {
+          setTimeout(() => step.classList.add('lit'), delays[i] || 0);
+        });
+
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(section);
 }
 
 /* ─── Gráfico bursátil — sección Casos ──────────────────── */

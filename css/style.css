@@ -537,6 +537,116 @@ body {
   position: relative; z-index: 1;
 }
 
+/* ─── Process Steps — Progressive Illumination ──────────── */
+
+/* Estado inicial: todo apagado */
+.process-step {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.process-step .step-number {
+  transition: background 1.2s ease, box-shadow 1.2s ease, transform 0.3s ease;
+}
+.process-step h3 { transition: color 1.2s ease; }
+.process-step p   { transition: color 1.2s ease; }
+
+/* Línea conectora — arranca casi invisible */
+#process-line-connector {
+  opacity: 0.15;
+  transition: opacity 2.5s ease;
+}
+#process-line-connector.lit { opacity: 1; }
+
+/* ── PASO 1: primera chispa — tenue ────────────────────── */
+.process-step[data-step="1"] .step-number {
+  background: #0d2a4a;
+  box-shadow: 0 2px 8px rgba(13,42,74,0.3);
+}
+.process-step[data-step="1"].lit {
+  opacity: 0.50;
+  transform: translateX(0);
+}
+.process-step[data-step="1"].lit .step-number {
+  background: #0d2a4a;
+  box-shadow: 0 3px 12px rgba(13,42,74,0.45);
+}
+.process-step[data-step="1"].lit h3 { color: #4a6a8a; }
+.process-step[data-step="1"].lit p  { color: #6a8aaa; }
+
+/* ── PASO 2: más brillo ─────────────────────────────────── */
+.process-step[data-step="2"] .step-number {
+  background: #003d80;
+  box-shadow: 0 2px 8px rgba(0,61,128,0.3);
+}
+.process-step[data-step="2"].lit {
+  opacity: 0.70;
+  transform: translateX(0);
+}
+.process-step[data-step="2"].lit .step-number {
+  background: #003d80;
+  box-shadow: 0 4px 16px rgba(0,61,128,0.5);
+}
+.process-step[data-step="2"].lit h3 { color: #1a4a8a; }
+.process-step[data-step="2"].lit p  { color: #4a6a8a; }
+
+/* ── PASO 3: animaciones activas ────────────────────────── */
+.process-step[data-step="3"] .step-number {
+  background: #0055c0;
+  box-shadow: 0 2px 8px rgba(0,85,192,0.3);
+}
+.process-step[data-step="3"].lit {
+  opacity: 0.88;
+  transform: translateX(0);
+}
+.process-step[data-step="3"].lit .step-number {
+  background: #0055c0;
+  box-shadow: 0 4px 20px rgba(0,85,192,0.55);
+  animation: stepPulse3 2.2s ease-in-out infinite 0.4s;
+}
+.process-step[data-step="3"].lit h3 { color: #0a3a7a; }
+.process-step[data-step="3"].lit p  { color: #3a5a8a; }
+
+@keyframes stepPulse3 {
+  0%, 100% { transform: scale(1);    box-shadow: 0 4px 20px rgba(0,85,192,0.55); }
+  50%       { transform: scale(1.07); box-shadow: 0 4px 28px rgba(0,85,192,0.8); }
+}
+
+/* ── PASO 4: fully illuminated + microinteracciones ─────── */
+.process-step[data-step="4"] .step-number {
+  background: #00477a;
+  box-shadow: 0 2px 8px rgba(0,71,122,0.3);
+}
+.process-step[data-step="4"].lit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.process-step[data-step="4"].lit .step-number {
+  background: var(--primary);
+  box-shadow: 0 4px 20px rgba(0,113,227,0.55);
+  animation: stepGlow4 2s ease-in-out infinite;
+}
+.process-step[data-step="4"].lit h3 { color: var(--text); }
+.process-step[data-step="4"].lit p  { color: var(--text-secondary); }
+
+@keyframes stepGlow4 {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0,113,227,0.55), 0 0 0 0 rgba(0,113,227,0.35);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 4px 28px rgba(0,113,227,0.8), 0 0 0 10px rgba(0,113,227,0);
+  }
+}
+
+/* Microinteracción: hover en paso 4 número */
+.process-step[data-step="4"].lit .step-number:hover {
+  transform: scale(1.14) rotate(-4deg);
+  box-shadow: 0 6px 32px rgba(0,113,227,0.75);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+}
+
 /* ─── CTA Section ────────────────────────────────────────── */
 .cta-box {
   background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
