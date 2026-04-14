@@ -582,7 +582,7 @@ body {
   box-shadow: 0 3px 12px rgba(13,42,74,0.5);
 }
 .process-step[data-step="1"].lit h3 { color: rgba(255,255,255,0.95); }
-.process-step[data-step="1"].lit p  { color: rgba(200,220,240,0.90); }
+.process-step[data-step="1"].lit p  { color: white; }
 
 /* ── PASO 2: navy más brillante ─────────────────────────── */
 .process-step[data-step="2"].lit {
@@ -595,7 +595,7 @@ body {
   box-shadow: 0 4px 16px rgba(0,61,128,0.55);
 }
 .process-step[data-step="2"].lit h3 { color: white; }
-.process-step[data-step="2"].lit p  { color: rgba(210,230,248,0.92); }
+.process-step[data-step="2"].lit p  { color: white; }
 
 /* ── PASO 3: azul activo + pulso en número ──────────────── */
 .process-step[data-step="3"].lit {
@@ -629,7 +629,7 @@ body {
   backdrop-filter: blur(4px);
 }
 .process-step[data-step="4"].lit h3 { color: white; }
-.process-step[data-step="4"].lit p  { color: rgba(255,255,255,0.88); }
+.process-step[data-step="4"].lit p  { color: white; }
 
 @keyframes stepGlow4 {
   0%, 100% {
