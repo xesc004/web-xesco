@@ -2,9 +2,9 @@
 
     python3 herramientas/preparar_demo.py aldiax ruta/al/video.mp4 [--desde 0] [--duracion 20]
 
-Recorta, quita el audio y comprime el vídeo en vertical (H.264, 540 px de ancho, sin sonido, listo para
-reproducirse en bucle) en img/apps/<app>/demo.mp4, y añade data-demo="…" al <article id="app-<app>"> de
-index.html para que la sala lo use. Necesita ffmpeg.
+Recorta, quita el audio y comprime el vídeo en vertical (540 px de ancho, sin sonido, listo para reproducirse
+en bucle) en img/apps/<app>/demo.mp4 (H.264) y demo.webm (VP9, para navegadores sin H.264), y añade
+data-demo="…" al <article id="app-<app>"> de index.html para que la sala lo use. Necesita ffmpeg.
 """
 import argparse
 import os
@@ -25,11 +25,12 @@ def main():
 
     relativa = f"img/apps/{args.app}/demo.mp4"
     destino = os.path.join(WEB, relativa)
-    subprocess.run([
-        "ffmpeg", "-loglevel", "error", "-y", "-ss", str(args.desde), "-i", args.video, "-t", str(args.duracion),
-        "-an", "-vf", "scale=540:-2:flags=lanczos,fps=30", "-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p",
-        "-crf", "28", "-preset", "slow", "-movflags", "+faststart", destino,
-    ], check=True)
+    entrada = ["ffmpeg", "-loglevel", "error", "-y", "-ss", str(args.desde), "-i", args.video, "-t", str(args.duracion),
+               "-an", "-vf", "scale=540:-2:flags=lanczos,fps=30"]
+    subprocess.run(entrada + ["-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p", "-crf", "28",
+                              "-preset", "slow", "-movflags", "+faststart", destino], check=True)
+    subprocess.run(entrada + ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "40", "-row-mt", "1",
+                              destino[:-4] + ".webm"], check=True)
 
     ruta_html = os.path.join(WEB, "index.html")
     html = open(ruta_html, encoding="utf-8").read()
@@ -38,7 +39,8 @@ def main():
     if n != 1:
         raise SystemExit(f"No encuentro <article id=\"app-{args.app}\"> en index.html")
     open(ruta_html, "w", encoding="utf-8").write(html)
-    print(f"{relativa}: {os.path.getsize(destino) // 1024} KB · data-demo añadido a index.html")
+    webm = os.path.getsize(destino[:-4] + ".webm") // 1024
+    print(f"{relativa}: {os.path.getsize(destino) // 1024} KB (+ webm {webm} KB) · data-demo añadido a index.html")
 
 
 if __name__ == "__main__":

@@ -52,12 +52,17 @@ function montarDemo(pantalla, demo, capturas) {
   Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', autoplay: !reducido.matches });
   video.setAttribute('aria-label', capturas[0]?.alt ?? '');
   if (capturas[0]) video.poster = capturas[0].currentSrc || capturas[0].src;
-  // Si el vídeo no carga se pasa a las capturas animadas
-  video.addEventListener('error', () => {
+  // MP4 (H.264) y, al lado, WebM (VP9) para navegadores sin H.264. Si ninguno carga (el error llega en la
+  // última <source>), se pasa a las capturas animadas
+  for (const [src, type] of [[demo, 'video/mp4'], [demo.replace(/\.mp4$/, '.webm'), 'video/webm']]) {
+    const fuente = document.createElement('source');
+    Object.assign(fuente, { src, type });
+    video.appendChild(fuente);
+  }
+  video.lastElementChild.addEventListener('error', () => {
     video.remove();
     parar = montarCapturas(pantalla, capturas);
   }, { once: true });
-  video.src = demo;
   if (reducido.matches) video.controls = true;
   pantalla.appendChild(video);
   return () => {
