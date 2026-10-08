@@ -339,7 +339,10 @@ function crearJuego(sprites) {
   // Código Konami: modo Kyūbi (aura naranja de fuego); repetirlo lo apaga
   const konami = crearKonami();
   addEventListener('keydown', (e) => {
-    if (e.repeat || enModoCV() || resumen.abierto() || sala.abierta() || !konami(e.code)) return;
+    if (e.repeat || enModoCV() || resumen.abierto() || sala.abierta()) return;
+    // Escribiendo en el formulario no cuenta (flechas para mover el cursor y luego «b», «a»…)
+    if (e.target instanceof HTMLElement && e.target.matches('input, textarea, select, [contenteditable]')) return;
+    if (!konami(e.code)) return;
     const activo = jugador.el.classList.toggle('modo-kyubi');
     decir(bocadillo, activo ? 'secreto.konami' : 'secreto.konami.fuera', 3);
     sonar(activo ? 'premio' : 'golpe');
@@ -353,6 +356,7 @@ function crearJuego(sprites) {
     mundo,
     obtenerEscala: () => estado.escala,
     obtenerColisionadores: () => estado.colisionadores,
+    sePuedeCoger: () => !estado.tuberia,
   });
   const raton = activarRaton({
     jugador,
@@ -387,7 +391,13 @@ function crearJuego(sprites) {
 
   function viajar(id) {
     const zona = objetos.zonas.find((z) => z.id === id);
-    if (!zona) return;
+    if (!zona || estado.tuberia?.fase === 'dentro') return;
+    // Si estaba entrando o saliendo de una tubería, el viaje corta esa animación
+    if (estado.tuberia) {
+      estado.tuberia = null;
+      jugador.el.classList.remove('en-tuberia');
+      entrada.activar(true);
+    }
     reaparecer(jugador, { x: zona.x + 160, y: Y_SUELO }, estado.colisionadores);
     centrarCamara(camara, centroJugador(), estado.visible, ANCHO_MUNDO);
     estado.camaraLibreHasta = 0;
@@ -496,9 +506,10 @@ function crearJuego(sprites) {
   jugador.el.classList.add('listo');
 
   let espera = 0;
+  // En modo CV no se mide: el nivel está recolocado como página y se vuelve a medir al volver al juego
   addEventListener('resize', () => {
     clearTimeout(espera);
-    espera = setTimeout(medir, 120);
+    espera = setTimeout(() => { if (!enModoCV()) medir(); }, 120);
   });
   document.fonts?.ready.then(medir);
   addEventListener('load', medir);
@@ -506,7 +517,8 @@ function crearJuego(sprites) {
 
   // Rueda o trackpad: el muñeco corre solo en la dirección del gesto
   addEventListener('wheel', (e) => {
-    if (enModoCV()) return;
+    // En el CV, en los diálogos (sala, resumen) y en el desplegable de zonas la rueda desplaza como siempre
+    if (enModoCV() || e.target.closest?.('dialog[open], .minimapa')) return;
     e.preventDefault();
     const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
     if (Math.abs(d) > 2) entrada.correrAuto(d, 180);

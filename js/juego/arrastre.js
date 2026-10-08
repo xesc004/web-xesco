@@ -6,7 +6,7 @@ import { cambiarEstado } from './jugador.js';
 const LIMITE_VX = 900;
 const LIMITE_VY = 1200;
 
-export function activarArrastre({ jugador, mundo, obtenerEscala, obtenerColisionadores }) {
+export function activarArrastre({ jugador, mundo, obtenerEscala, obtenerColisionadores, sePuedeCoger = () => true }) {
   const el = jugador.el;
   let puntero = null;
   let muestras = [];
@@ -27,7 +27,7 @@ export function activarArrastre({ jugador, mundo, obtenerEscala, obtenerColision
   }
 
   el.addEventListener('pointerdown', (e) => {
-    if (puntero !== null || jugador.estado === 'celebrando') return;
+    if (puntero !== null || jugador.estado === 'celebrando' || !sePuedeCoger()) return;
     e.preventDefault();
     puntero = e.pointerId;
     try { el.setPointerCapture(puntero); } catch { /* sin captura, el arrastre sigue con los eventos del elemento */ }

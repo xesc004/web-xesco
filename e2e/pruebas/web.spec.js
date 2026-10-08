@@ -68,3 +68,31 @@ test.describe('idioma, modo CV y formulario', () => {
     await contexto.close();
   });
 });
+
+test('escribir en el formulario no activa el código Konami', async ({ page }, info) => {
+  test.skip(info.project.name.startsWith('movil'), 'teclado solo en escritorio');
+  await page.goto('/?depurar');
+  await page.waitForFunction(() => window.__juego?.jugador);
+  await page.locator('[data-ir="contacto"]').dispatchEvent('click');
+  await page.keyboard.press('Escape');
+  const campo = page.locator('#formulario-contacto textarea');
+  await campo.focus();
+  for (const k of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']) {
+    await page.keyboard.press(k);
+  }
+  await expect(campo).toHaveValue('ba');
+  await expect(page.locator('#muneco')).not.toHaveClass(/modo-kyubi/);
+});
+
+test('la rueda desplaza la sala de una app en ventanas bajas', async ({ page }, info) => {
+  test.skip(info.project.name.startsWith('movil'), 'rueda solo en escritorio');
+  await page.setViewportSize({ width: 1000, height: 480 });
+  await page.goto('/?depurar');
+  await page.waitForFunction(() => window.__juego?.jugador);
+  await page.locator('.tuberia-boton[data-sala="aldiax"]').dispatchEvent('click');
+  const escena = page.locator('#sala .sala-escena');
+  await expect(page.locator('#sala')).toBeVisible();
+  await escena.hover();
+  await page.mouse.wheel(0, 400);
+  await expect.poll(() => escena.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+});
