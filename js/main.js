@@ -6,14 +6,18 @@ import { medirPlataformas, posicionEnMundo } from './mundo/plataformas.js';
 import { crearFondo, medirFondo, actualizarFondo } from './mundo/fondo.js';
 import { crearHojas, redimensionarHojas, moverHojas, dibujarHojas } from './mundo/hojas.js';
 import {
-  crearJugador, actualizarJugador, dibujarJugador, cambiarEstado, reaparecer, ponerPremios, reir, dejarEstela,
+  crearJugador, actualizarJugador, dibujarJugador, cambiarEstado, reaparecer, ponerPremios, quitarPremios, reir,
+  dejarEstela,
 } from './juego/jugador.js';
+import { crearResumen } from './juego/resumen.js';
+import { crearKonami, SECRETOS } from './juego/secretos.js';
 import { crearBocadillo, decir, callar, actualizarBocadillo } from './juego/bocadillo.js';
 import { activarRaton } from './juego/raton.js';
 import { crearCamara, seguirCamara, centrarCamara, limitarCamara } from './juego/camara.js';
 import { activarArrastre } from './juego/arrastre.js';
 import {
   crearObjetos, medirObjetos, actualizarObjetos, activarSorpresas, lanzarClones, reanimar, contarPiezas,
+  apuntarSecreto, reiniciarObjetos,
 } from './juego/objetos.js';
 import { crearHud } from './ui/hud.js';
 import { aplicarIdioma, idiomaInicial, idiomaActual } from './ui/i18n.js';
@@ -73,14 +77,7 @@ function activarControlesTactiles(entrada) {
   });
 }
 
-function mostrarMeta(jugador, n, total) {
-  const aviso = document.getElementById('mensaje-meta');
-  aviso.textContent = aviso.dataset.plantilla.replace('{n}', n).replace('{total}', total);
-  aviso.hidden = false;
-  jugador.cuerpo.vx = 0;
-  cambiarEstado(jugador, 'celebrando');
-  setTimeout(() => { aviso.hidden = true; }, 4500);
-}
+const ESPERA_AYUDA = 4;
 
 function crearJuego(sprites) {
   const entrada = crearEntrada();
@@ -108,7 +105,14 @@ function crearJuego(sprites) {
     ultimoDibujo: performance.now(),
     camaraAnterior: 0,
     estela: 0,
+    // Cronómetro de la partida: empieza con la primera tecla o toque
+    inicioPartida: null,
+    // Ayuda «→ / Espacio»: aparece tras 4 s sin moverse hasta que se ha usado andar y saltar
+    sinMover: 0,
+    usado: { andar: false, saltar: false },
   };
+  const ayuda = document.getElementById('ayuda');
+  const tactil = document.querySelector('.tactil');
   const hud = crearHud({ alViajar: viajar, alSonido: alternarSonido, sonidoInicial: sonidoActivo() });
   function decirUnaVez(clave, segundos) {
     if (estado.dichas.has(clave)) return;
@@ -135,8 +139,52 @@ function crearJuego(sprites) {
     clones: () => {
       if (!movimientoReducido.matches) lanzarClones(mundo, jugador);
     },
-    meta: (n, total) => mostrarMeta(jugador, n, total),
+    meta: (n, total) => {
+      jugador.cuerpo.vx = 0;
+      cambiarEstado(jugador, 'celebrando');
+      const segundos = (performance.now() - (estado.inicioPartida ?? estado.creado)) / 1000;
+      // El resumen sale cuando ya se ha visto la celebración
+      setTimeout(() => {
+        if (enModoCV()) return;
+        resumen.mostrar({
+          segundos, piezas: n, total, secretos: objetos.secretos.size, totalSecretos: SECRETOS.length,
+        });
+      }, 1600);
+    },
+    secreto: (id) => {
+      if (!apuntarSecreto(objetos, id)) return;
+      decir(bocadillo, `secreto.${id}`, 4);
+    },
   };
+  estado.creado = performance.now();
+  const resumen = crearResumen({
+    sprites,
+    alAbrir: () => entrada.activar(false),
+    alCerrar: () => { if (!enModoCV()) entrada.activar(true); },
+    alContactar: () => {
+      document.querySelector('#formulario-contacto input[name="name"]')?.focus({ preventScroll: true });
+    },
+    alJugarOtraVez: () => {
+      reiniciarObjetos(objetos);
+      quitarPremios(jugador);
+      hud.piezas(0, objetos.piezas.length);
+      estado.inicioPartida = null;
+      viajar('inicio');
+    },
+  });
+
+  // Código Konami: modo Kyūbi (aura naranja de fuego); repetirlo lo apaga
+  const konami = crearKonami();
+  addEventListener('keydown', (e) => {
+    if (e.repeat || enModoCV() || resumen.abierto() || !konami(e.code)) return;
+    const activo = jugador.el.classList.toggle('modo-kyubi');
+    decir(bocadillo, activo ? 'secreto.konami' : 'secreto.konami.fuera', 3);
+    sonar(activo ? 'premio' : 'golpe');
+    if (activo) {
+      reanimar(jugador.el, 'premiado');
+      avisos.secreto('konami');
+    }
+  });
   const arrastre = activarArrastre({
     jugador,
     mundo,
@@ -185,7 +233,9 @@ function crearJuego(sprites) {
 
   function actualizar(dt) {
     const e = entrada.leer();
-    if (e.izquierda || e.derecha || e.saltar) estado.camaraLibreHasta = 0;
+    const seMueve = e.izquierda || e.derecha || e.saltar;
+    if (seMueve) estado.camaraLibreHasta = 0;
+    actualizarAyuda(e, seMueve, dt);
     const eventos = actualizarJugador(jugador, e, estado.colisionadores, dt);
     arrastre.actualizar(dt);
     for (const ev of eventos) {
@@ -201,6 +251,20 @@ function crearJuego(sprites) {
     actualizarObjetos(objetos, jugador, eventos, estado.porId, avisos);
     if (performance.now() > estado.camaraLibreHasta) {
       seguirCamara(camara, centroJugador(), jugador.mirando, estado.visible, ANCHO_MUNDO, dt);
+    }
+  }
+
+  function actualizarAyuda(e, seMueve, dt) {
+    if (seMueve && estado.inicioPartida === null) estado.inicioPartida = performance.now();
+    if (e.izquierda || e.derecha) estado.usado.andar = true;
+    if (e.saltar) estado.usado.saltar = true;
+    const aprendido = estado.usado.andar && estado.usado.saltar;
+    estado.sinMover = seMueve || jugador.estado === 'colgado' ? 0 : estado.sinMover + dt;
+    const mostrar = !aprendido && estado.sinMover >= ESPERA_AYUDA && !introActiva()
+      && !resumen.abierto() && jugador.estado !== 'celebrando';
+    if (mostrar === ayuda.hidden) {
+      ayuda.hidden = !mostrar;
+      tactil?.classList.toggle('ayudando', mostrar);
     }
   }
 
@@ -220,6 +284,10 @@ function crearJuego(sprites) {
       dejarEstela(jugador, mundo);
     }
     actualizarBocadillo(bocadillo, jugador.cuerpo, camara.x, estado.visible, ahora);
+    if (!ayuda.hidden) {
+      const c = jugador.cuerpo;
+      ayuda.style.transform = `translate3d(${(c.x + c.w + 30).toFixed(0)}px, ${(c.y + 30).toFixed(0)}px, 0)`;
+    }
     const recorrido = Math.max(1, ANCHO_MUNDO - estado.visible);
     actualizarFondo(fondo, camara.x * e, camara.x / recorrido, movimientoReducido.matches);
     if (hojas) {

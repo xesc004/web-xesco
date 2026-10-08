@@ -2,6 +2,7 @@
 import { medirElementos } from '../mundo/plataformas.js';
 import { sonar } from '../ui/sonido.js';
 import { aplicarHoja, posicionFotograma } from './jugador.js';
+import { leerSecretos, guardarSecretos } from './secretos.js';
 
 const CLAVE_PIEZAS = 'xesco.piezas';
 
@@ -51,6 +52,8 @@ export function crearObjetos(mundo) {
     robots: [],
     meta: null,
     recogidas: leerRecogidas(),
+    secretos: leerSecretos(),
+    secreta: null,
     zonaActual: null,
     clonesLanzados: false,
     metaAlcanzada: false,
@@ -69,6 +72,26 @@ export function medirObjetos(o) {
     .sort((a, b) => a.x - b.x);
   o.robots = medirElementos(o.mundo, '.robot');
   o.meta = medirElementos(o.mundo, '.bandera.meta')[0] ?? null;
+  o.secreta = medirElementos(o.mundo, '.pieza-secreta')[0] ?? null;
+  o.secreta?.el.classList.toggle('recogida', o.secretos.has('pieza'));
+}
+
+export function apuntarSecreto(o, id) {
+  if (o.secretos.has(id)) return false;
+  o.secretos.add(id);
+  guardarSecretos(o.secretos);
+  return true;
+}
+
+// «Jugar otra vez»: piezas, banderas y meta como al principio (los secretos encontrados se conservan)
+export function reiniciarObjetos(o) {
+  o.recogidas.clear();
+  guardarRecogidas(o.recogidas);
+  for (const p of o.piezas) p.el.classList.remove('recogida');
+  o.mundo.querySelectorAll('.bandera.izada').forEach((b) => b.classList.remove('izada'));
+  o.zonaActual = null;
+  o.clonesLanzados = false;
+  o.metaAlcanzada = false;
 }
 
 export function contarPiezas(o) {
@@ -85,6 +108,13 @@ export function actualizarObjetos(o, jugador, eventos, porId, avisos) {
     guardarRecogidas(o.recogidas);
     sonar('pieza');
     avisos.piezas(o.recogidas.size, o.piezas.length);
+  }
+
+  const s = o.secreta;
+  if (s && !s.el.classList.contains('recogida') && solapan(c, s)) {
+    s.el.classList.add('recogida');
+    sonar('premio');
+    avisos.secreto('pieza');
   }
 
   for (const e of eventos) {

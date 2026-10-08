@@ -692,6 +692,22 @@
 }
 
 .contacto-enlaces a { text-decoration: none; overflow-wrap: anywhere; }
+
+.contacto-pdf { margin-top: 12px; }
+
+.boton-pdf {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--marino);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #0E1424;
+}
+
+.boton-pdf::before { content: "⬇ "; }
+.boton-pdf:hover { background: #2A3858; }
 .contacto-enlaces a:hover { text-decoration: underline; }
 
 .formulario { margin-top: 16px; display: grid; gap: 12px; }
@@ -745,7 +761,7 @@
   height: 160px;
   background-image: url("../img/personaje/muneco.webp");
   background-repeat: no-repeat;
-  background-size: calc(var(--columnas, 8) * 160px) calc(var(--filas, 5) * 160px);
+  background-size: calc(var(--columnas, 8) * 160px) calc(var(--filas, 6) * 160px);
   pointer-events: none;
 }
 
@@ -825,9 +841,9 @@
 .con-capa > .premio-capa {
   display: block;
   left: 36px;
-  top: 58px;
+  top: calc(var(--cabeza) + 48px);
   width: 88px;
-  height: 92px;
+  height: calc(102px - var(--cabeza));
   transform-origin: 50% 0;
   transform: rotate(var(--vaiven));
   clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
@@ -913,6 +929,64 @@
 
 @keyframes globo { from { opacity: 0; scale: 0.6; translate: 0 14px; } }
 
+/* Ayuda contextual: teclas junto al muñeco si nadie se mueve */
+.ayuda {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 12;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgb(29 40 64 / 0.88);
+  color: #fff;
+  font: 600 18px var(--fuente-titulos);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: ayuda 1.2s ease-in-out infinite;
+}
+
+.ayuda kbd {
+  display: inline-block;
+  min-width: 34px;
+  padding: 2px 10px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--marino);
+  font: inherit;
+  text-align: center;
+  box-shadow: 0 3px 0 var(--crema-sombra);
+}
+
+@keyframes ayuda { 50% { translate: 8px 0; } }
+
+/* Pieza secreta: morada y brillante, muy arriba sobre la cama elástica de Una Neurona */
+.pieza-secreta {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #F3D9FF 0 9px, #B26BEA 10px 16px, #7B3FC0 17px);
+  box-shadow: 0 3px 0 #5A2D91, 0 0 18px 4px rgb(178 107 234 / 0.6);
+  animation: flotar 1.8s ease-in-out infinite;
+}
+
+.pieza-secreta.recogida { animation: recoger 0.6s ease-out forwards; }
+
+/* Modo Kyūbi (código Konami): aura de fuego naranja y roja */
+.modo-kyubi > .premio-aura {
+  display: block;
+  left: -6px;
+  top: -14px;
+  width: 172px;
+  height: 180px;
+  border-radius: 50% 50% 42% 42%;
+  background:
+    radial-gradient(closest-side, rgb(255 120 40 / 0.65), rgb(214 40 20 / 0.45) 55%, transparent),
+    conic-gradient(from 200deg at 50% 70%, transparent, rgb(255 90 20 / 0.35), transparent 30%, rgb(255 150 40 / 0.3), transparent 60%);
+  animation: chakra 0.45s ease-in-out infinite alternate;
+}
+
+.modo-kyubi > .jugador-sprite { filter: drop-shadow(0 0 4px #FF8A3D) drop-shadow(0 0 12px rgb(214 40 20 / 0.9)); }
+
 /* Luciérnagas del contacto: aparecen de noche */
 .luciernaga {
   width: 8px;
@@ -954,6 +1028,6 @@
 @media (prefers-reduced-motion: reduce) {
   .pieza, .robot.saluda, .capturas, .clon, .letra.pisada, .sorpresa.golpeado, .cama-elastica.rebota,
   .forja.clang .chispas, .jugador.humo, .con-aura > .premio-aura, .luciernaga, .bocadillo-globo.aparece,
-  .jugador.premiado .jugador-sprite { animation: none; }
+  .jugador.premiado .jugador-sprite, .pieza-secreta, .modo-kyubi > .premio-aura { animation: none; }
   .bandera::after { transition: none; }
 }

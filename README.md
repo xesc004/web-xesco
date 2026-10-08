@@ -20,6 +20,7 @@ js/juego/             muñeco, arrastre, cámara y objetos del nivel
 js/ui/                idioma, CV rápido, contacto (Web3Forms), sonido y barra superior
 i18n/en.json          textos en inglés
 img/                  foto, apps, fondo (SVG) y hoja de sprites del muñeco
+cv/                   CV en PDF (español e inglés), generado desde el modo CV
 tests/                tests de las partes puras (node --test)
 herramientas/         servidor local y generadores de recursos
 minifigura/scripts/   modelo 3D del muñeco y sprites (Blender)
@@ -43,7 +44,12 @@ npm test                           # tests de física, escala, cámara y cielo
 - Ambiente: hojas que caen y se arremolinan al correr, matas desenfocadas en primer plano, cielo que va de la
   mañana a la noche con los farolillos encendiéndose y luciérnagas en el contacto, y la pantalla de entrada
   «MUNDO 1-1». Todo se apaga con `prefers-reduced-motion`.
-- Si se añade una animación `sentado` a la hoja de sprites, el muñeco la usará al esperar en vez de saludar.
+- Tras 8 s quieto el muñeco se sienta (animación `sentado`); tras 4 s sin moverse aparece la ayuda «→ / Espacio»
+  hasta que se ha andado y saltado.
+- Meta: resumen con tiempo, piezas, secretos y rango (S/A/B/C), botones «Contáctame» y «Descargar CV en PDF»,
+  compartir en LinkedIn (copia el texto y abre LinkedIn), tarjeta PNG de 1200 × 630 y «Jugar otra vez».
+- Secretos: una pieza morada muy arriba (se alcanza con la cama elástica de Una Neurona) y el código Konami
+  (↑↑↓↓←→←→BA), que activa el modo Kyūbi.
 
 ## Regenerar recursos
 
@@ -53,6 +59,11 @@ npm test                           # tests de física, escala, cámara y cielo
   Blender Lab).
 - Muñeco: `minifigura/scripts/mf_build.py` (modelo) y `minifigura/scripts/mf_sprites.py` (hoja de sprites)
   dentro de Blender con `minifigura/minifigura_xesco.blend`.
+- Solo la animación «sentado»: se renderizan sus fotogramas con `mf_sprites` y se añaden a la hoja con
+  `python3 herramientas/anadir_sentado.py DIR` (con `--cara-lisa parado.png` si el modelo se construyó sin la foto
+  de referencia: la cara se copia del primer fotograma de la hoja).
+- CV en PDF: con el servidor local en marcha, `node herramientas/generar-cv-pdf.mjs` (necesita Playwright) escribe
+  `cv/Francisco-Alabau-Calatayud-CV.pdf` y `-en.pdf` a partir del modo CV impreso.
 
 ## Despliegue
 

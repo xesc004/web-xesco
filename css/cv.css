@@ -14,7 +14,7 @@ html.cv .hud-piezas,
 html.cv #boton-sonido,
 html.cv .solo-juego,
 html.cv .clon,
-html.cv .mensaje-meta,
+html.cv .ayuda,
 html.cv .sorpresa,
 html.cv .pista,
 html.cv .depurar-caja { display: none !important; }
@@ -101,8 +101,39 @@ html.cv .contacto-enlaces { grid-template-columns: 1fr; }
 }
 
 @media print {
-  .hud, .tactil, .saltar-cv { display: none !important; }
-  html.cv .mundo { padding-top: 0; }
-  .cartel { box-shadow: none !important; border: 1px solid #ddd; break-inside: avoid; }
-  .formulario { display: none; }
+  /* CV en PDF: compacto (2-3 hojas A4), sin capturas, botones ni formulario */
+  @page { size: A4; }
+  html.cv .hud, html.cv .tactil, html.cv .saltar-cv, html.cv .formulario, html.cv .contacto-pdf, html.cv .resumen,
+  html.cv .capturas, html.cv .boton-tienda, html.cv .nota { display: none !important; }
+  html.cv .rotulo { break-after: avoid; }
+  html.cv body { background: #fff; font-size: 10.5pt; }
+  html.cv .mundo { max-width: none; padding: 0; }
+  html.cv .zona { margin-bottom: 8px; }
+  html.cv .app { margin-top: 6px; }
+  html.cv .cartel, html.cv .rotulo {
+    margin-bottom: 8px;
+    padding: 10px 14px;
+    font-size: 10.5pt;
+    line-height: 1.4;
+    box-shadow: none !important;
+    border: 1px solid #E8D3B8;
+    break-inside: avoid;
+  }
+  html.cv .cartel h2, html.cv .rotulo h2 { font-size: 15pt; margin-bottom: 4px; }
+  html.cv .cartel h3, html.cv .ficha h3 { font-size: 12pt; margin-bottom: 2px; }
+  html.cv .titulo { margin-bottom: 6px; }
+  html.cv .titulo-linea-1 { font-size: 30pt; }
+  html.cv .titulo-linea-2 { font-size: 20pt; }
+  html.cv .titular { font-size: 14pt; }
+  html.cv .subtitular { font-size: 11pt; }
+  html.cv .foto { display: flex; align-items: center; gap: 12px; text-align: left; }
+  html.cv .foto img { width: 70px; height: 70px; margin: 0; border-width: 3px; box-shadow: none; }
+  html.cv .ficha-icono { width: 40px; height: 40px; border-radius: 10px; }
+  html.cv .ficha-frase, html.cv .ficha-tec, html.cv .etiqueta { font-size: 9.5pt; }
+  html.cv .ficha-puntos { margin-top: 6px; }
+  html.cv .etiqueta { margin-top: 4px; padding: 1px 10px; }
+  html.cv .torres { gap: 4px; margin-bottom: 8px; }
+  html.cv .torre { padding: 5px 12px; break-inside: avoid; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  html.cv .torre-nombre { font-size: 10.5pt; }
+  html.cv .contacto-enlaces { grid-template-columns: 1fr 1fr; }
 }

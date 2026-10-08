@@ -59,6 +59,9 @@ def animaciones():
                               for f in _ciclo(6)]),
         ("celebrar", 8, True, [dict(giro=0, brazos=(-165 + 15 * math.sin(f), -165 - 15 * math.sin(f)),
                                     altura=0.18 * abs(math.sin(f))) for f in _ciclo(6)]),
+        # Sentado en el suelo con las piernas hacia la cámara, respirando despacio (se usa al esperar)
+        ("sentado", 3, True, [dict(giro=8, piernas=(-90, -90), brazos=(-28 - 3 * math.sin(f), -28 - 3 * math.sin(f)),
+                                   altura=0.015 * math.sin(f), sentar=True) for f in _ciclo(4)]),
     ]
 
 
@@ -77,8 +80,9 @@ def _z_min_piernas():
     return z
 
 
-def aplicar_pose(giro=0.0, piernas=(0.0, 0.0), brazos=(0.0, 0.0), altura=0.0, apoyar=False):
-    """apoyar: sube el cuerpo lo que se hunda la puntera de la pierna trasera (piernas rígidas al andar)."""
+def aplicar_pose(giro=0.0, piernas=(0.0, 0.0), brazos=(0.0, 0.0), altura=0.0, apoyar=False, sentar=False):
+    """apoyar: sube el cuerpo lo que se hunda la puntera de la pierna trasera (piernas rígidas al andar).
+    sentar: baja el cuerpo hasta que las piernas (dobladas hacia delante) tocan el suelo."""
     raiz = bpy.data.objects["MF_Raiz"]
     raiz.rotation_euler = (0.0, 0.0, math.radians(giro))
     raiz.location = (0.0, 0.0, 0.0 if apoyar else altura)
@@ -88,6 +92,9 @@ def aplicar_pose(giro=0.0, piernas=(0.0, 0.0), brazos=(0.0, 0.0), altura=0.0, ap
     bpy.context.view_layer.update()
     if apoyar:
         raiz.location = (0.0, 0.0, altura + max(0.0, -_z_min_piernas()))
+        bpy.context.view_layer.update()
+    elif sentar:
+        raiz.location = (0.0, 0.0, altura - _z_min_piernas())
         bpy.context.view_layer.update()
 
 

@@ -72,6 +72,11 @@ export function ponerPremios(j, piezas) {
   return nuevos;
 }
 
+export function quitarPremios(j) {
+  for (const id of j.premios) j.el.classList.remove(`con-${id}`);
+  j.premios.clear();
+}
+
 // Se ríe si se le pasa el ratón por encima mientras está tranquilo en el suelo
 export function reir(j) {
   if (!j.cuerpo.enSuelo || !['parado', 'esperando'].includes(j.estado)) return false;

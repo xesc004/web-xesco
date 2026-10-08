@@ -84,7 +84,7 @@
     <button type="button" class="hud-boton" id="boton-sonido" aria-pressed="false" data-i18n-attr="aria-label:hud.sonido" aria-label="Sonido">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="ondas" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </button>
-    <button type="button" class="hud-cv" id="boton-cv" data-i18n="hud.cv">Ver CV rápido</button>
+    <button type="button" class="hud-cv" id="boton-cv"><span class="hud-cv-largo" data-i18n="hud.cv">Ver CV rápido</span><span class="hud-cv-corto" aria-hidden="true">CV</span></button>
     <button type="button" class="hud-cv" id="boton-volver" data-i18n="hud.volver">Volver al nivel</button>
   </header>
 
@@ -311,6 +311,7 @@
         <span class="pieza decor" style="--x:420;--y:280"></span>
         <span class="pieza decor" style="--x:960;--y:360"></span>
         <span class="pieza decor" style="--x:1120;--y:250"></span>
+        <span class="pieza-secreta decor" style="--x:1150;--y:60"></span>
       </article>
     </section>
 
@@ -438,6 +439,7 @@
           <li><a href="https://www.linkedin.com/in/francisco-alabau-calatayud-329196330/" target="_blank" rel="noopener">LinkedIn</a></li>
           <li><a href="https://github.com/xesc004" target="_blank" rel="noopener">GitHub</a></li>
         </ul>
+        <p class="contacto-pdf"><a class="boton-pdf" href="cv/Francisco-Alabau-Calatayud-CV.pdf" download data-i18n="cv.descargar" data-i18n-attr="href:cv.pdf">Descargar CV en PDF</a></p>
         <form id="formulario-contacto" class="formulario" action="https://api.web3forms.com/submit" method="POST" data-error="Hubo un error al enviar el mensaje. Escríbeme directamente a xescoalabaucalatayud2@gmail.com" data-i18n-attr="data-error:contacto.error">
           <input type="hidden" name="access_key" value="11003856-d192-4b60-9d0c-4ad8a9e5654d" />
           <input type="hidden" name="subject" value="Nuevo contacto desde xescoalabau.com" />
@@ -478,6 +480,10 @@
       <span class="premio-bandana"><span class="bandana-placa"></span></span>
     </div>
     <div id="bocadillo" class="bocadillo" aria-hidden="true" hidden><p class="bocadillo-globo"></p></div>
+    <div id="ayuda" class="ayuda" aria-hidden="true" hidden>
+      <span class="solo-raton"><kbd>→</kbd> / <kbd data-i18n="ayuda.espacio">Espacio</kbd></span>
+      <span class="solo-tactil">▶ / <span data-i18n="tactil.saltar">Saltar</span></span>
+    </div>
   </main>
 
   <div class="primer-plano" aria-hidden="true">
@@ -511,9 +517,44 @@
     <p data-frase="premio.bandana" data-i18n="frase.premio.bandana">12 piezas: ¡bandana de la Hoja conseguida!</p>
     <p data-frase="premio.capa" data-i18n="frase.premio.capa">24 piezas: ¡ya tengo capa de Hokage!</p>
     <p data-frase="premio.aura" data-i18n="frase.premio.aura">¡Las 36 piezas! Modo chakra activado.</p>
+    <p data-frase="secreto.pieza" data-i18n="frase.secreto.pieza">¡Pieza secreta! Pocos llegan hasta aquí arriba.</p>
+    <p data-frase="secreto.konami" data-i18n="frase.secreto.konami">¡Modo Kyūbi! ↑↑↓↓←→←→BA</p>
+    <p data-frase="secreto.konami.fuera" data-i18n="frase.secreto.konami.fuera">Vale, vuelvo a la calma.</p>
   </div>
 
-  <p id="mensaje-meta" class="mensaje-meta" role="status" hidden data-plantilla="¡Nivel completado! Has encontrado {n} de {total} piezas." data-i18n-attr="data-plantilla:meta.mensaje"></p>
+  <dialog id="resumen" class="resumen" aria-labelledby="resumen-titulo">
+    <button type="button" class="resumen-cerrar" aria-label="Cerrar" data-i18n-attr="aria-label:resumen.cerrar">×</button>
+    <div class="resumen-cabecera">
+      <p class="resumen-rango"><strong id="resumen-letra">S</strong><span id="resumen-etiqueta-rango" data-i18n="resumen.rango">Rango</span></p>
+      <div>
+        <h2 id="resumen-titulo" data-i18n="resumen.titulo">¡Nivel completado!</h2>
+        <p data-comentario-rango="S" data-i18n="resumen.s">¡Perfecto! Lo has visto todo, y rápido.</p>
+        <p data-comentario-rango="A" data-i18n="resumen.a">¡Muy bien! Casi lo tienes todo.</p>
+        <p data-comentario-rango="B" data-i18n="resumen.b">¡Bien! Aún quedan piezas y secretos por encontrar.</p>
+        <p data-comentario-rango="C" data-i18n="resumen.c">Has llegado al final. ¿Repetimos y buscas las piezas?</p>
+      </div>
+    </div>
+    <dl class="resumen-datos">
+      <div><dt id="resumen-etiqueta-tiempo" data-i18n="resumen.tiempo">Tiempo</dt><dd id="resumen-tiempo">0:00</dd></div>
+      <div><dt id="resumen-etiqueta-piezas" data-i18n="resumen.piezas">Piezas</dt><dd id="resumen-piezas">0/36</dd></div>
+      <div><dt id="resumen-etiqueta-secretos" data-i18n="resumen.secretos">Secretos</dt><dd id="resumen-secretos">0/2</dd></div>
+    </dl>
+    <div class="resumen-acciones">
+      <button type="button" class="resumen-principal" id="resumen-contacto" data-i18n="resumen.contacto">Contáctame</button>
+      <a class="resumen-principal secundario" id="resumen-pdf" href="cv/Francisco-Alabau-Calatayud-CV.pdf" download data-i18n="cv.descargar" data-i18n-attr="href:cv.pdf">Descargar CV en PDF</a>
+    </div>
+    <div class="resumen-extra">
+      <button type="button" id="resumen-linkedin" data-i18n="resumen.linkedin">Compartir en LinkedIn</button>
+      <button type="button" id="resumen-tarjeta" data-i18n="resumen.tarjeta">Descargar tarjeta</button>
+      <button type="button" id="resumen-otra" data-i18n="resumen.otra">Jugar otra vez</button>
+    </div>
+    <p class="resumen-aviso" role="status" hidden></p>
+    <div hidden>
+      <span id="resumen-texto-compartir" data-i18n="resumen.compartir">He completado el portfolio jugable de Xesco con rango {rango} en {tiempo} ({piezas}/{total} piezas).</span>
+      <span id="resumen-copiado" data-i18n="resumen.copiado">Texto copiado: pégalo en tu publicación de LinkedIn.</span>
+      <span id="resumen-tarjeta-cabecera" data-i18n="resumen.cabecera">PORTFOLIO DE XESCO · MUNDO 1-1</span>
+    </div>
+  </dialog>
 
   <div class="tactil" aria-hidden="true">
     <button type="button" class="tactil-boton" data-control="izquierda" tabindex="-1">◀</button>
