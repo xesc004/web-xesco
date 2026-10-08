@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://xescoalabau.com/sitemap.xml
+Sitemap: https://xescosolutions.com/sitemap.xml

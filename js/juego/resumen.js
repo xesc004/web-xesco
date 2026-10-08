@@ -2,7 +2,7 @@
 // compartir en LinkedIn, tarjeta descargable y «Jugar otra vez».
 import { posicionFotograma } from './jugador.js';
 
-const URL_WEB = 'https://xescoalabau.com/';
+const URL_WEB = 'https://xescosolutions.com/';
 const TIEMPO_RAPIDO = 60;
 const TIEMPO_LENTO = 240;
 
@@ -76,7 +76,7 @@ async function dibujarTarjeta(datos, sprites) {
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = '#FFFFFF';
   ctx.font = fuente(30);
-  ctx.fillText('xescoalabau.com', 70, 520);
+  ctx.fillText('xescosolutions.com', 70, 520);
   // Muñeco celebrando, sacado de la hoja de sprites
   const hoja = new Image();
   hoja.src = `img/personaje/${sprites.imagen}`;
