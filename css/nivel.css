@@ -32,8 +32,8 @@
 .capa-arboles { background-image: url("../img/fondo/arboles.svg"); }
 .capa-frente { background-image: url("../img/fondo/primer-plano.svg"); }
 
-/* Las capas de la noche solo existen desde que empieza a oscurecer (.noche-activa la pone fondo.js): de día no
-   cuestan nada. */
+/* Las capas de la noche existen desde la carga (.noche-activa la pone fondo.js al crear el fondo, durante la
+   intro); sin el juego (modo CV o sin JS) no se crean. */
 .escena:not(.noche-activa) .capa-luces,
 .escena:not(.noche-activa) .estrellas { visibility: hidden; }
 
@@ -341,15 +341,17 @@
   content: "";
   position: absolute;
   left: 10px;
-  top: 196px;
+  top: 8px;
   width: 70px;
   height: 46px;
   background: var(--naranja);
   clip-path: polygon(0 0, 100% 0, 78% 50%, 100% 100%, 0 100%);
-  transition: top 0.9s cubic-bezier(0.3, 1.4, 0.6, 1);
+  /* Se iza con transform (lo mueve la GPU); animar top repintaba el mundo en cada fotograma */
+  transform: translateY(188px);
+  transition: transform 0.9s cubic-bezier(0.3, 1.4, 0.6, 1);
 }
 
-.bandera.izada::after { top: 8px; }
+.bandera.izada::after { transform: none; }
 
 .bandera.meta { height: 580px; }
 
@@ -357,7 +359,7 @@
 
 .bandera.meta::after {
   left: 14px;
-  top: 512px;
+  transform: translateY(504px);
   width: 104px;
   height: 66px;
   background:
@@ -366,7 +368,7 @@
     var(--marino);
 }
 
-.bandera.meta.izada::after { top: 8px; }
+.bandera.meta.izada::after { transform: none; }
 
 /* ── Proyectos: fichas, bloques sorpresa y capturas ── */
 .ficha-cabecera { display: flex; gap: 16px; align-items: center; }

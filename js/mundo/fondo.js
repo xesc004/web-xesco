@@ -41,6 +41,9 @@ export function oscuridad(progreso) {
 
 // raices: elementos que contienen capas [data-parallax]; nocturnos: elementos que reciben --noche
 export function crearFondo(raices, nocturnos = []) {
+  // Las capas de la noche se crean ya al cargar (se rasterizan mientras se ve la intro) y luego solo cambia su
+  // opacidad: crearlas al empezar a oscurecer daba un tirón justo al llegar a Metodología
+  for (const el of nocturnos) el.classList.add('noche-activa');
   return {
     capas: raices.flatMap((raiz) => [...raiz.querySelectorAll('[data-parallax]')]).map((el) => ({
       el,
@@ -72,10 +75,7 @@ export function actualizarFondo(fondo, desplazamientoPx, progreso, reducido) {
     const noche = Math.round(oscuridad(progreso) / PASO_NOCHE) * PASO_NOCHE;
     if (noche !== fondo.ultimaNoche) {
       fondo.ultimaNoche = noche;
-      for (const el of fondo.nocturnos) {
-        el.style.setProperty('--noche', String(noche));
-        el.classList.toggle('noche-activa', noche > 0);
-      }
+      for (const el of fondo.nocturnos) el.style.setProperty('--noche', String(noche));
     }
   }
 }

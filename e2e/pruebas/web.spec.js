@@ -74,7 +74,10 @@ test('escribir en el formulario no activa el código Konami', async ({ page }, i
   await page.goto('/?depurar');
   await page.waitForFunction(() => window.__juego?.jugador);
   await page.locator('[data-ir="contacto"]').dispatchEvent('click');
+  // Al llegar a la meta sale el resumen: se cierra antes de escribir para que no robe el foco
+  await expect(page.locator('#resumen')).toBeVisible({ timeout: 8_000 });
   await page.keyboard.press('Escape');
+  await expect(page.locator('#resumen')).toBeHidden();
   const campo = page.locator('#formulario-contacto textarea');
   await campo.focus();
   for (const k of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']) {
