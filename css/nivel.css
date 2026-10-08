@@ -786,7 +786,7 @@
   z-index: 10;
   width: 160px;
   height: 160px;
-  /* Gira sobre los pies (carrera ninja, risa); colgado del ratón, sobre la cabeza */
+  /* Gira sobre los pies (frenazo, risa); colgado del ratón, sobre la cabeza */
   transform-origin: 50% 96%;
   cursor: grab;
   touch-action: none;
@@ -889,7 +889,7 @@
   to { transform: scale(1.06); opacity: 1; }
 }
 
-/* Imágenes residuales de la carrera ninja */
+/* Imágenes residuales al lanzar al muñeco */
 .estela {
   z-index: 9;
   transform-origin: 50% 96%;

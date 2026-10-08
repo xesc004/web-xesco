@@ -117,12 +117,12 @@ test('desatascar saca al muñeco de un sólido hacia arriba', () => {
   assert.equal(c.y + c.h, 600);
 });
 
-test('con correr (Shift) alcanza más velocidad y al soltarlo frena poco a poco', () => {
+test('por encima de la velocidad máxima frena poco a poco en vez de recortar de golpe', () => {
   const c = crearCuerpo({ x: 0, y: 640, w: 60, h: 140 });
-  simular(c, [suelo], 1, { ...nada, derecha: true, correr: true });
-  assert.ok(c.vx > 600);
+  simular(c, [suelo], 0.1);
+  c.vx = 600;
   paso(c, { ...nada, derecha: true }, [suelo], DT);
-  assert.ok(c.vx > 600, 'no se recorta de golpe');
+  assert.ok(c.vx > 560, 'no se recorta de golpe');
   simular(c, [suelo], 1, { ...nada, derecha: true });
   assert.ok(Math.abs(c.vx - 380) < 1);
 });

@@ -3,10 +3,9 @@ import { crearCuerpo, paso, desatascar } from '../motor/fisica.js';
 
 const ANCHO_CUERPO = 60;
 const ALTO_CUERPO = 140;
-const QUIETO = { izquierda: false, derecha: false, saltar: false, saltoPulsado: false, bajar: false, correr: false };
+const QUIETO = { izquierda: false, derecha: false, saltar: false, saltoPulsado: false, bajar: false };
 const FRONTALES = new Set(['parado', 'saludar', 'celebrar', 'colgado', 'sentado']);
 const ESPERA = 8;
-const VELOCIDAD_NINJA = 450;
 
 // Premios por piezas recogidas: cada uno añade una clase al muñeco (con-bandana, con-capa, con-aura)
 export const PREMIOS = [
@@ -53,7 +52,6 @@ export function crearJugador(el, sprites, inicio) {
     // Lanzado con el ratón: deja estela hasta que aterriza
     lanzado: false,
     quieto: 0,
-    corriendo: false,
     premios: new Set(),
     dibujado: { indice: -1, vista: '', cabeza: -1, vaiven: 0 },
   };
@@ -147,7 +145,6 @@ export function actualizarJugador(j, entrada, colisionadores, dt) {
       estirar(j, 1 + 0.28 * fuerza, 1 - 0.26 * fuerza);
     }
   }
-  j.corriendo = Boolean(entrada.correr) && Math.abs(c.vx) > VELOCIDAD_NINJA;
 
   let nuevo = 'parado';
   if (c.pared !== 0) nuevo = 'enPared';
@@ -191,12 +188,11 @@ export function derrapando(j, entrada) {
   return dir !== Math.sign(c.vx);
 }
 
-// Inclinación hacia delante en la carrera ninja, hacia atrás al frenar y temblor de risa (se suma al ángulo
+// Inclinación hacia atrás al frenar y temblor de risa (se suma al ángulo
 // del arrastre)
 function inclinar(j, entrada, dt) {
   let objetivo = 0;
   if (j.estado === 'riendo') objetivo = Math.sin(j.tiempo * 38) * 5;
-  else if (j.corriendo && j.cuerpo.enSuelo) objetivo = j.mirando * 12;
   else if (derrapando(j, entrada)) objetivo = -Math.sign(j.cuerpo.vx) * Math.min(14, Math.abs(j.cuerpo.vx) / 40);
   j.inclinacion += (objetivo - j.inclinacion) * Math.min(1, dt * (j.estado === 'riendo' ? 40 : 10));
 }
@@ -263,7 +259,7 @@ export function dibujarJugador(j) {
   j.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${(j.angulo + j.inclinacion).toFixed(2)}deg) scale(${(reflejo * ex).toFixed(3)}, ${ey.toFixed(3)})`;
 }
 
-// Imagen residual de la carrera ninja: copia del fotograma actual que se desvanece
+// Imagen residual al lanzarlo con el ratón: copia del fotograma actual que se desvanece
 export function dejarEstela(j, mundo) {
   if (mundo.querySelectorAll('.estela').length >= 8) return;
   const estela = document.createElement('div');

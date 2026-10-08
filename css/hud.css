@@ -277,7 +277,6 @@ html.cv #boton-cv { display: none; }
   .tactil.ayudando .tactil-saltar, .ayuda { animation: none; }
 }
 
-.tactil-correr { width: 72px; height: 72px; font: 600 15px var(--fuente-titulos); }
 
 /* ── Pantalla de entrada «MUNDO 1-1 · XESCO» ── */
 .intro { display: none; }

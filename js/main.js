@@ -184,11 +184,11 @@ function crearJuego(sprites) {
         temblar(2, 0.15);
       }
     }
-    // Polvo al correr (más a menudo en la carrera ninja) y al derrapar
+    // Polvo al correr y al derrapar
     const corre = c.enSuelo && Math.abs(c.vx) > 300;
     const derrapa = derrapando(jugador, e);
     estado.polvo = corre || derrapa ? estado.polvo + dt : 0;
-    const cada = derrapa ? 0.04 : jugador.corriendo ? 0.05 : 0.11;
+    const cada = derrapa ? 0.04 : 0.11;
     if (estado.polvo >= cada) {
       estado.polvo = 0;
       const atras = -Math.sign(c.vx);
@@ -424,7 +424,6 @@ function crearJuego(sprites) {
         decirUnaVez('pared', 3);
       }
     }
-    if (jugador.corriendo) decirUnaVez('ninja', 3);
     const sobre = jugador.cuerpo.enSuelo ? jugador.cuerpo.sobre?.el : null;
     if (sobre?.dataset.sala) {
       decirUnaVez('tuberia', 4);
@@ -471,8 +470,8 @@ function crearJuego(sprites) {
     raton.actualizar(pantallaX);
     dibujarJugador(jugador);
     actualizarParticulas(particulas, dt);
-    // Carrera ninja o lanzado con el ratón: una imagen residual cada 50 ms
-    const conEstela = jugador.corriendo || (jugador.lanzado && jugador.estado !== 'colgado');
+    // Lanzado con el ratón: una imagen residual cada 50 ms
+    const conEstela = jugador.lanzado && jugador.estado !== 'colgado';
     estado.estela = conEstela && !movimientoReducido.matches ? estado.estela + dt : 0;
     if (estado.estela >= 0.05) {
       estado.estela = 0;

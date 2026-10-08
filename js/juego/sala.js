@@ -100,7 +100,7 @@ function rellenarInfo(dialogo, articulo) {
 // Física real dentro de la sala, en las mismas unidades que el nivel (px de pantalla / escala de la sala):
 // el muñeco cae por la tubería del techo, salta encima de la del suelo y se mete con ↓.
 const PASO = 1 / 120;
-const SIN_ENTRADA = { izquierda: false, derecha: false, saltar: false, saltoPulsado: false, bajar: false, correr: false };
+const SIN_ENTRADA = { izquierda: false, derecha: false, saltar: false, saltoPulsado: false, bajar: false };
 const TECLAS = {
   ArrowLeft: 'izquierda', KeyA: 'izquierda', ArrowRight: 'derecha', KeyD: 'derecha',
   Space: 'saltar', ArrowUp: 'saltar', KeyW: 'saltar', ArrowDown: 'bajar', KeyS: 'bajar',
@@ -171,7 +171,6 @@ export function crearSala({ sprites, alSalir, alSonar }) {
       saltar: flancoSaltar,
       saltoPulsado: pulsadas.has('saltar'),
       bajar: flancoBajar,
-      correr: false,
     };
     flancoSaltar = false;
     flancoBajar = false;

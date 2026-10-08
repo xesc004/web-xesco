@@ -43,8 +43,8 @@ npm test                                       # escritorio y móvil; el formula
 ```
 
 - `?cv` abre el modo CV rápido; `?depurar` dibuja los colisionadores y expone `window.__juego`.
-- Controles: ← → (o A D) para andar, Espacio para saltar, ↓ para bajar de una plataforma y Shift (o el botón
-  «Ninja» en móvil) para la carrera ninja. Cayendo contra el costado de un cartel o de un sólido se resbala y
+- Controles: ← → (o A D) para andar, Espacio para saltar y ↓ para bajar de una plataforma. Cayendo contra el
+  costado de un cartel o de un sólido se resbala y
   se puede saltar hacia el otro lado. El muñeco se puede coger y lanzar con el ratón o el dedo; la rueda del
   ratón lo hace correr.
 - El muñeco comenta cada zona con un bocadillo (frases en `#frases` de `index.html`, traducidas en

@@ -15,9 +15,6 @@ export const FISICA = {
   memoriaSalto: 0.12,
   rebote: 1500,
   tiempoAtravesar: 0.25,
-  // Carrera ninja (Shift)
-  velocidadNinja: 640,
-  aceleracionNinja: 3400,
   // Paredes: deslizamiento lento y salto que impulsa hacia el lado contrario
   deslizarPared: 240,
   saltoPared: 940,
@@ -71,10 +68,10 @@ export function paso(c, entrada, colisionadores, dt) {
   if (c.bloqueo > 0) c.bloqueo -= dt;
   const dir = c.bloqueo > 0 ? 0 : (entrada.derecha ? 1 : 0) - (entrada.izquierda ? 1 : 0);
   const control = c.enSuelo ? 1 : F.controlAereo;
-  const maxima = entrada.correr ? F.velocidadNinja : F.velocidadMax;
-  const aceleracion = entrada.correr ? F.aceleracionNinja : F.aceleracion;
+  const maxima = F.velocidadMax;
+  const aceleracion = F.aceleracion;
   if (dir !== 0) {
-    // Por encima de la máxima (al soltar Shift o tras un impulso) se frena poco a poco en vez de recortar de golpe
+    // Por encima de la máxima (tras el impulso de un salto de pared) se frena poco a poco en vez de recortar de golpe
     const v = c.vx + dir * aceleracion * control * dt;
     c.vx = Math.abs(v) <= maxima ? v : Math.sign(v) * Math.max(maxima, Math.abs(c.vx) - F.frenado * control * dt);
   } else if (c.bloqueo <= 0) {
