@@ -32,6 +32,8 @@ test.describe('accesibilidad', () => {
     await expect(page.locator('#sala')).toBeHidden({ timeout: 8_000 });
     await page.locator('[data-ir="contacto"]').dispatchEvent('click');
     await expect(page.locator('#resumen')).toBeVisible({ timeout: 8_000 });
+    // El resumen entra con un fundido: se analiza cuando ha terminado (a medio fundido el contraste es menor)
+    await page.waitForFunction(() => document.getElementById('resumen').getAnimations().length === 0);
     r = await new AxeBuilder({ page }).include('#resumen').withTags(ETIQUETAS).analyze();
     expect(resumen(r.violations)).toEqual([]);
   });
