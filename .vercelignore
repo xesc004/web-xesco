@@ -1,0 +1,8 @@
+# Material de desarrollo que no se publica
+docs/
+tests/
+e2e/
+herramientas/
+minifigura/
+.claude/
+README.md

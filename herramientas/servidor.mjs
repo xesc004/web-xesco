@@ -7,7 +7,8 @@ const RAIZ = process.cwd();
 const TIPOS = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.png': 'image/png',
-  '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.pdf': 'application/pdf',
+  '.jpg': 'image/jpeg', '.ico': 'image/x-icon', '.pdf': 'application/pdf', '.webmanifest': 'application/manifest+json',
+  '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8', '.woff2': 'font/woff2',
 };
 const puerto = Number(process.env.PORT || 8080);
 
