@@ -1,0 +1,63 @@
+{
+  "imagen": "muneco.webp",
+  "fotograma": 160,
+  "columnas": 8,
+  "filas": 5,
+  "pie": 6,
+  "animaciones": {
+    "parado": {
+      "inicio": 0,
+      "n": 4,
+      "fps": 3,
+      "bucle": true
+    },
+    "saludar": {
+      "inicio": 4,
+      "n": 8,
+      "fps": 10,
+      "bucle": false
+    },
+    "giro": {
+      "inicio": 12,
+      "n": 3,
+      "fps": 30,
+      "bucle": false
+    },
+    "andar": {
+      "inicio": 15,
+      "n": 8,
+      "fps": 12,
+      "bucle": true
+    },
+    "saltar": {
+      "inicio": 23,
+      "n": 2,
+      "fps": 8,
+      "bucle": false
+    },
+    "caer": {
+      "inicio": 25,
+      "n": 2,
+      "fps": 6,
+      "bucle": true
+    },
+    "aterrizar": {
+      "inicio": 27,
+      "n": 1,
+      "fps": 1,
+      "bucle": false
+    },
+    "colgado": {
+      "inicio": 28,
+      "n": 6,
+      "fps": 8,
+      "bucle": true
+    },
+    "celebrar": {
+      "inicio": 34,
+      "n": 6,
+      "fps": 8,
+      "bucle": true
+    }
+  }
+}

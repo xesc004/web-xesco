@@ -1,1 +1,12 @@
 .vercel
+node_modules/
+__pycache__/
+
+# Material de trabajo (no se publica)
+material/
+minifigura/*.blend
+minifigura/*.blend1
+minifigura/renders/
+minifigura/referencia/
+minifigura/sprites/
+minifigura/texturas/
