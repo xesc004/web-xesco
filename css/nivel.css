@@ -990,6 +990,81 @@
 
 .modo-kyubi > .jugador-sprite { filter: drop-shadow(0 0 4px #FF8A3D) drop-shadow(0 0 12px rgb(214 40 20 / 0.9)); }
 
+/* Tuberías de las apps: verdes, con studs de LEGO en el borde; la de entrada lleva un botón con la flecha */
+.tuberia {
+  z-index: 11;
+  height: calc((780 - var(--y)) * 1px);
+  --verde: #3FA34D;
+  --verde-luz: #7BD389;
+  --verde-sombra: #1F6B2C;
+}
+
+.tuberia::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 34px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 100%, var(--verde) 0 7px, transparent 7.5px) 4px -12px / 24px 12px repeat-x,
+    linear-gradient(90deg, var(--verde-sombra), var(--verde) 18%, var(--verde-luz) 32%, var(--verde) 50%, var(--verde-sombra));
+  box-shadow: inset 0 -5px 0 rgb(0 0 0 / 0.18), 0 4px 0 rgb(0 0 0 / 0.15);
+}
+
+.tuberia::after {
+  content: "";
+  position: absolute;
+  inset: 30px 9px 0;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--verde-sombra), var(--verde) 18%, var(--verde-luz) 32%, var(--verde) 50%, var(--verde-sombra));
+}
+
+.tuberia-boton {
+  position: absolute;
+  inset: 34px 9px 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.tuberia-boton::before {
+  content: "▼";
+  font-size: 30px;
+  line-height: 1;
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.3);
+  animation: flecha-tuberia 1s ease-in-out infinite;
+}
+
+.tuberia-boton > span {
+  position: absolute;
+  bottom: calc(100% + 54px);
+  left: 50%;
+  translate: -50% 0;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: var(--marino);
+  color: #fff;
+  font: 600 16px var(--fuente-titulos);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.tuberia-boton:hover > span,
+.tuberia-boton:focus-visible > span { opacity: 1; }
+
+@keyframes flecha-tuberia { 50% { translate: 0 6px; } }
+
+.tuberia-salida::after { inset: 30px 7px 0; }
+.tuberia-salida::before { inset: 0 -4px auto; }
+
+.jugador.en-tuberia { visibility: hidden; }
+
 /* Partículas: polvo, chispas del yunque y piezas de LEGO de los bloques sorpresa */
 .particulas {
   position: absolute;
@@ -1105,6 +1180,6 @@
 @media (prefers-reduced-motion: reduce) {
   .pieza, .robot.saluda, .capturas, .clon, .letra.pisada, .sorpresa.golpeado, .cama-elastica.rebota,
   .forja.clang .chispas, .jugador.humo, .con-aura > .premio-aura, .luciernaga, .bocadillo-globo.aparece,
-  .jugador.premiado .jugador-sprite, .pieza-secreta, .modo-kyubi > .premio-aura { animation: none; }
+  .jugador.premiado .jugador-sprite, .pieza-secreta, .modo-kyubi > .premio-aura, .tuberia-boton::before { animation: none; }
   .bandera::after { transition: none; }
 }

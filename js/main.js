@@ -11,6 +11,7 @@ import {
 } from './juego/jugador.js';
 import { crearParticulas, emitir, actualizarParticulas } from './juego/particulas.js';
 import { crearResumen } from './juego/resumen.js';
+import { crearSala } from './juego/sala.js';
 import { crearKonami, SECRETOS } from './juego/secretos.js';
 import { crearBocadillo, decir, callar, actualizarBocadillo } from './juego/bocadillo.js';
 import { activarRaton } from './juego/raton.js';
@@ -260,10 +261,85 @@ function crearJuego(sprites) {
     },
   });
 
+  // Tuberías: ↓ sobre la de una app (o su botón) baja a la sala; se vuelve por la tubería de salida
+  const DURACION_TUBERIA = 0.55;
+  const sala = crearSala({
+    sprites,
+    alSonar: () => sonar('tuberia'),
+    alSalir: (app) => {
+      const p = estado.porId.get(`salida-${app}`);
+      if (!p) {
+        jugador.el.classList.remove('en-tuberia');
+        estado.tuberia = null;
+        entrada.activar(true);
+        return;
+      }
+      const c = jugador.cuerpo;
+      c.x = p.x + p.w / 2 - c.w / 2;
+      c.y = p.y;
+      c.vx = 0;
+      c.vy = 0;
+      jugador.mirando = 1;
+      cambiarEstado(jugador, 'parado');
+      jugador.el.classList.remove('en-tuberia');
+      centrarCamara(camara, centroJugador(), estado.visible, ANCHO_MUNDO);
+      estado.tuberia = { fase: 'subiendo', t: 0, p };
+      sonar('tuberia');
+      entrada.activar(true);
+    },
+  });
+
+  function entrarTuberia(p) {
+    if (estado.tuberia || sala.abierta()) return;
+    const c = jugador.cuerpo;
+    c.x = p.x + p.w / 2 - c.w / 2;
+    c.y = p.y - c.h;
+    c.vx = 0;
+    c.vy = 0;
+    cambiarEstado(jugador, 'parado');
+    callar(bocadillo);
+    entrada.activar(false);
+    estado.tuberia = { fase: 'bajando', t: 0, p };
+    sonar('tuberia');
+  }
+
+  // Mientras entra o sale de una tubería no hay física: el muñeco se hunde o asoma detrás de ella
+  function animarTuberia(dt) {
+    const t = estado.tuberia;
+    const c = jugador.cuerpo;
+    t.t += dt;
+    const k = Math.min(1, t.t / (movimientoReducido.matches ? 0.01 : DURACION_TUBERIA));
+    if (t.fase === 'bajando') {
+      c.y = t.p.y - c.h + k * (c.h + 10);
+      if (k === 1) {
+        t.fase = 'dentro';
+        jugador.el.classList.add('en-tuberia');
+        sala.abrir(t.p.el.dataset.sala);
+      }
+    } else if (t.fase === 'subiendo') {
+      c.y = t.p.y - k * c.h;
+      if (k === 1) {
+        c.y = t.p.y - c.h - 0.5;
+        c.vy = -250;
+        estado.tuberia = null;
+      }
+    }
+  }
+
+  mundo.querySelectorAll('.tuberia-boton').forEach((boton) => {
+    boton.addEventListener('click', (e) => {
+      const p = estado.porId.get(`tuberia-${boton.dataset.sala}`);
+      if (!p) return;
+      if (e.detail > 0) boton.blur();
+      reanimar(jugador.el, 'humo');
+      entrarTuberia(p);
+    });
+  });
+
   // Código Konami: modo Kyūbi (aura naranja de fuego); repetirlo lo apaga
   const konami = crearKonami();
   addEventListener('keydown', (e) => {
-    if (e.repeat || enModoCV() || resumen.abierto() || !konami(e.code)) return;
+    if (e.repeat || enModoCV() || resumen.abierto() || sala.abierta() || !konami(e.code)) return;
     const activo = jugador.el.classList.toggle('modo-kyubi');
     decir(bocadillo, activo ? 'secreto.konami' : 'secreto.konami.fuera', 3);
     sonar(activo ? 'premio' : 'golpe');
@@ -319,6 +395,10 @@ function crearJuego(sprites) {
   }
 
   function actualizar(dt) {
+    if (estado.tuberia) {
+      if (estado.tuberia.fase !== 'dentro') animarTuberia(dt);
+      return;
+    }
     const e = entrada.leer();
     const seMueve = e.izquierda || e.derecha || e.saltar;
     if (seMueve) estado.camaraLibreHasta = 0;
@@ -335,6 +415,11 @@ function crearJuego(sprites) {
       }
     }
     if (jugador.corriendo) decirUnaVez('ninja', 3);
+    const sobre = jugador.cuerpo.enSuelo ? jugador.cuerpo.sobre?.el : null;
+    if (sobre?.dataset.sala) {
+      decirUnaVez('tuberia', 4);
+      if (e.bajar) entrarTuberia(estado.porId.get(sobre.id));
+    }
     if (jugador.cuerpo.y > ALTO_MUNDO + 300) reaparecer(jugador, estado.control, estado.colisionadores);
     actualizarObjetos(objetos, jugador, eventos, estado.porId, avisos);
     if (performance.now() > estado.camaraLibreHasta) {
@@ -348,7 +433,7 @@ function crearJuego(sprites) {
     if (e.saltar) estado.usado.saltar = true;
     const aprendido = estado.usado.andar && estado.usado.saltar;
     estado.sinMover = seMueve || jugador.estado === 'colgado' ? 0 : estado.sinMover + dt;
-    const mostrar = !aprendido && estado.sinMover >= ESPERA_AYUDA && !introActiva()
+    const mostrar = !aprendido && estado.sinMover >= ESPERA_AYUDA && !introActiva() && !estado.tuberia
       && !resumen.abierto() && jugador.estado !== 'celebrando';
     if (mostrar === ayuda.hidden) {
       ayuda.hidden = !mostrar;

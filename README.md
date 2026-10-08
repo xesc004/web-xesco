@@ -53,6 +53,10 @@ npm test                           # tests de física, escala, cámara y cielo
   hasta que se ha andado y saltado.
 - Meta: resumen con tiempo, piezas, secretos y rango (S/A/B/C), botones «Contáctame» y «Descargar CV en PDF»,
   compartir en LinkedIn (copia el texto y abre LinkedIn), tarjeta PNG de 1200 × 630 y «Jugar otra vez».
+- Tuberías: en cada app hay una tubería verde; con ↓ encima (o tocándola) el muñeco baja a una sala con la app
+  funcionando en un móvil, su enlace a la tienda y su stack, y vuelve por la tubería de salida. Sin vídeo, la
+  sala anima las capturas; para usar un vídeo: `python3 herramientas/preparar_demo.py aldiax video.mp4`
+  (lo comprime en `img/apps/aldiax/demo.mp4` y añade `data-demo` al artículo de la app).
 - Secretos: una pieza morada muy arriba (se alcanza con la cama elástica de Una Neurona) y el código Konami
   (↑↑↓↓←→←→BA), que activa el modo Kyūbi.
 

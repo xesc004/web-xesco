@@ -45,6 +45,8 @@ const EFECTOS = {
   pared: () => tono({ de: 420, a: 860, duracion: 0.12, volumen: 0.07 }),
   premio: () => [784, 988, 1175, 1568].forEach((f, i) => tono({ tipo: 'triangle', de: f, duracion: 0.14, volumen: 0.08, retraso: i * 0.08 })),
   risa: () => [0, 1, 2].forEach((i) => tono({ tipo: 'sine', de: 620 - i * 40, a: 520 - i * 40, duracion: 0.09, volumen: 0.07, retraso: i * 0.11 })),
+  // Tres notas que bajan, como al meterse por una tubería
+  tuberia: () => [220, 165, 110].forEach((f, i) => tono({ tipo: 'square', de: f, a: f * 0.94, duracion: 0.11, volumen: 0.07, retraso: i * 0.12 })),
   meta: () => [523, 659, 784, 1047].forEach((f, i) => tono({ de: f, duracion: 0.16, volumen: 0.07, retraso: i * 0.12 })),
 };
 

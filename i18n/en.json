@@ -166,5 +166,11 @@
   "resumen.cabecera": "XESCO'S PORTFOLIO · WORLD 1-1",
   "frase.secreto.pieza": "Secret piece! Few people make it up here.",
   "frase.secreto.konami": "Kyūbi mode! ↑↑↓↓←→←→BA",
-  "frase.secreto.konami.fuera": "Okay, back to calm."
+  "frase.secreto.konami.fuera": "Okay, back to calm.",
+  "tuberia.entrar": "See the app inside",
+  "sala.antetitulo": "Secret room · the app inside",
+  "sala.stack": "Technologies",
+  "sala.pista": "← → to walk · ↓ on the green pipe to leave",
+  "sala.salir": "Leave through the pipe",
+  "frase.tuberia": "A pipe! Press ↓ (or tap it) to see the app inside."
 }

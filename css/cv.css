@@ -15,6 +15,7 @@ html.cv #boton-sonido,
 html.cv .solo-juego,
 html.cv .clon,
 html.cv .ayuda,
+html.cv .sala,
 html.cv .sorpresa,
 html.cv .pista,
 html.cv .depurar-caja { display: none !important; }

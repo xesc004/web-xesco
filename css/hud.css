@@ -410,3 +410,226 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   .resumen-cabecera h2 { font-size: 24px; }
   .resumen-acciones { grid-template-columns: 1fr; }
 }
+
+/* ── Sala de cada app (se entra por la tubería) ── */
+.sala {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--crema);
+  background:
+    linear-gradient(rgb(0 0 0 / 0.25) 2px, transparent 2px) 0 0 / 100% 40px,
+    linear-gradient(90deg, rgb(0 0 0 / 0.25) 2px, transparent 2px) 0 0 / 80px 80px,
+    linear-gradient(90deg, rgb(0 0 0 / 0.25) 2px, transparent 2px) 40px 40px / 80px 80px,
+    radial-gradient(ellipse at 50% 35%, #2A3858, #141B30 75%);
+  overflow: hidden;
+}
+
+.sala::backdrop { background: #0B0F1C; }
+
+.sala-escena { position: relative; width: 100%; height: 100%; overflow: hidden auto; }
+
+/* Suelo de ladrillos naranja, como el del nivel */
+.sala-escena::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 60px;
+  background:
+    linear-gradient(var(--naranja) 0 10px, var(--naranja-oscuro) 10px 14px, transparent 14px),
+    repeating-linear-gradient(90deg, transparent 0 78px, #8E400D 78px 80px),
+    repeating-linear-gradient(#B4520F 0 22px, #8E400D 22px 24px);
+}
+
+.sala-tuberia {
+  position: fixed;
+  z-index: 4;
+  width: 110px;
+  --verde: #3FA34D;
+  --verde-luz: #7BD389;
+  --verde-sombra: #1F6B2C;
+  background: linear-gradient(90deg, var(--verde-sombra), var(--verde) 18%, var(--verde-luz) 32%, var(--verde) 50%, var(--verde-sombra)) center / 92px 100% no-repeat;
+}
+
+.sala-tuberia::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--verde-sombra), var(--verde) 18%, var(--verde-luz) 32%, var(--verde) 50%, var(--verde-sombra));
+  box-shadow: inset 0 -5px 0 rgb(0 0 0 / 0.18);
+}
+
+.sala-tuberia-techo { top: 0; left: 30px; height: 120px; }
+.sala-tuberia-techo::before { bottom: 0; }
+.sala-tuberia-suelo { right: 30px; bottom: 58px; height: 120px; cursor: pointer; }
+.sala-tuberia-suelo::before { top: 0; }
+
+.sala-flecha {
+  position: absolute;
+  left: 50%;
+  top: -46px;
+  translate: -50% 0;
+  font: 600 34px var(--fuente-titulos);
+  color: var(--naranja-claro);
+  opacity: 0.35;
+  transition: opacity 0.2s;
+}
+
+.sala-tuberia-suelo.cerca .sala-flecha { opacity: 1; animation: flecha-tuberia 0.8s ease-in-out infinite; }
+
+/* El muñeco de la sala: se dibuja entre las tuberías (detrás de ellas al entrar y salir) */
+.sala-muneco {
+  position: fixed;
+  left: 0;
+  bottom: 54px;
+  z-index: 2;
+  width: 160px;
+  height: 160px;
+  scale: var(--sala-escala, 1);
+  transform-origin: 0 100%;
+  pointer-events: none;
+}
+
+.sala-muneco .muneco { transform-origin: 50% 50%; }
+.sala-muneco.entrando { animation: sala-caer 0.65s cubic-bezier(0.55, 0, 1, 0.45) both; }
+.sala-muneco.saliendo { animation: sala-hundirse 0.5s ease-in forwards; }
+
+@keyframes sala-caer {
+  from { translate: 0 -80vh; }
+  85% { translate: 0 8px; }
+}
+
+@keyframes sala-hundirse { to { translate: 0 180px; } }
+
+.sala-contenido {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 5vw, 64px);
+  min-height: 100%;
+  padding: 40px 170px 230px;
+}
+
+/* Móvil con la app: vídeo o capturas que se suceden */
+.sala-movil {
+  flex: none;
+  width: clamp(190px, 30vh, 290px);
+  aspect-ratio: 9 / 19.5;
+  padding: 10px;
+  border-radius: 40px;
+  background: #0E1220;
+  box-shadow: 0 0 0 3px #3A4568, 0 30px 60px rgb(0 0 0 / 0.5);
+}
+
+.sala-pantalla {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 30px;
+  background: #1D2840;
+}
+
+.sala-pantalla > img, .sala-pantalla > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sala-pantalla > img { opacity: 0; transition: opacity 0.45s; }
+.sala-pantalla > img.actual { opacity: 1; animation: sala-desplazar 2.6s ease-in-out; }
+
+@keyframes sala-desplazar { 40% { object-position: 50% 30%; } }
+
+.sala-toque {
+  position: absolute;
+  z-index: 1;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.35);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sala-toque.toca { animation: sala-toque 0.6s ease-out; }
+
+@keyframes sala-toque {
+  0% { opacity: 0; scale: 1.4; }
+  30% { opacity: 1; scale: 0.8; }
+  100% { opacity: 0; scale: 1.6; }
+}
+
+.sala-info { max-width: 460px; }
+.sala-antetitulo { color: var(--naranja); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; }
+.sala-cabecera { display: flex; align-items: center; gap: 14px; margin: 8px 0; }
+.sala-icono { width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 4px 12px rgb(0 0 0 / 0.4); }
+.sala-info h2 { color: #fff; font-size: clamp(32px, 4vw, 46px); }
+.sala-frase { font-size: 19px; color: var(--naranja-claro); }
+.sala-puntos { margin-top: 14px; padding-left: 1.1em; line-height: 1.5; }
+.sala-puntos li + li { margin-top: 4px; }
+.sala-puntos li::marker { color: var(--naranja); }
+.sala-stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; }
+
+.sala-stack li {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgb(244 123 32 / 0.18);
+  border: 1px solid rgb(244 123 32 / 0.55);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sala-tienda .boton-tienda { background: var(--naranja); box-shadow: 0 4px 0 var(--naranja-oscuro); margin-top: 18px; }
+.sala-tienda .boton-tienda.proximamente { background: #6B7285; box-shadow: 0 4px 0 #4C5262; }
+.sala-pista { margin-top: 18px; font-size: 14px; color: rgb(255 246 236 / 0.7); }
+
+.sala-salir {
+  margin-top: 12px;
+  padding: 10px 18px;
+  border: 2px solid rgb(255 246 236 / 0.5);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--crema);
+  font: 600 16px var(--fuente-texto);
+  cursor: pointer;
+}
+
+.sala-salir:hover { border-color: var(--naranja); color: #fff; }
+
+@media (max-width: 760px) {
+  .sala { --sala-escala: 0.6; }
+  .sala-contenido { flex-direction: column; gap: 18px; padding: 24px 20px 190px; text-align: left; }
+  .sala-movil { width: min(46vw, 190px); padding: 7px; border-radius: 28px; }
+  .sala-pantalla { border-radius: 22px; }
+  .sala-info h2 { font-size: 28px; }
+  .sala-icono { width: 48px; height: 48px; border-radius: 12px; }
+  .sala-frase { font-size: 17px; }
+  .sala-escena::after { height: 44px; }
+  .sala-muneco { bottom: 38px; }
+  .sala-tuberia { width: 76px; background-size: 62px 100%; }
+  .sala-tuberia::before { height: 26px; }
+  .sala-tuberia-techo { left: 10px; height: 54px; }
+  .sala-tuberia-suelo { right: 10px; bottom: 42px; height: 80px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sala-muneco.entrando, .sala-muneco.saliendo, .sala-pantalla > img.actual,
+  .sala-tuberia-suelo.cerca .sala-flecha { animation: none; }
+}
