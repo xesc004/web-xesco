@@ -107,7 +107,8 @@
   <header class="hud">
     <a class="hud-marca" href="#inicio">Xesco</a>
     <nav class="minimapa" aria-label="Mapa del nivel" data-i18n-attr="aria-label:hud.mapa">
-      <ol class="minimapa-zonas">
+      <button type="button" class="minimapa-abrir" aria-expanded="false" aria-controls="minimapa-lista"><span class="minimapa-abrir-zona">Inicio</span><span class="sr" data-i18n="hud.mapa.abrir">: elegir zona</span></button>
+      <ol class="minimapa-zonas" id="minimapa-lista">
         <li><button type="button" data-ir="inicio"><span class="sr" data-i18n="mapa.inicio">Inicio</span></button></li>
         <li><button type="button" data-ir="perfil"><span class="sr" data-i18n="mapa.perfil">Perfil</span></button></li>
         <li><button type="button" data-ir="formacion"><span class="sr" data-i18n="mapa.formacion">Formación</span></button></li>

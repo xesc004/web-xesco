@@ -457,7 +457,7 @@
   align-items: center;
   gap: 6px;
   text-align: center;
-  color: #fff;
+  color: var(--marino);
   border-radius: 10px 10px 0 0;
   background:
     linear-gradient(90deg, transparent calc(100% - 12px), rgb(0 0 0 / 0.1) calc(100% - 12px)),
@@ -479,7 +479,7 @@
   font-weight: 600;
   font-size: 17px;
   line-height: 1.2;
-  text-shadow: 0 2px 0 rgb(0 0 0 / 0.15);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.35);
 }
 
 .torre-detalle { font-size: 13px; line-height: 1.35; }
@@ -488,10 +488,10 @@
   margin-top: auto;
   font-size: 15px;
   letter-spacing: 2px;
-  color: rgb(255 255 255 / 0.45);
+  color: rgb(29 40 64 / 0.4);
 }
 
-.torre-nivel .lleno { color: #fff; }
+.torre-nivel .lleno { color: var(--marino); }
 
 /* ── Decorados de las apps ── */
 .robot { height: auto; transform-origin: 50% 100%; }
@@ -745,7 +745,7 @@
   border: 0;
   border-radius: 12px;
   background: var(--naranja);
-  color: #fff;
+  color: var(--marino);
   font: 600 18px var(--fuente-titulos);
   cursor: pointer;
   box-shadow: 0 4px 0 var(--naranja-oscuro);

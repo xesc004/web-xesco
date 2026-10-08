@@ -1,0 +1,14 @@
+{
+  "name": "web-xesco-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Pruebas de extremo a extremo del portfolio (Playwright + axe-core). Fuera del despliegue.",
+  "scripts": {
+    "test": "playwright test",
+    "navegadores": "playwright install chromium webkit firefox"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.56.1"
+  }
+}

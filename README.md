@@ -22,6 +22,7 @@ i18n/en.json          textos en inglés
 img/                  foto, apps, fondo (SVG) y hoja de sprites del muñeco
 cv/                   CV en PDF (español e inglés), generado desde el modo CV
 tests/                tests de las partes puras (node --test)
+e2e/                  pruebas de extremo a extremo y accesibilidad (Playwright)
 herramientas/         servidor local y generadores de recursos
 minifigura/scripts/   modelo 3D del muñeco y sprites (Blender)
 ```
@@ -30,7 +31,15 @@ minifigura/scripts/   modelo 3D del muñeco y sprites (Blender)
 
 ```bash
 node herramientas/servidor.mjs     # http://localhost:8080
-npm test                           # tests de física, escala, cámara y cielo
+npm test                           # tests de física, escala, cámara, cielo, rango y Konami
+```
+
+Pruebas E2E y de accesibilidad (Playwright + axe-core, WCAG 2.2 AA) en `e2e/`, con su propio `package.json` para
+que el despliegue no instale nada:
+
+```bash
+cd e2e && npm install && npm run navegadores   # Chromium, WebKit y Firefox
+npm test                                       # escritorio y móvil; el formulario nunca se envía de verdad
 ```
 
 - `?cv` abre el modo CV rápido; `?depurar` dibuja los colisionadores y expone `window.__juego`.

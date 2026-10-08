@@ -3,6 +3,8 @@
   --naranja: #F47B20;
   --naranja-oscuro: #C85A0E;
   --naranja-claro: #FFE2C7;
+  /* Naranja para texto sobre crema o blanco (contraste AA ≥ 4,5:1); sobre fondo naranja el texto va en marino */
+  --naranja-texto: #B84A06;
   --marino: #1D2840;
   --crema: #FFF6EC;
   --crema-sombra: #E8D3B8;
@@ -54,7 +56,7 @@ h1, h2, h3 {
 
 p, ul, ol, figure { margin: 0; }
 
-a { color: var(--naranja-oscuro); }
+a { color: var(--naranja-texto); }
 
 [hidden] { display: none !important; }
 

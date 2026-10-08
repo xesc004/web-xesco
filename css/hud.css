@@ -19,7 +19,7 @@
 .hud-marca {
   padding: 0 6px;
   font: 600 22px var(--fuente-titulos);
-  color: var(--naranja);
+  color: var(--naranja-texto);
   text-decoration: none;
 }
 
@@ -134,7 +134,7 @@
   border: 0;
   border-radius: 10px;
   background: var(--naranja);
-  color: #fff;
+  color: var(--marino);
   font: 600 15px var(--fuente-texto);
   white-space: nowrap;
   cursor: pointer;
@@ -146,15 +146,80 @@ html.cv #boton-volver { display: inline-block; }
 html.cv #boton-cv { display: none; }
 
 .hud-cv-corto { display: none; }
+.minimapa-abrir { display: none; }
 
 /* Móvil: el minimapa necesita sitio; «Ver CV rápido» pasa a «CV» (el texto largo queda para lectores de pantalla) */
 @media (max-width: 760px) {
   .hud { left: 8px; right: 8px; gap: 6px; padding: 6px; }
   .minimapa-zona, .hud-marca { display: none; }
-  .minimapa { flex: 1 1 0; }
-  .minimapa-zonas { min-width: 0; padding: 0 2px; }
-  .minimapa-zonas button { width: 9px; height: 9px; border-width: 1.5px; }
-  .minimapa-zonas button.actual { transform: scale(1.3); }
+  /* Móvil: los 13 puntos serían demasiado pequeños para el dedo; el minimapa pasa a ser un desplegable
+     con la zona actual y la barra de progreso, y la lista de zonas con nombres y botones grandes */
+  .minimapa { position: relative; flex: 1 1 0; min-width: 0; }
+  .minimapa-abrir {
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    padding: 0 26px 4px 10px;
+    border: 0;
+    border-radius: 10px;
+    background:
+      linear-gradient(var(--naranja), var(--naranja)) 10px calc(100% - 6px) / calc((100% - 36px) * var(--progreso, 0)) 4px no-repeat,
+      linear-gradient(var(--crema-sombra), var(--crema-sombra)) 10px calc(100% - 6px) / calc(100% - 36px) 4px no-repeat,
+      #fff;
+    color: var(--marino);
+    font: 600 14px var(--fuente-texto);
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+  .minimapa-abrir::after { content: "▾"; position: absolute; right: 10px; top: 8px; }
+  .minimapa-zonas { display: none; }
+  .minimapa.abierto .minimapa-zonas {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    display: grid;
+    gap: 2px;
+    width: max-content;
+    min-width: 220px;
+    max-height: 70dvh;
+    height: auto;
+    padding: 8px;
+    overflow: auto;
+    border-radius: 14px;
+    background: var(--crema);
+    box-shadow: 0 10px 30px rgb(29 40 64 / 0.3);
+  }
+  .minimapa.abierto .minimapa-zonas li { width: 100%; }
+  .minimapa.abierto .minimapa-zonas button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: auto;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--marino);
+    font: 600 15px var(--fuente-texto);
+    text-align: left;
+    transform: none;
+  }
+  .minimapa.abierto .minimapa-zonas button::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--marino);
+    border-radius: 50%;
+  }
+  .minimapa.abierto .minimapa-zonas button.visitada::before { background: var(--naranja); }
+  .minimapa.abierto .minimapa-zonas button.actual { background: var(--naranja-claro); }
+  .minimapa.abierto .minimapa-zonas .sr { position: static !important; width: auto; height: auto; clip-path: none; }
+  .minimapa-marcador { display: none; }
   .hud-piezas { gap: 4px; font-size: 14px; }
   .hud-pieza { width: 15px; height: 15px; }
   .hud-boton { min-width: 36px; height: 36px; padding: 0 6px; }
@@ -327,6 +392,7 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
 .resumen-cabecera { display: flex; gap: 20px; align-items: center; padding-right: 30px; }
 .resumen-cabecera h2 { font-size: 30px; margin-bottom: 4px; }
 .resumen-cabecera p { color: var(--texto-suave); }
+.resumen-cabecera .resumen-rango { color: var(--marino); }
 
 .resumen-rango {
   flex: none;
@@ -336,7 +402,7 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   height: 104px;
   border-radius: 50%;
   background: var(--naranja);
-  color: #fff;
+  color: var(--marino);
   box-shadow: inset 0 -8px 0 var(--naranja-oscuro);
   line-height: 1;
   text-align: center;
@@ -374,7 +440,7 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   border: 0;
   border-radius: 14px;
   background: var(--naranja);
-  color: #fff;
+  color: var(--marino);
   font: 600 18px var(--fuente-titulos);
   text-align: center;
   text-decoration: none;
@@ -382,7 +448,7 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   box-shadow: 0 4px 0 var(--naranja-oscuro);
 }
 
-.resumen-principal.secundario { background: var(--marino); box-shadow: 0 4px 0 #0E1424; }
+.resumen-principal.secundario { background: var(--marino); color: #fff; box-shadow: 0 4px 0 #0E1424; }
 
 .resumen-extra { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 
@@ -590,13 +656,15 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
 .sala-stack li {
   padding: 4px 12px;
   border-radius: 999px;
-  background: rgb(244 123 32 / 0.18);
-  border: 1px solid rgb(244 123 32 / 0.55);
+  background: #2A3858;
+  border: 1px solid rgb(244 123 32 / 0.7);
+  color: #fff;
   font-size: 14px;
   font-weight: 600;
 }
 
-.sala-tienda .boton-tienda { background: var(--naranja); box-shadow: 0 4px 0 var(--naranja-oscuro); margin-top: 18px; }
+.sala-tienda .boton-tienda { background: var(--naranja); color: var(--marino); box-shadow: 0 4px 0 var(--naranja-oscuro); margin-top: 18px; }
+.sala-tienda .boton-tienda:hover { background: #FF9447; }
 .sala-tienda .boton-tienda.proximamente { background: #6B7285; box-shadow: 0 4px 0 #4C5262; }
 .sala-pista { margin-top: 18px; font-size: 14px; color: rgb(255 246 236 / 0.7); }
 

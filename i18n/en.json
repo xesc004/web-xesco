@@ -172,5 +172,6 @@
   "sala.stack": "Technologies",
   "sala.pista": "← → to walk · ↓ on the green pipe to leave",
   "sala.salir": "Leave through the pipe",
-  "frase.tuberia": "A pipe! Press ↓ (or tap it) to see the app inside."
+  "frase.tuberia": "A pipe! Press ↓ (or tap it) to see the app inside.",
+  "hud.mapa.abrir": ": choose a zone"
 }
