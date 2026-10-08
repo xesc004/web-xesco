@@ -2,9 +2,10 @@
 // Está en el HTML para verse desde el primer pintado; si el JS fallara, el CSS la quita sola a los pocos segundos.
 const raiz = document.documentElement;
 const CLAVE = 'xesco.intro';
-// La primera vez se ve entera (hasta que aparece «XESCO»); en las recargas de la misma sesión, más breve
-const MINIMO = 2100;
-const MINIMO_REPETIDA = 900;
+// El montaje del muñeco acaba hacia 1,45 s (cuando aparece «XESCO»); se deja un segundo más para verlo entero.
+// En las recargas de la misma sesión, algo más breve pero sin cortar el montaje.
+const MINIMO = 3100;
+const MINIMO_REPETIDA = 2500;
 
 function minimo() {
   try {
