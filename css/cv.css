@@ -1,0 +1,104 @@
+/* Modo «CV rápido»: el mismo contenido en una página vertical normal */
+html.cv body { background: var(--crema); }
+
+html.cv .escena,
+html.cv .decor,
+html.cv .muneco,
+html.cv .tactil,
+html.cv .minimapa,
+html.cv .hud-piezas,
+html.cv #boton-sonido,
+html.cv .solo-juego,
+html.cv .clon,
+html.cv .mensaje-meta,
+html.cv .sorpresa,
+html.cv .pista,
+html.cv .depurar-caja { display: none !important; }
+
+html.cv .hud { justify-content: flex-end; }
+html.cv .hud-marca { margin-right: auto; }
+
+html.cv .mundo {
+  position: static;
+  width: auto;
+  height: auto;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 96px 20px 64px;
+  transform: none !important;
+}
+
+html.cv .zona,
+html.cv .app,
+html.cv .zona > *,
+html.cv .app > *,
+html.cv .torres > li {
+  position: static;
+  left: auto;
+  top: auto;
+  width: auto;
+  height: auto;
+}
+
+html.cv .zona { margin-bottom: 36px; }
+html.cv .zona, html.cv .app { scroll-margin-top: 90px; }
+html.cv .app { margin-top: 18px; }
+html.cv .cartel, html.cv .rotulo { margin-bottom: 16px; }
+html.cv .cartel::before, html.cv .cartel::after { display: none; }
+
+html.cv .titulo { margin-bottom: 20px; }
+html.cv .titulo-linea-1 { font-size: clamp(40px, 9vw, 72px); }
+html.cv .titulo-linea-2 { font-size: clamp(28px, 6vw, 48px); margin-top: 6px; }
+html.cv .letra { line-height: 1.05; }
+
+html.cv .foto img { width: 220px; height: 220px; }
+
+html.cv .rotulo { text-align: left; }
+html.cv .rotulo h2 { font-size: 30px; text-shadow: none; }
+html.cv .rotulo p { font-weight: 400; text-shadow: none; }
+
+html.cv .capturas {
+  display: flex !important;
+  flex-wrap: wrap;
+  margin: -4px 0 16px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  animation: none;
+}
+
+html.cv .torres { display: grid; gap: 8px; height: auto; margin-bottom: 16px; }
+
+html.cv .torre {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-align: left;
+  background: var(--naranja);
+}
+
+html.cv .torre::before { display: none; }
+html.cv .torre-detalle { margin-right: auto; }
+html.cv .torre-nivel { margin-top: 0; }
+
+html.cv .contacto-enlaces { grid-template-columns: 1fr; }
+
+@media (min-width: 640px) {
+  html.cv .contacto-enlaces { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  html.cv .formulario-fila { grid-template-columns: 1fr; }
+  html.cv .cartel { padding: 18px; }
+}
+
+@media print {
+  .hud, .tactil, .saltar-cv { display: none !important; }
+  html.cv .mundo { padding-top: 0; }
+  .cartel { box-shadow: none !important; border: 1px solid #ddd; break-inside: avoid; }
+  .formulario { display: none; }
+}

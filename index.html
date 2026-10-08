@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="cv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <script>if (!/[?&]cv(=|&|$)/.test(location.search)) document.documentElement.classList.replace('cv', 'juego');</script>
 
   <!-- Google Analytics -->
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QXF2EDSVY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,945 +14,444 @@
     gtag('config', 'G-7QXF2EDSVY');
   </script>
 
-  <!-- ── SEO ─────────────────────────────────────────────── -->
-  <title>XescoSolutions | Soluciones Digitales para PYMES en Valencia</title>
-  <meta name="description"
-    content="XescoSolutions — Tu partner tecnológico en Valencia. Automatizaciones empresariales, desarrollo web y aplicaciones a medida para PYMES. Basados en Valencia, España." />
-  <meta name="keywords"
-    content="soluciones digitales Valencia, automatizaciones PYMES Valencia, desarrollo web Valencia, partner tecnológico Valencia, consultoría tecnológica Valencia, XescoSolutions, Zapier Valencia, Make Valencia, n8n Valencia, digitalización empresas Valencia, aplicaciones a medida Valencia, Francisco Alabau Calatayud" />
-  <meta name="author" content="Francisco Alabau Calatayud (XescoSolutions)" />
-  <meta name="robots" content="index, follow" />
+  <title data-i18n="meta.titulo">Xesco · Francisco Alabau Calatayud · Portfolio</title>
+  <meta name="description" data-i18n-attr="content:meta.descripcion" content="Portfolio de Francisco Alabau Calatayud (Xesco), estudiante de Ingeniería Informática: apps publicadas, desarrollo de software con IA y automatización. Recórrelo como un nivel de plataformas." />
   <link rel="canonical" href="https://xescoalabau.com/" />
-
-  <!-- ── Open Graph ────────────────────────────────────────── -->
-  <meta property="og:title" content="XescoSolutions | Soluciones Digitales para PYMES en Valencia" />
-  <meta property="og:description"
-    content="Tu partner tecnológico en Valencia. Automatizaciones, desarrollo web y aplicaciones para PYMES. Basados en Valencia, España." />
+  <meta property="og:title" content="Xesco · Portfolio" />
+  <meta property="og:description" content="Recorre el portfolio de Francisco Alabau Calatayud como un nivel de plataformas." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://xescoalabau.com/" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content="https://xescoalabau.com/img/foto/xesco.webp" />
+  <meta name="theme-color" content="#F47B20" />
 
-  <!-- ── Google Fonts ──────────────────────────────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet" />
-
-  <!-- ── Tailwind CSS (CDN) ────────────────────────────────── -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          colors: {
-            primary:   '#0071e3',
-            secondary: '#3395ff',
-            accent:    '#34aadc',
-          },
-        }
-      }
-    };
-  </script>
-
-  <!-- ── Three.js ─────────────────────────────────────────── -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-
-  <!-- ── AOS Animate On Scroll ─────────────────────────────── -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
-
-  <!-- ── Custom styles ─────────────────────────────────────── -->
-  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/nivel.css" />
+  <link rel="stylesheet" href="css/hud.css" />
+  <link rel="stylesheet" href="css/cv.css" />
+  <script type="module" src="js/main.js"></script>
 </head>
 
-<body class="antialiased">
+<body>
+  <a class="saltar-cv" href="?cv" data-i18n="hud.saltar">Saltar al CV</a>
 
-  <!-- ════════════════════════════════════════════════════════
-       BARRA DE PROGRESO DE SCROLL
-  ═══════════════════════════════════════════════════════════ -->
-  <div id="scroll-progress"
-    style="position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#0071e3,#34aadc);z-index:200;transition:width 0.1s linear;"></div>
-
-  <!-- ════════════════════════════════════════════════════════
-       NAVEGACIÓN
-  ═══════════════════════════════════════════════════════════ -->
-  <nav id="navbar" aria-label="Navegación principal">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-
-      <!-- Logo -->
-      <a href="#inicio" class="flex items-center">
-        <img src="LogoSinNombreSinFondo.png" alt="XescoSolutions" class="h-10 w-auto" style="max-height:40px;">
-      </a>
-
-      <!-- Links (desktop) -->
-      <div class="hidden md:flex items-center gap-7">
-        <a href="#servicios"        class="nav-link">Servicios</a>
-        <a href="#por-que-elegirme" class="nav-link">Por qué yo</a>
-        <a href="#casos"            class="nav-link">Casos de uso</a>
-        <a href="#proceso"          class="nav-link">Proceso</a>
-        <a href="#contacto"         class="nav-link">Contacto</a>
-      </div>
-
-      <!-- CTA + hamburger -->
-      <div class="flex items-center gap-3">
-        <a href="#contacto"
-          class="hidden md:inline-flex btn-primary"
-          style="padding:9px 18px;font-size:0.82rem;">
-          Consulta gratuita
-        </a>
-        <button id="menu-toggle" aria-label="Abrir menú" class="md:hidden p-2" style="color:var(--text);">
-          <!-- Hamburger icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ── Menú móvil ───────────────────────────────────────── -->
-  <div id="mobile-menu" role="dialog" aria-label="Menú móvil">
-    <button id="menu-close" aria-label="Cerrar menú">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
-    <a href="#servicios"        class="nav-link" onclick="closeMobileMenu()">Servicios</a>
-    <a href="#por-que-elegirme" class="nav-link" onclick="closeMobileMenu()">Por qué yo</a>
-    <a href="#casos"            class="nav-link" onclick="closeMobileMenu()">Casos de uso</a>
-    <a href="#proceso"          class="nav-link" onclick="closeMobileMenu()">Proceso</a>
-    <a href="#contacto"         class="nav-link" onclick="closeMobileMenu()">Contacto</a>
-    <a href="#contacto" class="btn-primary mt-4" onclick="closeMobileMenu()">Consulta gratuita</a>
+  <div class="escena" aria-hidden="true">
+    <div class="cielo"></div>
+    <div class="capa capa-montana" data-parallax="0.1" data-proporcion="4" style="--proporcion:4"></div>
+    <div class="capa capa-colinas" data-parallax="0.25" data-proporcion="2.6667" style="--proporcion:2.6667"></div>
+    <div class="capa capa-aldea" data-parallax="0.5" data-proporcion="3.1111" style="--proporcion:3.1111"></div>
+    <div class="capa capa-arboles" data-parallax="0.8" data-proporcion="2.2222" style="--proporcion:2.2222"></div>
   </div>
 
+  <header class="hud">
+    <a class="hud-marca" href="#inicio">Xesco</a>
+    <nav class="minimapa" aria-label="Mapa del nivel" data-i18n-attr="aria-label:hud.mapa">
+      <ol class="minimapa-zonas">
+        <li><button type="button" data-ir="inicio"><span class="sr" data-i18n="mapa.inicio">Inicio</span></button></li>
+        <li><button type="button" data-ir="perfil"><span class="sr" data-i18n="mapa.perfil">Perfil</span></button></li>
+        <li><button type="button" data-ir="formacion"><span class="sr" data-i18n="mapa.formacion">Formación</span></button></li>
+        <li><button type="button" data-ir="experiencia"><span class="sr" data-i18n="mapa.experiencia">Experiencia</span></button></li>
+        <li><button type="button" data-ir="aldiax"><span class="sr" data-i18n="mapa.aldiax">Aldiax</span></button></li>
+        <li><button type="button" data-ir="yunque"><span class="sr" data-i18n="mapa.yunque">Yunque</span></button></li>
+        <li><button type="button" data-ir="chatadn"><span class="sr" data-i18n="mapa.chatadn">ChatADN</span></button></li>
+        <li><button type="button" data-ir="una-neurona"><span class="sr" data-i18n="mapa.neurona">Una Neurona</span></button></li>
+        <li><button type="button" data-ir="habilidades"><span class="sr" data-i18n="mapa.habilidades">Habilidades</span></button></li>
+        <li><button type="button" data-ir="metodologia"><span class="sr" data-i18n="mapa.metodologia">Metodología</span></button></li>
+        <li><button type="button" data-ir="charlas"><span class="sr" data-i18n="mapa.charlas">Charlas</span></button></li>
+        <li><button type="button" data-ir="idiomas"><span class="sr" data-i18n="mapa.idiomas">Idiomas</span></button></li>
+        <li><button type="button" data-ir="contacto"><span class="sr" data-i18n="mapa.contacto">Contacto</span></button></li>
+        <li class="minimapa-marcador" aria-hidden="true"></li>
+      </ol>
+      <span class="minimapa-zona" aria-live="polite">Inicio</span>
+    </nav>
+    <p class="hud-piezas"><span class="hud-pieza" aria-hidden="true"></span><span id="contador-piezas">0/0</span><span class="sr" data-i18n="hud.piezas">piezas</span></p>
+    <button type="button" class="hud-boton" id="boton-idioma" data-i18n="hud.idioma" data-i18n-attr="aria-label:hud.idioma.etiqueta" aria-label="Switch to English">EN</button>
+    <button type="button" class="hud-boton" id="boton-sonido" aria-pressed="false" data-i18n-attr="aria-label:hud.sonido" aria-label="Sonido">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="ondas" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <button type="button" class="hud-cv" id="boton-cv" data-i18n="hud.cv">Ver CV rápido</button>
+    <button type="button" class="hud-cv" id="boton-volver" data-i18n="hud.volver">Volver al nivel</button>
+  </header>
 
-  <!-- ════════════════════════════════════════════════════════
-       HERO
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="inicio" class="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
+  <main id="mundo" class="mundo">
+    <div class="suelo decor" aria-hidden="true"></div>
 
-    <!-- Fondo sutil (Apple-style) -->
-    <div class="hero-gradient"></div>
-
-    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 w-full">
-      <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-
-        <!-- ── Columna izquierda: texto ─────────────────────── -->
-        <div class="lg:w-1/2 hero-glitch-left">
-
-          <!-- Badge disponible -->
-          <a href="https://www.linkedin.com/in/francisco-alabau-calatayud-329196330/"
-            target="_blank" rel="noopener noreferrer"
-            class="badge mb-8 inline-flex"
-            aria-label="Ver perfil de LinkedIn: Francisco Alabau Calatayud">
-            <span class="pulse-dot"></span>
-            Disponible para nuevos proyectos &nbsp;·&nbsp; Ver en LinkedIn →
-          </a>
-
-          <!-- Headline -->
-          <h1 class="text-4xl sm:text-5xl lg:text-[3.6rem] font-black leading-tight tracking-tight mb-6 uppercase">
-            Soluciones Digitales en Valencia<br />
-            <span class="gradient-text">para PYMES</span>
-          </h1>
-
-          <!-- Subtítulo -->
-          <p class="text-lg text-slate-400 max-w-lg mb-10 leading-relaxed">
-            Automatizo procesos, desarrollo tu presencia web y creo aplicaciones
-            personalizadas para que tu empresa crezca sin límites.
-          </p>
-
-          <!-- CTAs -->
-          <div class="flex flex-col sm:flex-row gap-4 mb-14">
-            <a href="#contacto" class="btn-primary text-base">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-              Solicita una consulta gratuita
-            </a>
-            <a href="#servicios" class="btn-secondary text-base">
-              Ver mis servicios
-              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </a>
-          </div>
-
-          <!-- Stats de confianza -->
-          <div class="flex flex-wrap items-center gap-6 sm:gap-10">
-            <div class="text-center">
-              <div class="text-3xl font-black gradient-text">+15</div>
-              <div class="text-xs text-slate-500 mt-1 font-medium tracking-wide">Proyectos completados</div>
-            </div>
-            <div class="stat-divider hidden sm:block"></div>
-            <div class="text-center">
-              <div class="text-3xl font-black gradient-text">+4</div>
-              <div class="text-xs text-slate-500 mt-1 font-medium tracking-wide">Años de experiencia</div>
-            </div>
-            <div class="stat-divider hidden sm:block"></div>
-            <div class="text-center">
-              <div class="text-3xl font-black gradient-text">100%</div>
-              <div class="text-xs text-slate-500 mt-1 font-medium tracking-wide">Compromiso cliente</div>
-            </div>
-            <div class="stat-divider hidden sm:block"></div>
-            <div class="text-center">
-              <div class="text-3xl font-black gradient-text">&lt;24h</div>
-              <div class="text-xs text-slate-500 mt-1 font-medium tracking-wide">Tiempo de respuesta</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── Columna derecha: esfera 3D ───────────────────── -->
-        <div class="lg:w-1/2 flex items-center justify-center w-full hero-glitch-right">
-          <div id="sphere-container"
-            style="width:100%;height:440px;max-width:520px;"
-            aria-hidden="true"></div>
-        </div>
-
+    <section class="zona" id="inicio" data-zona="inicio" style="--x:0;--ancho:1500">
+      <div class="cartel pista" data-plataforma="unSentido" style="--x:40;--y:500;--w:300">
+        <p class="solo-raton" data-i18n="inicio.pista.raton">Muévete con ← →, salta con Espacio y arrastra al muñeco con el ratón.</p>
+        <p class="solo-tactil" data-i18n="inicio.pista.tactil">Usa ◀ ▶ y Saltar, o arrastra al muñeco con el dedo.</p>
       </div>
-    </div>
-
-    <!-- Indicador scroll -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none"
-        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"/>
-      </svg>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════════════════════
-       SERVICIOS
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="servicios" class="py-24 sm:py-32">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-
-      <!-- Cabecera -->
-      <div class="text-center mb-16" data-aos="fade-up">
-        <span class="section-label">Servicios</span>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">
-          Todo lo que necesitas para<br />
-          <span class="gradient-text">impulsar tu negocio</span>
-        </h2>
-        <p class="text-slate-400 max-w-xl mx-auto text-lg">
-          Soluciones a medida que se adaptan a tus necesidades y escalan con tu empresa.
-        </p>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:380;--y:640;--w:120"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:470;--y:520;--w:110"></div>
+      <h1 class="titulo" style="--x:520;--y:110;--w:960">
+        <span class="sr">Francisco Alabau Calatayud</span>
+        <span class="titulo-linea titulo-linea-1" aria-hidden="true"><span class="letra" data-plataforma="unSentido">F</span><span class="letra" data-plataforma="unSentido">r</span><span class="letra" data-plataforma="unSentido">a</span><span class="letra" data-plataforma="unSentido">n</span><span class="letra" data-plataforma="unSentido">c</span><span class="letra" data-plataforma="unSentido">i</span><span class="letra" data-plataforma="unSentido">s</span><span class="letra" data-plataforma="unSentido">c</span><span class="letra" data-plataforma="unSentido">o</span></span>
+        <span class="titulo-linea titulo-linea-2" aria-hidden="true"><span class="letra" data-plataforma="unSentido">A</span><span class="letra" data-plataforma="unSentido">l</span><span class="letra" data-plataforma="unSentido">a</span><span class="letra" data-plataforma="unSentido">b</span><span class="letra" data-plataforma="unSentido">a</span><span class="letra" data-plataforma="unSentido">u</span> <span class="letra" data-plataforma="unSentido">C</span><span class="letra" data-plataforma="unSentido">a</span><span class="letra" data-plataforma="unSentido">l</span><span class="letra" data-plataforma="unSentido">a</span><span class="letra" data-plataforma="unSentido">t</span><span class="letra" data-plataforma="unSentido">a</span><span class="letra" data-plataforma="unSentido">y</span><span class="letra" data-plataforma="unSentido">u</span><span class="letra" data-plataforma="unSentido">d</span></span>
+      </h1>
+      <div class="cartel cartel-titular" data-plataforma="unSentido" style="--x:600;--y:380;--w:780">
+        <p class="titular" data-i18n="inicio.titular">Estudiante de Ingeniería Informática</p>
+        <p class="subtitular" data-i18n="inicio.sub">Desarrollo de software con IA · Automatización · Apps</p>
       </div>
+      <span class="pieza decor" style="--x:440;--y:585"></span>
+      <span class="pieza decor" style="--x:520;--y:460"></span>
+      <span class="pieza decor" style="--x:820;--y:310"></span>
+      <span class="pieza decor" style="--x:1150;--y:150"></span>
+    </section>
 
-      <!-- Monitor mockup -->
-      <div class="monitor-mockup" data-aos="fade-up" data-aos-delay="100">
+    <section class="zona" id="perfil" data-zona="perfil" style="--x:1500;--ancho:1400">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:470;--w:100"></div>
+      <figure class="cartel foto" data-plataforma="unSentido" style="--x:280;--y:300;--w:380">
+        <img src="img/foto/xesco.webp" width="320" height="320" alt="Retrato de Francisco Alabau Calatayud" data-i18n-attr="alt:perfil.foto" />
+        <figcaption data-i18n="perfil.pie">Francisco Alabau Calatayud · Xesco</figcaption>
+      </figure>
+      <article class="cartel" data-plataforma="unSentido" style="--x:730;--y:330;--w:600">
+        <h2 data-i18n="perfil.titulo">Perfil</h2>
+        <p data-i18n="perfil.texto">Estudiante de 3.º de Ingeniería Informática con FP Superior en Desarrollo de Aplicaciones Multiplataforma (DAM). Me centro en el desarrollo de software, la automatización y el uso de agentes de inteligencia artificial para acelerar la creación de productos digitales. Tengo experiencia real creando aplicaciones, automatizando procesos y comunicando sobre IA aplicada a la educación.</p>
+      </article>
+      <span class="pieza decor" style="--x:180;--y:420"></span>
+      <span class="pieza decor" style="--x:450;--y:240"></span>
+      <span class="pieza decor" style="--x:1010;--y:270"></span>
+    </section>
 
-        <!-- Shell del monitor -->
-        <div class="monitor-shell">
-          <div class="monitor-cambar">
-            <div class="monitor-cam"></div>
-          </div>
-          <div class="monitor-screen-wrap">
-            <div class="monitor-screen">
+    <section class="zona" id="formacion" data-zona="formacion" style="--x:2900;--ancho:1300">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+      <article class="cartel" data-plataforma="unSentido" style="--x:250;--y:490;--w:520">
+        <h2 data-i18n="formacion.titulo">Formación</h2>
+        <h3 data-i18n="formacion.fp.titulo">FP Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)</h3>
+        <p>CEU</p>
+        <p class="etiqueta" data-i18n="formacion.fp.estado">Finalizado antes del grado</p>
+      </article>
+      <article class="cartel" data-plataforma="unSentido" style="--x:830;--y:330;--w:440">
+        <h3 data-i18n="formacion.grado.titulo">Grado en Ingeniería Informática</h3>
+        <p data-i18n="formacion.grado.centro">Universitat Politècnica de València (Campus d'Alcoi)</p>
+        <p class="etiqueta" data-i18n="formacion.grado.estado">Actualmente en 3.º curso</p>
+      </article>
+      <span class="pieza decor" style="--x:470;--y:430"></span>
+      <span class="pieza decor" style="--x:1030;--y:270"></span>
+    </section>
 
-              <!-- Barra de ventana estilo macOS -->
-              <div class="monitor-chrome">
-                <div class="monitor-dots">
-                  <span class="monitor-dot dot-r"></span>
-                  <span class="monitor-dot dot-y"></span>
-                  <span class="monitor-dot dot-g"></span>
-                </div>
-                <span class="monitor-chrome-title">XescoSolutions — Servicios</span>
-              </div>
+    <section class="zona" id="experiencia" data-zona="experiencia" style="--x:4200;--ancho:1300">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+      <article class="cartel" data-plataforma="unSentido" style="--x:290;--y:400;--w:520">
+        <h2 data-i18n="experiencia.titulo">Experiencia</h2>
+        <h3 data-i18n="experiencia.premea.titulo">Prácticas en Premea</h3>
+        <p data-i18n="experiencia.premea.texto">Desarrollo de un software para automatizar la generación de documentos.</p>
+      </article>
+      <article class="cartel" data-plataforma="unSentido" style="--x:880;--y:450;--w:380">
+        <h3 data-i18n="experiencia.delaware.titulo">Atención al público en Delaware (EE. UU.)</h3>
+        <p data-i18n="experiencia.delaware.texto">Trabajo de cara al público durante un verano en Estados Unidos.</p>
+      </article>
+      <span class="pieza decor" style="--x:190;--y:450"></span>
+      <span class="pieza decor" style="--x:560;--y:340"></span>
+      <span class="pieza decor" style="--x:1050;--y:390"></span>
+    </section>
 
-              <!-- Tarjetas 2×2 dentro de la pantalla -->
-              <div class="monitor-content">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                  <!-- 1 — Automatizaciones -->
-                  <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="service-icon" style="background:rgba(0,113,227,0.1);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        stroke="#0071e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-                        <path d="M5 3v4M19 17v4M3 5h4M17 19h4"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Automatizaciones Empresariales</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                      Elimina tareas repetitivas y conecta tus herramientas. Desde flujos simples hasta
-                      integraciones complejas con APIs personalizadas.
-                    </p>
-                    <div class="space-y-2">
-                      <div class="benefit-item"><span class="benefit-dot"></span>Zapier, Make (Integromat) y n8n</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Integraciones entre plataformas y CRMs</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Scripts y bots personalizados</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Ahorra hasta 10+ horas semanales</div>
-                    </div>
-                  </div>
-
-                  <!-- 2 — Desarrollo Web -->
-                  <div class="service-card" data-aos="fade-up" data-aos-delay="280">
-                    <div class="service-icon" style="background:rgba(52,170,220,0.12);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        stroke="#34aadc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="20" height="14" x="2" y="3" rx="2"/>
-                        <line x1="8" x2="16" y1="21" y2="21"/>
-                        <line x1="12" x2="12" y1="17" y2="21"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Desarrollo Web</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                      Sitios web modernos, rápidos y optimizados. Desde landing pages hasta
-                      e-commerce completos, con diseño a medida que convierte.
-                    </p>
-                    <div class="space-y-2">
-                      <div class="benefit-item"><span class="benefit-dot"></span>Sitios corporativos y landing pages</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Tiendas online y e-commerce</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Portfolios y webs personales</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Optimizado para SEO y velocidad</div>
-                    </div>
-                  </div>
-
-                  <!-- 3 — Aplicaciones a Medida -->
-                  <div class="service-card" data-aos="fade-up" data-aos-delay="360">
-                    <div class="service-icon" style="background:rgba(48,209,88,0.1);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="7" height="7" x="3" y="3" rx="1"/>
-                        <rect width="7" height="7" x="14" y="3" rx="1"/>
-                        <rect width="7" height="7" x="14" y="14" rx="1"/>
-                        <rect width="7" height="7" x="3" y="14" rx="1"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Aplicaciones a Medida</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                      Herramientas internas, dashboards y MVPs adaptados exactamente a tu flujo de trabajo.
-                      Sin excesos, sin costes de software innecesario.
-                    </p>
-                    <div class="space-y-2">
-                      <div class="benefit-item"><span class="benefit-dot"></span>Dashboards y paneles de control</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Herramientas internas para equipos</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>MVPs y prototipos funcionales</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Aplicaciones web escalables</div>
-                    </div>
-                  </div>
-
-                  <!-- 4 — Consultoría Tecnológica -->
-                  <div class="service-card" data-aos="fade-up" data-aos-delay="440">
-                    <div class="service-icon" style="background:rgba(251,191,36,0.14);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Consultoría Tecnológica</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                      Analizo tu situación y diseño la hoja de ruta digital más eficiente.
-                      Toma decisiones con claridad y evita inversiones equivocadas.
-                    </p>
-                    <div class="space-y-2">
-                      <div class="benefit-item"><span class="benefit-dot"></span>Auditorías de procesos y sistemas</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Roadmaps y estrategia digital</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Selección de herramientas</div>
-                      <div class="benefit-item"><span class="benefit-dot"></span>Optimización de costes tecnológicos</div>
-                    </div>
-                  </div>
-
-                </div>
-              </div><!-- /monitor-content -->
-
-            </div><!-- /monitor-screen -->
-          </div><!-- /monitor-screen-wrap -->
-        </div><!-- /monitor-shell -->
-
-        <!-- Stand -->
-        <div class="monitor-neck"></div>
-        <div class="monitor-base"></div>
-
-      </div><!-- /monitor-mockup -->
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════════════════════
-       POR QUÉ ELEGIRME
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="por-que-elegirme" class="py-24 sm:py-32" style="background:var(--bg-alt);">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="grid lg:grid-cols-2 gap-14 items-center">
-
-        <!-- Izquierda: texto -->
-        <div data-aos="fade-right">
-          <span class="section-label">Por qué elegirme</span>
-          <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-6">
-            Tu partner tecnológico<br />
-            <span class="gradient-text">en Valencia.</span>
-          </h2>
-          <p class="text-slate-400 text-lg leading-relaxed mb-8">
-            Trabajo directamente contigo, sin intermediarios ni capas de burocracia.
-            Entiendo tu negocio antes de escribir una línea de código.
-          </p>
-          <a href="#contacto" class="btn-primary inline-flex">
-            Hablemos de tu proyecto
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-            </svg>
-          </a>
-        </div>
-
-        <!-- Derecha: tarjetas -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" data-aos="fade-left" data-aos-delay="100">
-
-          <div class="why-card">
-            <div class="why-emoji">🎯</div>
-            <h4 class="font-bold mb-2">Soluciones personalizadas</h4>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              Nada genérico. Cada proyecto se diseña para tus necesidades específicas.
-            </p>
-          </div>
-
-          <div class="why-card">
-            <div class="why-emoji">💬</div>
-            <h4 class="font-bold mb-2">Comunicación directa</h4>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              Hablas directamente conmigo. Sin intermediarios ni malentendidos.
-            </p>
-          </div>
-
-          <div class="why-card">
-            <div class="why-emoji">📊</div>
-            <h4 class="font-bold mb-2">Resultados medibles</h4>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              Defino KPIs claros antes de empezar. Sabes exactamente qué esperar.
-            </p>
-          </div>
-
-          <div class="why-card">
-            <div class="why-emoji">🛡️</div>
-            <h4 class="font-bold mb-2">Soporte continuo</h4>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              No desaparezco tras la entrega. Disponible para ajustes y mejoras.
-            </p>
-          </div>
-
-        </div>
+    <section class="zona" id="proyectos" data-zona="proyectos" style="--x:5500;--ancho:5900">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+      <div class="cartel" data-plataforma="unSentido" style="--x:290;--y:380;--w:380">
+        <h2 data-i18n="proyectos.titulo">Proyectos</h2>
+        <p data-i18n="proyectos.texto">Cuatro apps propias, de la idea a la App Store.</p>
+        <p class="nota solo-juego" data-i18n="proyectos.pista">Golpea cada icono desde abajo para ver sus capturas.</p>
       </div>
-    </div>
-  </section>
+      <span class="pieza decor" style="--x:450;--y:320"></span>
 
-
-  <!-- ════════════════════════════════════════════════════════
-       CASOS DE USO
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="casos" class="py-24 sm:py-32" style="position:relative;overflow:hidden;">
-
-    <!-- Gráfico bursátil de fondo: esquina inferior-izquierda → superior-derecha -->
-    <svg class="stock-chart-svg" viewBox="0 0 1000 300" preserveAspectRatio="none"
-      aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="stock-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#0071e3" stop-opacity="0.18"/>
-          <stop offset="100%" stop-color="#0071e3" stop-opacity="0.01"/>
-        </linearGradient>
-      </defs>
-      <!-- Área de relleno bajo la línea -->
-      <path id="stock-fill"
-        d="M 0,299 L 40,262 L 70,272 L 110,252 L 145,264
-           L 180,240 L 210,228 L 245,244 L 280,218 L 315,204
-           L 350,220 L 385,192 L 420,178 L 452,196 L 488,166
-           L 522,152 L 555,170 L 590,140 L 625,126 L 658,144
-           L 692,112 L 728,98  L 760,116 L 795,84  L 832,70
-           L 865,88  L 900,56  L 935,42  L 965,58  L 1000,20
-           L 1000,300 L 0,300 Z"/>
-      <!-- Línea del gráfico -->
-      <path id="stock-line"
-        d="M 0,299 L 40,262 L 70,272 L 110,252 L 145,264
-           L 180,240 L 210,228 L 245,244 L 280,218 L 315,204
-           L 350,220 L 385,192 L 420,178 L 452,196 L 488,166
-           L 522,152 L 555,170 L 590,140 L 625,126 L 658,144
-           L 692,112 L 728,98  L 760,116 L 795,84  L 832,70
-           L 865,88  L 900,56  L 935,42  L 965,58  L 1000,20"
-        />
-    </svg>
-
-    <div class="max-w-6xl mx-auto px-4 sm:px-6" style="position:relative;z-index:1;">
-
-      <div class="text-center mb-16" data-aos="fade-up">
-        <span class="section-label">Casos de uso</span>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">
-          ¿Cómo puedo<br />
-          <span class="gradient-text">ayudar a tu empresa?</span>
-        </h2>
-        <p class="text-slate-400 max-w-xl mx-auto text-lg">
-          Ejemplos concretos de cómo transformo negocios con tecnología.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-
-        <div class="usecase-card" data-aos="fade-up" data-aos-delay="0">
-          <div class="text-4xl mb-5">⚡</div>
-          <div class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-3">Automatización</div>
-          <h3 class="text-xl font-bold mb-4 leading-snug">
-            Automatizo tu facturación y ahorras 10 horas semanales
-          </h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            Conecto tu CRM, contabilidad y email para que las facturas se generen,
-            envíen y registren solas. Cero errores humanos.
-          </p>
-        </div>
-
-        <div class="usecase-card" data-aos="fade-up" data-aos-delay="100">
-          <div class="text-4xl mb-5">🚀</div>
-          <div class="text-xs font-bold text-sky-400 uppercase tracking-widest mb-3">Web Profesional</div>
-          <h3 class="text-xl font-bold mb-4 leading-snug">
-            Tu presencia web profesional lista en menos de una semana
-          </h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            Diseño y desarrollo tu web corporativa o landing page optimizada
-            para convertir visitantes en clientes reales.
-          </p>
-        </div>
-
-        <div class="usecase-card" data-aos="fade-up" data-aos-delay="200">
-          <div class="text-4xl mb-5">📈</div>
-          <div class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-3">Escalabilidad</div>
-          <h3 class="text-xl font-bold mb-4 leading-snug">
-            Herramientas que escalan con tu negocio
-          </h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            Desarrollo dashboards y apps internas que tu equipo realmente usa,
-            con datos en tiempo real y fáciles de mantener.
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════════════════════
-       PROCESO DE TRABAJO
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="proceso" class="py-24 sm:py-32" style="background:var(--bg-alt);">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-
-      <div class="text-center mb-16" data-aos="fade-up">
-        <span class="section-label">Proceso de trabajo</span>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">
-          Simple, transparente<br />
-          <span class="gradient-text">y sin sorpresas</span>
-        </h2>
-        <p class="text-slate-400 max-w-xl mx-auto text-lg">
-          4 pasos para transformar tu idea en una solución real y funcional.
-        </p>
-      </div>
-
-      <!-- Steps con línea conectora -->
-      <div class="relative">
-
-        <!-- Línea vertical -->
-        <div id="process-line-connector" class="absolute left-6 top-10 bottom-10 w-px"
-          style="background:linear-gradient(to bottom,rgba(0,113,227,0.6),rgba(0,113,227,0.05));"
-          aria-hidden="true"></div>
-
-        <div class="flex flex-col gap-4">
-
-          <!-- Step 1 -->
-          <div class="flex gap-6 process-step" data-step="1">
-            <div class="flex flex-col items-center">
-              <div class="step-number">1</div>
-              <div class="process-line flex-1 mt-1" style="min-height:50px;"></div>
-            </div>
-            <div class="pb-10 pt-2 flex-1">
-              <h3 class="text-lg font-bold mb-2">Consulta inicial gratuita</h3>
-              <p class="text-white text-sm leading-relaxed">
-                Entendemos tus necesidades, objetivos y situación actual. Sin compromiso ni presión.
-                Solo escucha activa para encontrar la mejor solución.
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="flex gap-6 process-step" data-step="2">
-            <div class="flex flex-col items-center">
-              <div class="step-number">2</div>
-              <div class="process-line flex-1 mt-1" style="min-height:50px;"></div>
-            </div>
-            <div class="pb-10 pt-2 flex-1">
-              <h3 class="text-lg font-bold mb-2">Propuesta y presupuesto</h3>
-              <p class="text-white text-sm leading-relaxed">
-                Recibes una propuesta clara con alcance, plazos y precio fijo.
-                Sin costes ocultos ni sorpresas al final del proyecto.
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="flex gap-6 process-step" data-step="3">
-            <div class="flex flex-col items-center">
-              <div class="step-number">3</div>
-              <div class="process-line flex-1 mt-1" style="min-height:50px;"></div>
-            </div>
-            <div class="pb-10 pt-2 flex-1">
-              <h3 class="text-lg font-bold mb-2">Desarrollo e implementación</h3>
-              <p class="text-white text-sm leading-relaxed">
-                Trabajo con actualizaciones frecuentes para que siempre sepas el estado del proyecto.
-                Tu feedback es bienvenido en cada etapa.
-              </p>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="flex gap-6 process-step" data-step="4">
-            <div class="flex flex-col items-center">
-              <div class="step-number">4</div>
-            </div>
-            <div class="pt-2 flex-1">
-              <h3 class="text-lg font-bold mb-2">Entrega y soporte</h3>
-              <p class="text-white text-sm leading-relaxed">
-                Entrego con documentación y formación incluida. Y sigo disponible
-                para soporte, mejoras y nuevas funcionalidades.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════════════════════
-       TESTIMONIOS (preparado — edita con clientes reales)
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="testimonios" class="py-24 sm:py-32">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-
-      <div class="text-center mb-16" data-aos="fade-up">
-        <span class="section-label">Testimonios</span>
-        <h2 class="text-3xl sm:text-4xl font-black tracking-tight mb-4">
-          Lo que dicen<br />
-          <span class="gradient-text">mis clientes</span>
-        </h2>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-
-        <!-- Testimonio 1 (editar con datos reales) -->
-        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="0">
-          <div class="text-yellow-400 text-sm mb-4 tracking-wider">★★★★★</div>
-          <p class="text-slate-400 text-sm leading-relaxed mb-6">
-            "Xesco automatizó todo nuestro proceso de onboarding de clientes. Lo que antes nos llevaba 3 horas ahora se hace en minutos, sin errores."
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="avatar" style="background:linear-gradient(135deg,#0071e3,#34aadc);">ML</div>
+      <article class="app" id="app-aldiax" data-zona="aldiax" style="--x:700;--ancho:1300">
+        <div class="bandera decor" style="--x:30;--y:520"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+        <div class="cartel ficha" data-plataforma="unSentido" style="--x:290;--y:340;--w:560">
+          <div class="ficha-cabecera">
+            <img class="ficha-icono" src="img/apps/aldiax/icono.webp" width="72" height="72" alt="" />
             <div>
-              <div class="font-semibold text-sm">María López</div>
-              <div class="text-slate-500 text-xs">CEO, StartupXYZ</div>
+              <h3>Aldiax</h3>
+              <p class="ficha-frase" data-i18n="aldiax.frase">Aprende a usar la IA con ejercicios cortos, al estilo Duolingo.</p>
             </div>
           </div>
+          <ul class="ficha-puntos">
+            <li data-i18n="aldiax.p1">Un agente renueva cada día las noticias de IA y crea niveles a partir de ellas.</li>
+            <li data-i18n="aldiax.p2">Vocabulario de IA y 100 niveles gratis.</li>
+            <li data-i18n="aldiax.p3">Disponible en español, inglés, italiano y francés.</li>
+          </ul>
+          <p class="ficha-tec">Expo · React Native · Supabase · Edge Functions con IA</p>
+          <a class="boton-tienda" href="https://apps.apple.com/es/app/aldiax/id6801093580" target="_blank" rel="noopener" data-i18n="app.tienda">Ver en la App Store</a>
         </div>
+        <button type="button" class="sorpresa" id="sorpresa-aldiax" data-plataforma="sorpresa" aria-expanded="false" aria-controls="capturas-aldiax" style="--x:930;--y:420">
+          <img src="img/apps/aldiax/icono.webp" width="70" height="70" alt="" /><span class="sr" data-i18n="app.capturas.aldiax">Ver capturas de Aldiax</span>
+        </button>
+        <div class="capturas" id="capturas-aldiax" hidden style="--x:860;--y:80;--w:440">
+          <img src="img/apps/aldiax/captura-1.webp" loading="lazy" width="128" height="277" alt="Aldiax: pantalla de inicio" data-i18n-attr="alt:aldiax.c1" />
+          <img src="img/apps/aldiax/captura-2.webp" loading="lazy" width="128" height="277" alt="Aldiax: ejercicio resuelto" data-i18n-attr="alt:aldiax.c2" />
+          <img src="img/apps/aldiax/captura-3.webp" loading="lazy" width="128" height="277" alt="Aldiax: noticias de IA del día" data-i18n-attr="alt:aldiax.c3" />
+        </div>
+        <img class="robot decor" src="img/apps/aldiax/robot.svg" alt="" style="--x:1100;--y:630;--w:150" />
+        <span class="pieza decor" style="--x:420;--y:280"></span>
+        <span class="pieza decor" style="--x:960;--y:360"></span>
+      </article>
 
-        <!-- Testimonio 2 -->
-        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-          <div class="text-yellow-400 text-sm mb-4 tracking-wider">★★★★★</div>
-          <p class="text-slate-400 text-sm leading-relaxed mb-6">
-            "La web que nos desarrolló aumentó nuestras conversiones un 40%. Entregó antes del plazo y con una calidad excepcional."
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="avatar" style="background:linear-gradient(135deg,#3395ff,#0071e3);">CG</div>
+      <article class="app" id="app-yunque" data-zona="yunque" style="--x:2000;--ancho:1300">
+        <div class="bandera decor" style="--x:30;--y:520"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+        <div class="cartel ficha" data-plataforma="unSentido" style="--x:290;--y:340;--w:560">
+          <div class="ficha-cabecera">
+            <img class="ficha-icono" src="img/apps/yunque/icono.webp" width="72" height="72" alt="" />
             <div>
-              <div class="font-semibold text-sm">Carlos García</div>
-              <div class="text-slate-500 text-xs">Director Comercial</div>
+              <h3>Yunque</h3>
+              <p class="ficha-frase" data-i18n="yunque.frase">Hábitos para subir la testosterona de forma natural.</p>
             </div>
           </div>
+          <ul class="ficha-puntos">
+            <li data-i18n="yunque.p1">Versión gratuita y versión de pago.</li>
+            <li data-i18n="yunque.p2">Widgets en la pantalla de inicio para no perder el ritmo.</li>
+            <li data-i18n="yunque.p3">Todo se guarda en el móvil: sin cuentas ni servidores.</li>
+          </ul>
+          <p class="ficha-tec">Expo · React Native · SQLite · HealthKit</p>
+          <a class="boton-tienda" href="https://apps.apple.com/es/app/yunque/id6808992256" target="_blank" rel="noopener" data-i18n="app.tienda">Ver en la App Store</a>
         </div>
+        <button type="button" class="sorpresa" id="sorpresa-yunque" data-plataforma="sorpresa" aria-expanded="false" aria-controls="capturas-yunque" style="--x:930;--y:420">
+          <img src="img/apps/yunque/icono.webp" width="70" height="70" alt="" /><span class="sr" data-i18n="app.capturas.yunque">Ver capturas de Yunque</span>
+        </button>
+        <div class="capturas" id="capturas-yunque" hidden style="--x:860;--y:80;--w:440">
+          <img src="img/apps/yunque/captura-1.webp" loading="lazy" width="128" height="277" alt="Yunque: captura 1" data-i18n-attr="alt:yunque.c1" />
+          <img src="img/apps/yunque/captura-2.webp" loading="lazy" width="128" height="277" alt="Yunque: captura 2" data-i18n-attr="alt:yunque.c2" />
+          <img src="img/apps/yunque/captura-3.webp" loading="lazy" width="128" height="277" alt="Yunque: captura 3" data-i18n-attr="alt:yunque.c3" />
+        </div>
+        <div class="forja decor" id="forja" data-plataforma="solido" style="--x:1080;--y:690;--w:200"><span class="forja-forma"></span><span class="chispas"></span></div>
+        <span class="pieza decor" style="--x:420;--y:280"></span>
+        <span class="pieza decor" style="--x:960;--y:360"></span>
+      </article>
 
-        <!-- Testimonio 3 -->
-        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-          <div class="text-yellow-400 text-sm mb-4 tracking-wider">★★★★★</div>
-          <p class="text-slate-400 text-sm leading-relaxed mb-6">
-            "El dashboard que creó para nuestro equipo de ventas ha transformado cómo tomamos decisiones. Claro, útil y muy fácil de usar."
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="avatar" style="background:linear-gradient(135deg,#30d158,#34aadc);">AM</div>
+      <article class="app" id="app-chatadn" data-zona="chatadn" style="--x:3300;--ancho:1300">
+        <div class="bandera decor" style="--x:30;--y:520"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+        <div class="cartel ficha" data-plataforma="unSentido" style="--x:290;--y:340;--w:560">
+          <div class="ficha-cabecera">
+            <img class="ficha-icono" src="img/apps/chatadn/icono.webp" width="72" height="72" alt="" />
             <div>
-              <div class="font-semibold text-sm">Ana Martínez</div>
-              <div class="text-slate-500 text-xs">Responsable de Ventas</div>
+              <h3>ChatADN</h3>
+              <p class="ficha-frase" data-i18n="chatadn.frase">Convierte un chat de WhatsApp en una historia visual.</p>
             </div>
           </div>
+          <ul class="ficha-puntos">
+            <li data-i18n="chatadn.p1">Mensajes, tiempos de respuesta, palabras y emojis más usados.</li>
+            <li data-i18n="chatadn.p2">Análisis 100 % en el dispositivo: tus chats no salen del móvil.</li>
+            <li data-i18n="chatadn.p3">Compra única para desbloquear la versión Pro.</li>
+          </ul>
+          <p class="ficha-tec">Expo · React Native · RevenueCat</p>
+          <a class="boton-tienda" href="https://apps.apple.com/es/app/chatadn/id6817065918" target="_blank" rel="noopener" data-i18n="app.tienda">Ver en la App Store</a>
         </div>
+        <button type="button" class="sorpresa" id="sorpresa-chatadn" data-plataforma="sorpresa" aria-expanded="false" aria-controls="capturas-chatadn" style="--x:930;--y:420">
+          <img src="img/apps/chatadn/icono.webp" width="70" height="70" alt="" /><span class="sr" data-i18n="app.capturas.chatadn">Ver capturas de ChatADN</span>
+        </button>
+        <div class="capturas" id="capturas-chatadn" hidden style="--x:860;--y:80;--w:440">
+          <img src="img/apps/chatadn/captura-1.webp" loading="lazy" width="128" height="277" alt="ChatADN: captura 1" data-i18n-attr="alt:chatadn.c1" />
+          <img src="img/apps/chatadn/captura-2.webp" loading="lazy" width="128" height="277" alt="ChatADN: captura 2" data-i18n-attr="alt:chatadn.c2" />
+          <img src="img/apps/chatadn/captura-3.webp" loading="lazy" width="128" height="277" alt="ChatADN: captura 3" data-i18n-attr="alt:chatadn.c3" />
+        </div>
+        <div class="burbuja decor" data-plataforma="unSentido" style="--x:1060;--y:650;--w:140"></div>
+        <div class="burbuja decor" data-plataforma="unSentido" style="--x:1150;--y:530;--w:140"></div>
+        <div class="burbuja decor" data-plataforma="unSentido" style="--x:1060;--y:410;--w:140"></div>
+        <span class="pieza decor" style="--x:420;--y:280"></span>
+        <span class="pieza decor" style="--x:960;--y:360"></span>
+      </article>
 
+      <article class="app" id="app-una-neurona" data-zona="una-neurona" style="--x:4600;--ancho:1300">
+        <div class="bandera decor" style="--x:30;--y:520"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+        <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+        <div class="cartel ficha" data-plataforma="unSentido" style="--x:290;--y:340;--w:560">
+          <div class="ficha-cabecera">
+            <img class="ficha-icono" src="img/apps/una-neurona/icono.webp" width="72" height="72" alt="" />
+            <div>
+              <h3>Una Neurona</h3>
+              <p class="ficha-frase" data-i18n="neurona.frase">Juego de fiesta para descubrir quién es el más tonto del grupo.</p>
+            </div>
+          </div>
+          <ul class="ficha-puntos">
+            <li data-i18n="neurona.p1">100 minijuegos en 12 categorías; en cada partida tocan 5 al azar.</li>
+            <li data-i18n="neurona.p2">Salas de hasta 8 amigos y un IQ de broma al final.</li>
+            <li data-i18n="neurona.p3">Gratis con anuncios o pago único para quitarlos.</li>
+          </ul>
+          <p class="ficha-tec">Expo · React Native · Supabase en tiempo real · AdMob</p>
+          <span class="boton-tienda proximamente" data-i18n="app.proximamente">Próximamente en App Store</span>
+        </div>
+        <button type="button" class="sorpresa" id="sorpresa-una-neurona" data-plataforma="sorpresa" aria-expanded="false" aria-controls="capturas-una-neurona" style="--x:930;--y:420">
+          <img src="img/apps/una-neurona/icono.webp" width="70" height="70" alt="" /><span class="sr" data-i18n="app.capturas.neurona">Ver capturas de Una Neurona</span>
+        </button>
+        <div class="capturas" id="capturas-una-neurona" hidden style="--x:860;--y:80;--w:440">
+          <img src="img/apps/una-neurona/captura-1.webp" loading="lazy" width="128" height="277" alt="Una Neurona: sala de juego" data-i18n-attr="alt:neurona.c1" />
+          <img src="img/apps/una-neurona/captura-2.webp" loading="lazy" width="128" height="277" alt="Una Neurona: 100 minijuegos" data-i18n-attr="alt:neurona.c2" />
+          <img src="img/apps/una-neurona/captura-3.webp" loading="lazy" width="128" height="277" alt="Una Neurona: resultado final" data-i18n-attr="alt:neurona.c3" />
+        </div>
+        <div class="cama-elastica decor" id="neurona-cama" data-plataforma="elastico" style="--x:1060;--y:620;--w:180"></div>
+        <span class="pieza decor" style="--x:420;--y:280"></span>
+        <span class="pieza decor" style="--x:960;--y:360"></span>
+        <span class="pieza decor" style="--x:1120;--y:250"></span>
+      </article>
+    </section>
+
+    <section class="zona" id="habilidades" data-zona="habilidades" style="--x:11400;--ancho:1500">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="rotulo" style="--x:250;--y:150;--w:900">
+        <h2 data-i18n="habilidades.titulo">Habilidades</h2>
+        <p data-i18n="habilidades.texto">Cada torre mide mi nivel en esa habilidad, sobre 7. Súbete a ellas.</p>
       </div>
-    </div>
-  </section>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:650;--w:110"></div>
+      <ul class="torres" style="--x:0;--y:0;--w:1500">
+        <li class="torre" data-plataforma="solido" style="--x:250;--y:540;--w:150;--h:240">
+          <span class="torre-nombre" data-i18n="habilidad.programacion">Programación</span>
+          <span class="torre-detalle">Python · Java · C/C++ · JavaScript/TypeScript</span>
+          <span class="torre-nivel" role="img" aria-label="4 de 7" data-i18n-attr="aria-label:nivel.4"><span class="lleno">●●●●</span>○○○</span>
+        </li>
+        <li class="torre" data-plataforma="solido" style="--x:415;--y:480;--w:150;--h:300">
+          <span class="torre-nombre" data-i18n="habilidad.apps">Desarrollo de apps</span>
+          <span class="torre-nivel" role="img" aria-label="5 de 7" data-i18n-attr="aria-label:nivel.5"><span class="lleno">●●●●●</span>○○</span>
+        </li>
+        <li class="torre" data-plataforma="solido" style="--x:580;--y:480;--w:150;--h:300">
+          <span class="torre-nombre" data-i18n="habilidad.arquitectura">Arquitectura de agentes y orquestación</span>
+          <span class="torre-nivel" role="img" aria-label="5 de 7" data-i18n-attr="aria-label:nivel.5"><span class="lleno">●●●●●</span>○○</span>
+        </li>
+        <li class="torre" data-plataforma="solido" style="--x:745;--y:480;--w:150;--h:300">
+          <span class="torre-nombre" data-i18n="habilidad.despliegue">Despliegue de productos digitales</span>
+          <span class="torre-nivel" role="img" aria-label="5 de 7" data-i18n-attr="aria-label:nivel.5"><span class="lleno">●●●●●</span>○○</span>
+        </li>
+        <li class="torre" data-plataforma="solido" style="--x:910;--y:420;--w:150;--h:360">
+          <span class="torre-nombre" data-i18n="habilidad.agentes">Agentes de IA para desarrollo de software</span>
+          <span class="torre-nivel" role="img" aria-label="6 de 7" data-i18n-attr="aria-label:nivel.6"><span class="lleno">●●●●●●</span>○</span>
+        </li>
+        <li class="torre" data-plataforma="solido" style="--x:1075;--y:420;--w:150;--h:360">
+          <span class="torre-nombre" data-i18n="habilidad.automatizacion">Automatización de procesos</span>
+          <span class="torre-nivel" role="img" aria-label="6 de 7" data-i18n-attr="aria-label:nivel.6"><span class="lleno">●●●●●●</span>○</span>
+        </li>
+        <li class="torre" data-plataforma="solido" style="--x:1240;--y:420;--w:150;--h:360">
+          <span class="torre-nombre" data-i18n="habilidad.prompt">Prompt engineering</span>
+          <span class="torre-nivel" role="img" aria-label="6 de 7" data-i18n-attr="aria-label:nivel.6"><span class="lleno">●●●●●●</span>○</span>
+        </li>
+      </ul>
+      <span class="pieza decor" style="--x:620;--y:420"></span>
+      <span class="pieza decor" style="--x:1110;--y:360"></span>
+      <span class="pieza decor" style="--x:1300;--y:360"></span>
+    </section>
 
+    <section class="zona" id="metodologia" data-zona="metodologia" style="--x:12900;--ancho:1300">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:500;--w:100"></div>
+      <article class="cartel" data-plataforma="unSentido" style="--x:290;--y:380;--w:640">
+        <h2 data-i18n="metodologia.titulo">Metodología</h2>
+        <p data-i18n="metodologia.texto">No me centro en un único lenguaje: trabajo con agentes de inteligencia artificial y un agente orquestador que reparte el trabajo entre subagentes más económicos, para optimizar el desarrollo y el gasto de tokens.</p>
+        <p class="nota solo-juego" data-i18n="metodologia.pista">Como un orquestador, el muñeco acaba de lanzar a sus clones.</p>
+      </article>
+      <span class="pieza decor" style="--x:560;--y:320"></span>
+      <span class="pieza decor" style="--x:1100;--y:600"></span>
+    </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       CTA + CONTACTO
-  ═══════════════════════════════════════════════════════════ -->
-  <section id="contacto" class="py-24 sm:py-32" style="background:var(--bg-alt);">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <section class="zona" id="charlas" data-zona="charlas" style="--x:14200;--ancho:1400">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escenario decor" data-plataforma="solido" style="--x:110;--y:690;--w:560"></div>
+      <div class="atril decor" style="--x:470;--y:600;--w:70"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:560;--y:560;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:640;--y:440;--w:110"></div>
+      <article class="cartel" data-plataforma="unSentido" style="--x:140;--y:320;--w:470">
+        <h2 data-i18n="charlas.titulo">Charlas</h2>
+        <h3 data-i18n="charlas.ponencia">Charla para el profesorado del IES San Vicente Ferrer</h3>
+        <p data-i18n="charlas.tema">Tema: aplicación de la inteligencia artificial en la educación.</p>
+        <p class="etiqueta" data-i18n="charlas.fecha">Noviembre de 2026</p>
+        <p class="nota" data-i18n="charlas.proximas">Próximamente, nuevas charlas en más centros.</p>
+      </article>
+      <article class="cartel" data-plataforma="unSentido" style="--x:790;--y:380;--w:520">
+        <h3 data-i18n="eventos.titulo">Aprendizaje y eventos</h3>
+        <ul class="lista">
+          <li data-i18n="eventos.1">Asistencia a ponencias y eventos del sector tecnológico.</li>
+          <li data-i18n="eventos.2">Especial interés en la charla de Luis Ferrándiz sobre consultorías digitales.</li>
+          <li data-i18n="eventos.3">Asistencia a charlas de Mateo Valero, fundador del Barcelona Supercomputing Center.</li>
+        </ul>
+      </article>
+      <span class="pieza decor" style="--x:300;--y:260"></span>
+      <span class="pieza decor" style="--x:650;--y:380"></span>
+      <span class="pieza decor" style="--x:1000;--y:320"></span>
+    </section>
 
-      <div class="cta-box p-8 sm:p-16 text-center" data-aos="fade-up">
+    <section class="zona" id="idiomas" data-zona="idiomas" style="--x:15600;--ancho:1200">
+      <div class="bandera decor" style="--x:30;--y:520"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:640;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:150;--y:510;--w:100"></div>
+      <article class="cartel" data-plataforma="unSentido" style="--x:290;--y:400;--w:440">
+        <h2 data-i18n="idiomas.titulo">Idiomas</h2>
+        <ul class="lista idiomas">
+          <li><span class="bandera-mini es" aria-hidden="true"></span><span data-i18n="idiomas.es">Español · nativo</span></li>
+          <li><span class="bandera-mini va" aria-hidden="true"></span><span data-i18n="idiomas.va">Valenciano · alto</span></li>
+          <li><span class="bandera-mini en" aria-hidden="true"></span><span data-i18n="idiomas.en">Inglés · nivel funcional, con experiencia laboral internacional (sin certificación oficial)</span></li>
+        </ul>
+      </article>
+      <article class="cartel" data-plataforma="unSentido" style="--x:790;--y:430;--w:380">
+        <h2 data-i18n="otros.titulo">Otros datos</h2>
+        <ul class="lista">
+          <li data-i18n="otros.carnet">Carnet de conducir B.</li>
+          <li data-i18n="otros.disponible">Disponible para impartir charlas y colaborar en proyectos tecnológicos.</li>
+        </ul>
+      </article>
+      <div class="coche decor" data-plataforma="unSentido" style="--x:820;--y:690;--w:220"></div>
+      <span class="pieza decor" style="--x:480;--y:340"></span>
+      <span class="pieza decor" style="--x:960;--y:630"></span>
+      <span class="pieza decor" style="--x:980;--y:370"></span>
+    </section>
 
-        <span class="section-label">Empecemos</span>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 mt-2">
-          ¿Listo para automatizar<br />
-          <span class="gradient-text">y crecer?</span>
-        </h2>
-        <p class="text-slate-400 text-lg mb-12 max-w-md mx-auto">
-          Primera consulta gratuita, sin compromiso. Cuéntame tu proyecto y te digo cómo puedo ayudarte.
-        </p>
-
-        <!-- Botones de contacto directo -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-2xl mx-auto mb-12">
-
-          <!-- Teléfono -->
-          <a href="tel:+34658240032" class="contact-btn cb-phone"
-            aria-label="Llamar a Xesco: +34 658 240 032">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.49 5.49l.94-.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-            </svg>
-            <span class="text-xs font-bold mt-0.5">Llamar</span>
-            <span class="cb-label">+34 658 240 032</span>
-          </a>
-
-          <!-- WhatsApp -->
-          <a href="https://wa.me/34658240032" target="_blank" rel="noopener noreferrer"
-            class="contact-btn cb-whatsapp"
-            aria-label="Contactar por WhatsApp">
-            <!-- WhatsApp SVG -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="#25D366">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-            </svg>
-            <span class="text-xs font-bold mt-0.5" style="color:#25D366">WhatsApp</span>
-            <span class="cb-label">Respondo rápido</span>
-          </a>
-
-          <!-- Email -->
-          <a href="mailto:xescoalabaucalatayud2@gmail.com" class="contact-btn cb-email"
-            aria-label="Enviar email a Xesco">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none"
-              stroke="#0071e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="20" height="16" x="2" y="4" rx="2"/>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-            </svg>
-            <span class="text-xs font-bold mt-0.5">Email</span>
-            <span class="cb-label">Escríbeme</span>
-          </a>
-
-          <!-- LinkedIn -->
-          <a href="https://www.linkedin.com/in/francisco-alabau-calatayud-329196330/"
-            target="_blank" rel="noopener noreferrer"
-            class="contact-btn cb-linkedin"
-            aria-label="Sígueme en LinkedIn: Francisco Alabau Calatayud">
-            <!-- LinkedIn SVG oficial -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="#0A66C2">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-            <span class="text-xs font-bold mt-0.5" style="color:#0A66C2">LinkedIn</span>
-            <span class="cb-label">Conéctame</span>
-          </a>
-
-        </div><!-- /contact buttons -->
-
-        <!-- Separador "o envía un mensaje" -->
-        <div class="flex items-center gap-4 mb-10 max-w-sm mx-auto">
-          <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
-          <span class="text-slate-500 text-sm whitespace-nowrap">o envíame un mensaje</span>
-          <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
-        </div>
-
-        <!-- Formulario de contacto (Web3Forms — web3forms.com) -->
-        <form id="contact-form"
-          action="https://api.web3forms.com/submit"
-          method="POST"
-          class="max-w-lg mx-auto text-left space-y-4">
-
-          <input type="hidden" name="access_key" value="11003856-d192-4b60-9d0c-4ad8a9e5654d">
-          <input type="hidden" name="subject" value="Nuevo contacto desde xescoalabau.com">
-          <input type="hidden" name="from_name" value="Web xescoalabau.com">
-          <input type="checkbox" name="botcheck" style="display:none;">
-
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label for="name" class="block text-sm font-medium text-slate-300 mb-2">Nombre *</label>
-              <input type="text" id="name" name="name" required
-                placeholder="Tu nombre"
-                class="form-input" autocomplete="name" />
-            </div>
-            <div>
-              <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Email *</label>
-              <input type="email" id="email" name="email" required
-                placeholder="tu@email.com"
-                class="form-input" autocomplete="email" />
-            </div>
+    <section class="zona" id="contacto" data-zona="contacto" style="--x:16800;--ancho:1700">
+      <div class="bandera meta decor" style="--x:120;--y:200"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:220;--y:650;--w:110"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:260;--y:520;--w:100"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:300;--y:390;--w:100"></div>
+      <div class="escalon decor" data-plataforma="unSentido" style="--x:340;--y:270;--w:100"></div>
+      <div class="puesto decor" style="--x:470;--y:70;--w:880"><span class="noren" aria-hidden="true">ラーメン</span></div>
+      <article class="cartel contacto" data-plataforma="unSentido" style="--x:520;--y:180;--w:780">
+        <h2 data-i18n="contacto.titulo">¿Hablamos?</h2>
+        <p data-i18n="contacto.texto">Haz tu pedido: un proyecto, una charla o un café.</p>
+        <ul class="contacto-enlaces">
+          <li><a href="tel:+34658240032">+34 658 240 032</a></li>
+          <li><a href="mailto:xescoalabaucalatayud2@gmail.com">xescoalabaucalatayud2@gmail.com</a></li>
+          <li><a href="https://wa.me/34658240032" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="https://www.linkedin.com/in/francisco-alabau-calatayud-329196330/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://github.com/xesc004" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+        <form id="formulario-contacto" class="formulario" action="https://api.web3forms.com/submit" method="POST" data-error="Hubo un error al enviar el mensaje. Escríbeme directamente a xescoalabaucalatayud2@gmail.com" data-i18n-attr="data-error:contacto.error">
+          <input type="hidden" name="access_key" value="11003856-d192-4b60-9d0c-4ad8a9e5654d" />
+          <input type="hidden" name="subject" value="Nuevo contacto desde xescoalabau.com" />
+          <input type="hidden" name="from_name" value="Web xescoalabau.com" />
+          <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off" />
+          <div class="formulario-fila">
+            <label><span data-i18n="contacto.nombre">Nombre</span><input type="text" name="name" required autocomplete="name" /></label>
+            <label><span data-i18n="contacto.email">Email</span><input type="email" name="email" required autocomplete="email" /></label>
           </div>
-
-          <div>
-            <label for="service" class="block text-sm font-medium text-slate-300 mb-2">Servicio de interés</label>
-            <select id="service" name="service" class="form-input">
-              <option value="">Selecciona un servicio…</option>
-              <option value="automatizaciones">Automatizaciones empresariales</option>
-              <option value="web">Desarrollo web</option>
-              <option value="apps">Aplicaciones a medida</option>
-              <option value="consultoria">Consultoría tecnológica</option>
-              <option value="otro">Otro</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="message" class="block text-sm font-medium text-slate-300 mb-2">Cuéntame tu proyecto *</label>
-            <textarea id="message" name="message" required rows="4"
-              placeholder="Describe brevemente qué necesitas…"
-              class="form-input resize-none"></textarea>
-          </div>
-
-          <button type="submit" id="submit-btn" class="btn-primary w-full justify-center text-base">
-            Enviar mensaje
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
-            </svg>
-          </button>
-
-          <!-- Mensaje de éxito -->
-          <div id="form-success"
-            class="text-center text-emerald-400 text-sm py-3 font-medium"
-            role="alert">
-            ✓ Mensaje enviado. Te respondo en menos de 24 h.
-          </div>
-
+          <label><span data-i18n="contacto.mensaje">Mensaje</span><textarea name="message" rows="3" required></textarea></label>
+          <button type="submit" class="boton-enviar" data-i18n="contacto.enviar">Enviar pedido</button>
+          <p class="form-exito" role="status" hidden data-i18n="contacto.exito">✓ Pedido recibido. Te respondo en menos de 24 h.</p>
         </form>
+      </article>
+      <span class="pieza decor" style="--x:385;--y:200"></span>
+      <span class="pieza decor" style="--x:1420;--y:600"></span>
+      <span class="pieza decor" style="--x:1560;--y:400"></span>
+    </section>
 
-      </div><!-- /cta-box -->
-    </div>
-  </section>
+    <div id="muneco" class="muneco" role="img" aria-label="Minifigura de Xesco. Arrástrala con el ratón" data-i18n-attr="aria-label:muneco.etiqueta"></div>
+  </main>
 
+  <p id="mensaje-meta" class="mensaje-meta" role="status" hidden data-plantilla="¡Nivel completado! Has encontrado {n} de {total} piezas." data-i18n-attr="data-plantilla:meta.mensaje"></p>
 
-  <!-- ════════════════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════════════════ -->
-  <footer class="py-12 sm:py-16">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12"
-        style="border-bottom:1px solid var(--border);">
-
-        <!-- Brand -->
-        <div class="lg:col-span-2">
-          <div class="mb-3">
-            <img src="LogoSinNombreSinFondo.png" alt="XescoSolutions" class="h-12 w-auto" style="max-height:48px;">
-          </div>
-          <p class="text-slate-400 text-sm mb-6 max-w-xs leading-relaxed">
-            Especialista en automatizaciones, desarrollo web y aplicaciones a medida.
-            Transformo negocios con tecnología que funciona.
-          </p>
-          <!-- Social icons -->
-          <div class="flex gap-3" role="list" aria-label="Redes sociales">
-            <a href="https://www.linkedin.com/in/francisco-alabau-calatayud-329196330/"
-              target="_blank" rel="noopener noreferrer"
-              class="social-btn linkedin-btn"
-              role="listitem"
-              aria-label="Sígueme en LinkedIn: Francisco Alabau Calatayud">
-              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="#0A66C2">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-            </a>
-            <a href="https://wa.me/34658240032"
-              target="_blank" rel="noopener noreferrer"
-              class="social-btn whatsapp-btn"
-              role="listitem"
-              aria-label="Contáctame por WhatsApp">
-              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="#25D366">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Navegación -->
-        <div>
-          <h4 class="font-semibold text-sm mb-5" style="color:var(--text);">Navegación</h4>
-          <ul class="space-y-3">
-            <li><a href="#inicio"           class="nav-link">Inicio</a></li>
-            <li><a href="#servicios"        class="nav-link">Servicios</a></li>
-            <li><a href="#por-que-elegirme" class="nav-link">Por qué yo</a></li>
-            <li><a href="#proceso"          class="nav-link">Proceso</a></li>
-            <li><a href="#contacto"         class="nav-link">Contacto</a></li>
-          </ul>
-        </div>
-
-        <!-- Contacto -->
-        <div>
-          <h4 class="font-semibold text-sm mb-5" style="color:var(--text);">Contacto directo</h4>
-          <ul class="space-y-3">
-            <li>
-              <a href="tel:+34658240032" class="nav-link flex items-center gap-2 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.49 5.49l.94-.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                </svg>
-                +34 658 240 032
-              </a>
-            </li>
-            <li>
-              <a href="mailto:xescoalabaucalatayud2@gmail.com" class="nav-link flex items-center gap-2 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect width="20" height="16" x="2" y="4" rx="2"/>
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                </svg>
-                Email
-              </a>
-            </li>
-            <li>
-              <a href="https://wa.me/34658240032"
-                target="_blank" rel="noopener noreferrer"
-                class="nav-link flex items-center gap-2 text-sm">
-                <span style="color:#25D366;font-size:0.85rem;">●</span>
-                WhatsApp
-              </a>
-            </li>
-            <li>
-              <a href="https://www.linkedin.com/in/francisco-alabau-calatayud-329196330/"
-                target="_blank" rel="noopener noreferrer"
-                class="nav-link flex items-center gap-2 text-sm"
-                aria-label="LinkedIn: Francisco Alabau Calatayud">
-                <span style="color:#0A66C2;font-size:0.85rem;">●</span>
-                LinkedIn
-              </a>
-            </li>
-          </ul>
-        </div>
-
-      </div><!-- /grid -->
-
-      <!-- Bottom bar -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p class="text-slate-600 text-xs">
-          © 2025 Francisco Alabau Calatayud (XescoSolutions) · Todos los derechos reservados.
-        </p>
-        <p class="text-slate-600 text-xs flex items-center gap-1">
-          Basados en Valencia, España &nbsp;·&nbsp; Hecho con <span class="text-rose-500">♥</span>
-        </p>
-      </div>
-
-    </div>
-  </footer>
-
-
-  <!-- ════════════════════════════════════════════════════════
-       SCRIPTS
-  ═══════════════════════════════════════════════════════════ -->
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/sphere3d.js"></script>
-
+  <div class="tactil" aria-hidden="true">
+    <button type="button" class="tactil-boton" data-control="izquierda" tabindex="-1">◀</button>
+    <button type="button" class="tactil-boton" data-control="derecha" tabindex="-1">▶</button>
+    <button type="button" class="tactil-boton tactil-saltar" data-control="saltar" tabindex="-1" data-i18n="tactil.saltar">Saltar</button>
+  </div>
 </body>
 </html>

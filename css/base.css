@@ -1,0 +1,96 @@
+/* Tokens, tipografía y utilidades comunes al juego y al modo CV rápido */
+:root {
+  --naranja: #F47B20;
+  --naranja-oscuro: #C85A0E;
+  --naranja-claro: #FFE2C7;
+  --marino: #1D2840;
+  --crema: #FFF6EC;
+  --crema-sombra: #E8D3B8;
+  --madera: #8B5A2B;
+  --madera-oscura: #6B4423;
+  --hoja: #5E9E3F;
+  --texto: #1D2030;
+  --texto-suave: #4A4F63;
+  --fuente-titulos: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --fuente-texto: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --escala: 1;
+  --mundo-y: 0px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  font-family: var(--fuente-texto);
+  color: var(--texto);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html.juego, html.juego body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.juego body {
+  background: #A9DCF5;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+img { display: block; max-width: 100%; }
+
+h1, h2, h3 {
+  margin: 0;
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--marino);
+}
+
+p, ul, ol, figure { margin: 0; }
+
+a { color: var(--naranja-oscuro); }
+
+[hidden] { display: none !important; }
+
+:focus-visible {
+  outline: 3px solid var(--naranja);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.saltar-cv {
+  position: fixed;
+  z-index: 100;
+  left: 12px;
+  top: -80px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--marino);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.saltar-cv:focus { top: 12px; }
+
+.solo-tactil { display: none; }
+
+@media (pointer: coarse) {
+  .solo-tactil { display: block; }
+  .solo-raton { display: none; }
+}
