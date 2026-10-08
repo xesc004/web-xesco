@@ -521,13 +521,18 @@ function crearJuego(sprites) {
   });
 
   estado.camaraAnterior = camara.x;
-  let bucle = iniciarBucle({ actualizar, dibujar });
+  // Mientras se ve la intro no hace falta animar el nivel (en móviles lentos ahorra mucho trabajo):
+  // se dibuja una vez y el bucle arranca al quitarla
+  let bucle = null;
+  if (introActiva()) dibujar();
+  else bucle = iniciarBucle({ actualizar, dibujar });
   return {
     jugador,
     estado,
     objetos,
     pausar() {
-      bucle.detener();
+      bucle?.detener();
+      bucle = null;
       entrada.activar(false);
       callar(bocadillo);
     },
@@ -535,10 +540,15 @@ function crearJuego(sprites) {
       medir();
       entrada.activar(true);
       estado.ultimoDibujo = performance.now();
+      bucle?.detener();
       bucle = iniciarBucle({ actualizar, dibujar });
     },
     // Al quitar la intro: el saludo empieza de nuevo para que se vea y se comenta la zona actual
     alTerminarIntro() {
+      if (!bucle && !enModoCV()) {
+        estado.ultimoDibujo = performance.now();
+        bucle = iniciarBucle({ actualizar, dibujar });
+      }
       if (jugador.estado === 'saludando') jugador.tiempo = 0;
       if (estado.zonaPendiente) decir(bocadillo, `zona.${estado.zonaPendiente}`);
       estado.zonaPendiente = null;
