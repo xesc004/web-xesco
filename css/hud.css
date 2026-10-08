@@ -553,29 +553,41 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
 
 .sala-tuberia-suelo.cerca .sala-flecha { opacity: 1; animation: flecha-tuberia 0.8s ease-in-out infinite; }
 
-/* El muñeco de la sala: se dibuja entre las tuberías (detrás de ellas al entrar y salir) */
+/* El muñeco de la sala: lo mueve la física (sala.js); se dibuja detrás de las tuberías para entrar y salir */
 .sala-muneco {
   position: fixed;
   left: 0;
-  bottom: 54px;
+  top: 0;
   z-index: 2;
   width: 160px;
   height: 160px;
-  scale: var(--sala-escala, 1);
-  transform-origin: 0 100%;
+  transform-origin: 0 0;
   pointer-events: none;
 }
 
 .sala-muneco .muneco { transform-origin: 50% 50%; }
-.sala-muneco.entrando { animation: sala-caer 0.65s cubic-bezier(0.55, 0, 1, 0.45) both; }
-.sala-muneco.saliendo { animation: sala-hundirse 0.5s ease-in forwards; }
+.sala-escena:focus { outline: none; }
 
-@keyframes sala-caer {
-  from { translate: 0 -80vh; }
-  85% { translate: 0 8px; }
+/* Controles táctiles dentro de la sala */
+.sala-tactil { display: none; }
+
+@media (pointer: coarse) {
+  .sala-tactil {
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    right: 0;
+    bottom: max(56px, calc(env(safe-area-inset-bottom) + 50px));
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    padding: 0 100px 0 12px;
+    pointer-events: none;
+  }
+  .sala-tactil .tactil-boton { width: 58px; height: 58px; font-size: 22px; }
+  .sala-tactil .tactil-boton[data-control="derecha"] { margin-right: auto; }
+  .sala-tactil .tactil-saltar { width: 70px; height: 70px; font-size: 15px; }
 }
-
-@keyframes sala-hundirse { to { translate: 0 180px; } }
 
 .sala-contenido {
   position: relative;
@@ -690,7 +702,6 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   .sala-icono { width: 48px; height: 48px; border-radius: 12px; }
   .sala-frase { font-size: 17px; }
   .sala-escena::after { height: 44px; }
-  .sala-muneco { bottom: 38px; }
   .sala-tuberia { width: 76px; background-size: 62px 100%; }
   .sala-tuberia::before { height: 26px; }
   .sala-tuberia-techo { left: 10px; height: 54px; }
@@ -698,6 +709,6 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sala-muneco.entrando, .sala-muneco.saliendo, .sala-pantalla > img.actual,
+  .sala-pantalla > img.actual,
   .sala-tuberia-suelo.cerca .sala-flecha { animation: none; }
 }

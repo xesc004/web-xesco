@@ -32,9 +32,17 @@
 .capa-arboles { background-image: url("../img/fondo/arboles.svg"); }
 .capa-frente { background-image: url("../img/fondo/primer-plano.svg"); }
 
+/* Las capas de la noche solo existen desde que empieza a oscurecer (.noche-activa la pone fondo.js): de día no
+   cuestan nada. */
+.escena:not(.noche-activa) .capa-luces,
+.escena:not(.noche-activa) .estrellas { visibility: hidden; }
+
 /* Anochecer: cada capa se tiñe con su propia silueta como máscara (solo cambia la opacidad, --noche va de 0 a 1).
-   Las URL van escritas en cada regla: dentro de una variable CSS obligan a volver a rasterizar en cada fotograma. */
-.capa-montana::after, .capa-colinas::after, .capa-aldea::after, .capa-arboles::after, .capa-frente::after {
+   Las URL van escritas en cada regla: dentro de una variable CSS obligan a volver a rasterizar en cada fotograma.
+   will-change: opacity deja cada tinte en su propia capa: al cambiar la noche solo se recompone, sin repintar
+   la máscara (repintarla en cada paso era el tirón al final del nivel). */
+.noche-activa .capa-montana::after, .noche-activa .capa-colinas::after, .noche-activa .capa-aldea::after,
+.noche-activa .capa-arboles::after, .noche-activa .capa-frente::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -46,6 +54,7 @@
   -webkit-mask-repeat: repeat-x;
   mask-repeat: repeat-x;
   opacity: calc(var(--noche, 0) * var(--oscurece));
+  will-change: opacity;
 }
 
 .capa-montana::after { -webkit-mask-image: url("../img/fondo/montana.svg"); mask-image: url("../img/fondo/montana.svg"); --oscurece: 0.62; }
@@ -58,6 +67,7 @@
 .capa-luces {
   background-image: url("../img/fondo/aldea-luces.svg");
   opacity: var(--noche, 0);
+  will-change: transform, opacity;
 }
 
 .estrellas {
@@ -77,6 +87,7 @@
     radial-gradient(1.5px 1.5px at 85% 42%, #fff 50%, transparent 51%);
   background-size: 640px 100%;
   opacity: calc((var(--noche, 0) - 0.4) * 1.6);
+  will-change: opacity;
 }
 
 /* Hojas: una capa detrás del mundo (dentro de .escena) y otra delante, en el primer plano */

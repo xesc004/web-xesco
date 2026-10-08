@@ -55,12 +55,12 @@ test.describe('juego', () => {
     await abrirJuego(page);
     await expect(page.locator('.tactil')).toBeVisible();
     const antes = await estadoJugador(page);
-    const derecha = page.locator('.tactil-boton[data-control="derecha"]');
+    const derecha = page.locator('.tactil .tactil-boton[data-control="derecha"]');
     await derecha.dispatchEvent('pointerdown', { pointerId: 7, isPrimary: true });
     await page.waitForTimeout(600);
     await derecha.dispatchEvent('pointerup', { pointerId: 7, isPrimary: true });
     expect((await estadoJugador(page)).x).toBeGreaterThan(antes.x + 100);
-    const saltar = page.locator('.tactil-boton[data-control="saltar"]');
+    const saltar = page.locator('.tactil .tactil-boton[data-control="saltar"]');
     await saltar.dispatchEvent('pointerdown', { pointerId: 8, isPrimary: true });
     await page.waitForTimeout(150);
     expect((await estadoJugador(page)).enSuelo).toBe(false);
@@ -105,4 +105,29 @@ test('en móvil el minimapa es un desplegable con las zonas', async ({ page }, i
   await page.locator('.minimapa [data-ir="charlas"]').click();
   await expect(abrir).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('.minimapa-abrir-zona')).toHaveText('Charlas');
+});
+
+test('en la sala hay que saltar encima de la tubería y pulsar ↓ para salir', async ({ page }, info) => {
+  test.skip(info.project.name.startsWith('movil'), 'teclado solo en escritorio');
+  await abrirJuego(page);
+  await page.locator('.tuberia-boton[data-sala="yunque"]').dispatchEvent('click');
+  const sala = page.locator('#sala');
+  await expect(sala).toBeVisible();
+  await page.waitForTimeout(1500);
+  // ↓ en el suelo no hace nada: la tubería es un bloque real
+  await page.keyboard.press('ArrowDown');
+  await page.waitForTimeout(400);
+  await expect(sala).toBeVisible();
+  // Andar hasta la tubería (choca con ella), saltar y quedarse encima
+  await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(3500);
+  await page.keyboard.down('Space');
+  await page.waitForTimeout(450);
+  await page.keyboard.up('Space');
+  await page.waitForTimeout(800);
+  await page.keyboard.up('ArrowRight');
+  await page.waitForTimeout(300);
+  await expect(page.locator('.sala-tuberia-suelo')).toHaveClass(/cerca/);
+  await page.keyboard.press('ArrowDown');
+  await expect(sala).toBeHidden({ timeout: 4_000 });
 });

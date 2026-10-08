@@ -9,6 +9,8 @@ const CIELO = [
 ];
 const NOCHE_DESDE = 0.68;
 const NOCHE_HASTA = 0.95;
+// La noche se aplica a saltos de 4 %: menos recálculos de estilo y a simple vista igual de suave
+const PASO_NOCHE = 0.04;
 
 function mezclar(a, b, t) {
   return a.map((v, i) => Math.round(v + (b[i] - v) * t));
@@ -67,10 +69,13 @@ export function actualizarFondo(fondo, desplazamientoPx, progreso, reducido) {
     fondo.cielo.style.setProperty('--cielo-arriba', arriba);
     fondo.cielo.style.setProperty('--cielo-abajo', abajo);
     fondo.ultimoProgreso = progreso;
-    const noche = oscuridad(progreso);
-    if (Math.abs(noche - fondo.ultimaNoche) >= 0.01 || (noche !== fondo.ultimaNoche && (noche === 0 || noche === 1))) {
+    const noche = Math.round(oscuridad(progreso) / PASO_NOCHE) * PASO_NOCHE;
+    if (noche !== fondo.ultimaNoche) {
       fondo.ultimaNoche = noche;
-      for (const el of fondo.nocturnos) el.style.setProperty('--noche', String(noche));
+      for (const el of fondo.nocturnos) {
+        el.style.setProperty('--noche', String(noche));
+        el.classList.toggle('noche-activa', noche > 0);
+      }
     }
   }
 }

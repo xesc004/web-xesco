@@ -61,7 +61,7 @@ function pintarDepuracion(colisionadores) {
 }
 
 function activarControlesTactiles(entrada) {
-  document.querySelectorAll('.tactil-boton').forEach((boton) => {
+  document.querySelectorAll('.tactil .tactil-boton').forEach((boton) => {
     const accion = boton.dataset.control;
     const soltar = () => {
       entrada.soltar(accion);

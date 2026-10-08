@@ -590,7 +590,7 @@
   </div>
 
   <dialog id="sala" class="sala" aria-labelledby="sala-titulo">
-    <div class="sala-escena">
+    <div class="sala-escena" tabindex="-1">
       <div class="sala-tuberia sala-tuberia-techo" aria-hidden="true"></div>
       <div class="sala-tuberia sala-tuberia-suelo" aria-hidden="true"><span class="sala-flecha">↓</span></div>
       <div class="sala-muneco" aria-hidden="true"><span class="muneco"></span></div>
@@ -603,9 +603,15 @@
           <ul class="sala-puntos"></ul>
           <ul class="sala-stack" aria-label="Tecnologías" data-i18n-attr="aria-label:sala.stack"></ul>
           <div class="sala-tienda"></div>
-          <p class="sala-pista solo-raton" data-i18n="sala.pista">← → para andar · ↓ en la tubería verde para salir</p>
+          <p class="sala-pista solo-raton" data-i18n="sala.pista">← → para andar · Espacio para saltar · ↓ encima de la tubería verde para salir</p>
           <button type="button" class="sala-salir" data-i18n="sala.salir">Salir por la tubería</button>
         </div>
+      </div>
+      <div class="sala-tactil" aria-hidden="true">
+        <button type="button" class="tactil-boton" data-control="izquierda" tabindex="-1">◀</button>
+        <button type="button" class="tactil-boton" data-control="derecha" tabindex="-1">▶</button>
+        <button type="button" class="tactil-boton" data-control="bajar" tabindex="-1">▼</button>
+        <button type="button" class="tactil-boton tactil-saltar" data-control="saltar" tabindex="-1" data-i18n="tactil.saltar">Saltar</button>
       </div>
     </div>
   </dialog>

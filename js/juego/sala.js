@@ -1,9 +1,10 @@
 // Sala de cada app: se entra por una tubería del nivel. Muestra la app funcionando (su vídeo si el artículo tiene
 // data-demo; si no, sus capturas animadas dentro de un móvil), su enlace a la tienda y su stack.
-// El muñeco cae por la tubería del techo, se puede mover con ← → y sale por la tubería del suelo con ↓.
+// El muñeco cae por la tubería del techo y, con la misma física que el nivel, tiene que saltar encima de la del
+// suelo y meterse con ↓.
 import { aplicarHoja, posicionFotograma } from './jugador.js';
+import { crearCuerpo, paso } from '../motor/fisica.js';
 
-const VELOCIDAD = 320;
 const CAMBIO_PANTALLA = 2600;
 const reducido = matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -96,28 +97,101 @@ function rellenarInfo(dialogo, articulo) {
   if (boton) tienda.appendChild(boton.cloneNode(true));
 }
 
+// Física real dentro de la sala, en las mismas unidades que el nivel (px de pantalla / escala de la sala):
+// el muñeco cae por la tubería del techo, salta encima de la del suelo y se mete con ↓.
+const PASO = 1 / 120;
+const SIN_ENTRADA = { izquierda: false, derecha: false, saltar: false, saltoPulsado: false, bajar: false, correr: false };
+const TECLAS = {
+  ArrowLeft: 'izquierda', KeyA: 'izquierda', ArrowRight: 'derecha', KeyD: 'derecha',
+  Space: 'saltar', ArrowUp: 'saltar', KeyW: 'saltar', ArrowDown: 'bajar', KeyS: 'bajar',
+};
+
 export function crearSala({ sprites, alSalir, alSonar }) {
   const dialogo = document.getElementById('sala');
   const escena = dialogo.querySelector('.sala-escena');
   const muneco = dialogo.querySelector('.sala-muneco');
   const sprite = muneco.querySelector('.muneco');
+  const techo = dialogo.querySelector('.sala-tuberia-techo');
   const salida = dialogo.querySelector('.sala-tuberia-suelo');
   aplicarHoja(sprite, sprites);
-  const teclas = new Set();
-  const m = { x: 0, mirando: 1, tiempo: 0, fase: 'fuera', app: null };
+  const pulsadas = new Set();
+  let flancoSaltar = false;
+  let flancoBajar = false;
+  const m = { c: null, escala: 1, mirando: 1, tiempo: 0, anim: 'caer', fase: 'fuera', app: null, hundido: 0, mundo: [] };
   let parar = () => {};
   let id = 0;
   let anterior = 0;
+  let acumulado = 0;
 
-  // Posiciones del borde izquierdo del muñeco (que en el móvil se dibuja más pequeño)
-  function limites() {
-    const mitad = muneco.getBoundingClientRect().width / 2 || 80;
+  // Colisionadores de la sala medidos del DOM: suelo, paredes y la tubería de salida (sólida)
+  function medir() {
+    const s = Number(getComputedStyle(dialogo).getPropertyValue('--sala-escala')) || 1;
+    const suelo = parseFloat(getComputedStyle(escena, '::after').height) || 60;
     const tubo = salida.getBoundingClientRect();
-    return { min: 30, max: escena.clientWidth - 2 * mitad - 10, salida: tubo.left + tubo.width / 2 - mitad };
+    const ancho = innerWidth / s;
+    const alto = (innerHeight - suelo) / s;
+    m.escala = s;
+    m.mundo = [
+      { id: 'suelo', x: -200, y: alto, w: ancho + 400, h: 400, tipo: 'solido' },
+      { id: 'pared-izquierda', x: -200, y: -3000, w: 200, h: 6000, tipo: 'solido' },
+      { id: 'pared-derecha', x: ancho, y: -3000, w: 200, h: 6000, tipo: 'solido' },
+      { id: 'tubo', x: tubo.left / s, y: tubo.top / s, w: tubo.width / s, h: tubo.height / s, tipo: 'solido' },
+    ];
   }
 
-  function cercaDeLaSalida() {
-    return Math.abs(m.x - limites().salida) < 70;
+  function tubo() {
+    return m.mundo[3];
+  }
+
+  function encimaDelTubo() {
+    return m.c.enSuelo && m.c.sobre?.id === 'tubo';
+  }
+
+  // Piloto automático (botón «Salir», Esc o clic en la tubería): anda hacia ella, salta encima y se mete
+  function entradaAutomatica() {
+    const c = m.c;
+    const t = tubo();
+    const dx = t.x + t.w / 2 - (c.x + c.w / 2);
+    if (encimaDelTubo()) return { ...SIN_ENTRADA, bajar: true };
+    const cerca = Math.abs(dx) < t.w / 2 + 170;
+    return {
+      ...SIN_ENTRADA,
+      derecha: dx > 6,
+      izquierda: dx < -6,
+      saltar: c.enSuelo && cerca,
+      saltoPulsado: true,
+    };
+  }
+
+  function leerEntrada() {
+    if (m.fase === 'auto') return entradaAutomatica();
+    const e = {
+      izquierda: pulsadas.has('izquierda'),
+      derecha: pulsadas.has('derecha'),
+      saltar: flancoSaltar,
+      saltoPulsado: pulsadas.has('saltar'),
+      bajar: flancoBajar,
+      correr: false,
+    };
+    flancoSaltar = false;
+    flancoBajar = false;
+    return e;
+  }
+
+  function pasoFisico() {
+    const c = m.c;
+    if (m.fase === 'saliendo') {
+      // Se hunde por la tubería (detrás de ella)
+      m.hundido += PASO;
+      c.y += 320 * PASO;
+      if (m.hundido >= 0.5) cerrar();
+      return;
+    }
+    const e = m.fase === 'cayendo' ? SIN_ENTRADA : leerEntrada();
+    const eventos = paso(c, e, m.mundo, PASO);
+    if (m.fase === 'cayendo' && eventos.some((ev) => ev.tipo === 'aterriza')) m.fase = 'dentro';
+    if (e.derecha !== e.izquierda) m.mirando = e.derecha ? 1 : -1;
+    if (e.bajar && encimaDelTubo()) meterse();
   }
 
   function fotograma(nombre) {
@@ -130,74 +204,108 @@ export function crearSala({ sprites, alSalir, alSonar }) {
     const dt = Math.min((ahora - anterior) / 1000, 0.1);
     anterior = ahora;
     m.tiempo += dt;
-    const { min, max } = limites();
-    let anda = false;
-    if (m.fase === 'dentro') {
-      const dir = (teclas.has('ArrowRight') ? 1 : 0) - (teclas.has('ArrowLeft') ? 1 : 0);
-      if (dir) {
-        m.x = Math.max(min, Math.min(max, m.x + dir * VELOCIDAD * dt));
-        m.mirando = dir;
-        anda = true;
-      }
-    } else if (m.fase === 'hacia-salida') {
-      // Camina solo hasta la tubería del suelo y se mete
-      const objetivo = limites().salida;
-      const paso = VELOCIDAD * 1.4 * dt;
-      m.mirando = Math.sign(objetivo - m.x) || 1;
-      anda = Math.abs(objetivo - m.x) > paso;
-      m.x = anda ? m.x + m.mirando * paso : objetivo;
-      if (!anda) meterse();
+    acumulado += dt;
+    while (acumulado >= PASO && m.fase !== 'fuera') {
+      pasoFisico();
+      acumulado -= PASO;
     }
-    const nombre = m.fase === 'cayendo' ? 'caer' : anda ? 'andar' : 'parado';
+    if (m.fase === 'fuera') return;
+    const c = m.c;
+    let nombre = 'parado';
+    if (m.fase === 'saliendo') nombre = 'parado';
+    else if (!c.enSuelo) nombre = c.vy < 0 ? 'saltar' : 'caer';
+    else if (Math.abs(c.vx) > 25) nombre = 'andar';
+    if (nombre !== m.anim) {
+      m.anim = nombre;
+      m.tiempo = 0;
+    }
+    const s = m.escala;
+    const x = (c.x + c.w / 2 - 80) * s;
+    const y = (c.y + c.h - 160 + sprites.pie) * s;
     sprite.style.backgroundPosition = posicionFotograma(sprites, fotograma(nombre));
-    muneco.style.transform = `translateX(${m.x.toFixed(1)}px)`;
+    muneco.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${s})`;
     sprite.style.transform = `scaleX(${nombre === 'parado' ? 1 : m.mirando})`;
-    salida.classList.toggle('cerca', cercaDeLaSalida());
+    const t = tubo();
+    salida.classList.toggle('cerca', encimaDelTubo() || Math.abs(c.x + c.w / 2 - (t.x + t.w / 2)) < t.w / 2 + 120);
     id = requestAnimationFrame(dibujar);
   }
 
   function meterse() {
     if (m.fase === 'saliendo') return;
+    const c = m.c;
+    const t = tubo();
+    c.x = t.x + t.w / 2 - c.w / 2;
+    c.vx = 0;
     m.fase = 'saliendo';
-    muneco.classList.remove('entrando');
-    muneco.classList.add('saliendo');
+    m.hundido = 0;
     alSonar();
-    setTimeout(cerrar, reducido.matches ? 0 : 520);
   }
 
   function salir() {
-    if (m.fase !== 'dentro' && m.fase !== 'cayendo') return;
-    if (cercaDeLaSalida()) meterse();
-    else m.fase = 'hacia-salida';
+    if (m.fase === 'dentro' || m.fase === 'cayendo') m.fase = 'auto';
   }
 
   function cerrar() {
     cancelAnimationFrame(id);
     parar();
-    teclas.clear();
+    pulsadas.clear();
     const app = m.app;
     m.fase = 'fuera';
     dialogo.close();
     alSalir(app);
   }
 
+  function esControl(el) {
+    return el instanceof HTMLElement && el.matches('button, a, [role="button"]');
+  }
+
   dialogo.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      teclas.add(e.key);
-      e.preventDefault();
-    } else if (e.key === 'ArrowDown' && cercaDeLaSalida()) {
-      e.preventDefault();
-      meterse();
+    const accion = TECLAS[e.code];
+    if (!accion || e.ctrlKey || e.metaKey || e.altKey) return;
+    // Espacio o Intro sobre un botón o enlace lo activan, como siempre
+    if (e.code === 'Space' && esControl(e.target)) return;
+    e.preventDefault();
+    if (!pulsadas.has(accion)) {
+      if (accion === 'saltar') flancoSaltar = true;
+      if (accion === 'bajar') flancoBajar = true;
     }
+    pulsadas.add(accion);
+    if (m.fase === 'auto') m.fase = 'dentro';
   });
-  dialogo.addEventListener('keyup', (e) => teclas.delete(e.key));
-  // Esc: en vez de cerrar de golpe, el muñeco va a la tubería y sale
+  dialogo.addEventListener('keyup', (e) => {
+    const accion = TECLAS[e.code];
+    if (accion) pulsadas.delete(accion);
+  });
+  // Controles táctiles de la sala (los mismos que en el nivel)
+  dialogo.querySelectorAll('.sala-tactil [data-control]').forEach((boton) => {
+    const accion = boton.dataset.control;
+    const soltar = () => {
+      pulsadas.delete(accion);
+      boton.classList.remove('activo');
+    };
+    boton.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      if (!pulsadas.has(accion)) {
+        if (accion === 'saltar') flancoSaltar = true;
+        if (accion === 'bajar') flancoBajar = true;
+      }
+      pulsadas.add(accion);
+      boton.classList.add('activo');
+      if (m.fase === 'auto') m.fase = 'dentro';
+      try { boton.setPointerCapture(e.pointerId); } catch { /* sin captura funciona igual */ }
+    });
+    boton.addEventListener('pointerup', soltar);
+    boton.addEventListener('pointercancel', soltar);
+    boton.addEventListener('lostpointercapture', soltar);
+  });
+  // Esc: en vez de cerrar de golpe, el muñeco va a la tubería, salta encima y sale
   dialogo.addEventListener('cancel', (e) => {
     e.preventDefault();
     salir();
   });
   dialogo.querySelector('.sala-salir').addEventListener('click', salir);
   salida.addEventListener('click', salir);
+  addEventListener('resize', () => { if (dialogo.open) medir(); });
 
   return {
     abierta: () => dialogo.open,
@@ -208,16 +316,18 @@ export function crearSala({ sprites, alSalir, alSonar }) {
       rellenarInfo(dialogo, articulo);
       parar = montarDemo(dialogo.querySelector('.sala-pantalla'), articulo.dataset.demo, [...articulo.querySelectorAll('.capturas img')]);
       dialogo.showModal();
-      dialogo.querySelector('.sala-salir').focus({ preventScroll: true });
-      m.x = limites().min + 20;
+      // El foco va a la escena (no al botón) para que Espacio salte; Tab llega a los botones
+      escena.focus({ preventScroll: true });
+      medir();
+      // Aparece dentro de la tubería del techo y cae
+      const r = techo.getBoundingClientRect();
+      m.c = crearCuerpo({ x: (r.left + r.width / 2) / m.escala - 30, y: r.top / m.escala - 140, w: 60, h: 140 });
       m.mirando = 1;
       m.tiempo = 0;
+      m.anim = 'caer';
       m.fase = 'cayendo';
-      muneco.classList.remove('saliendo');
-      muneco.classList.remove('entrando');
-      void muneco.offsetWidth;
-      muneco.classList.add('entrando');
-      setTimeout(() => { if (m.fase === 'cayendo') m.fase = 'dentro'; }, reducido.matches ? 0 : 650);
+      pulsadas.clear();
+      acumulado = 0;
       anterior = performance.now();
       id = requestAnimationFrame(dibujar);
     },

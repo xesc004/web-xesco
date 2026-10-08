@@ -170,7 +170,7 @@
   "tuberia.entrar": "See the app inside",
   "sala.antetitulo": "Secret room · the app inside",
   "sala.stack": "Technologies",
-  "sala.pista": "← → to walk · ↓ on the green pipe to leave",
+  "sala.pista": "← → to walk · Space to jump · ↓ on top of the green pipe to leave",
   "sala.salir": "Leave through the pipe",
   "frase.tuberia": "A pipe! Press ↓ (or tap it) to see the app inside.",
   "hud.mapa.abrir": ": choose a zone"
