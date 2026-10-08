@@ -12,6 +12,15 @@ export const FISICA = {
   memoriaSalto: 0.12,
   rebote: 1500,
   tiempoAtravesar: 0.25,
+  // Carrera ninja (Shift)
+  velocidadNinja: 640,
+  aceleracionNinja: 3400,
+  // Paredes: deslizamiento lento y salto que impulsa hacia el lado contrario
+  deslizarPared: 240,
+  saltoPared: 940,
+  impulsoPared: 480,
+  bloqueoPared: 0.16,
+  margenPared: 24,
 };
 
 const EPS = 0.01;
@@ -29,6 +38,8 @@ export function crearCuerpo({ x, y, w, h }) {
     saltando: false,
     atravesando: null,
     tiempoAtravesar: 0,
+    pared: 0,
+    bloqueo: 0,
   };
 }
 
@@ -52,12 +63,18 @@ export function paso(c, entrada, colisionadores, dt) {
   const eventos = [];
   const estabaEnSuelo = c.enSuelo;
 
-  // Movimiento horizontal: acelera con la entrada y frena sin ella (menos control en el aire)
-  const dir = (entrada.derecha ? 1 : 0) - (entrada.izquierda ? 1 : 0);
+  // Movimiento horizontal: acelera con la entrada y frena sin ella (menos control en el aire).
+  // Tras un salto de pared la entrada horizontal se ignora un instante para que el impulso se note.
+  if (c.bloqueo > 0) c.bloqueo -= dt;
+  const dir = c.bloqueo > 0 ? 0 : (entrada.derecha ? 1 : 0) - (entrada.izquierda ? 1 : 0);
   const control = c.enSuelo ? 1 : F.controlAereo;
+  const maxima = entrada.correr ? F.velocidadNinja : F.velocidadMax;
+  const aceleracion = entrada.correr ? F.aceleracionNinja : F.aceleracion;
   if (dir !== 0) {
-    c.vx = Math.max(-F.velocidadMax, Math.min(F.velocidadMax, c.vx + dir * F.aceleracion * control * dt));
-  } else {
+    // Por encima de la máxima (al soltar Shift o tras un impulso) se frena poco a poco en vez de recortar de golpe
+    const v = c.vx + dir * aceleracion * control * dt;
+    c.vx = Math.abs(v) <= maxima ? v : Math.sign(v) * Math.max(maxima, Math.abs(c.vx) - F.frenado * control * dt);
+  } else if (c.bloqueo <= 0) {
     const frena = F.frenado * control * dt;
     c.vx = Math.abs(c.vx) <= frena ? 0 : c.vx - Math.sign(c.vx) * frena;
   }
@@ -73,6 +90,15 @@ export function paso(c, entrada, colisionadores, dt) {
     c.memoriaSalto = 0;
     c.tiempoAire = F.margenSalto + dt;
     eventos.push({ tipo: 'salta' });
+  } else if (c.memoriaSalto > 0 && c.pared !== 0 && !c.enSuelo) {
+    // Salto de pared: sale despedido hacia el lado contrario
+    c.vy = -F.saltoPared;
+    c.vx = -c.pared * F.impulsoPared;
+    c.saltando = true;
+    c.memoriaSalto = 0;
+    c.bloqueo = F.bloqueoPared;
+    eventos.push({ tipo: 'saltaPared', lado: c.pared });
+    c.pared = 0;
   }
   if (c.saltando && c.vy < 0 && !entrada.saltoPulsado) {
     c.vy *= F.corteSalto;
@@ -94,14 +120,31 @@ export function paso(c, entrada, colisionadores, dt) {
 
   c.vy = Math.min(c.vy + F.gravedad * dt, F.caidaMax);
 
-  // Eje X: choques laterales con sólidos
+  // Eje X: choques laterales con sólidos y con los costados de los carteles (data-pared).
+  // Un cartel solo hace de pared al caer y empujando contra él: subiendo se atraviesa como siempre.
+  const xAntes = c.x;
   c.x += c.vx * dt;
+  c.pared = 0;
   for (const p of colisionadores) {
-    if (!SOLIDOS.has(p.tipo) || !solapa(c, p)) continue;
-    if (c.vx > 0) c.x = p.x - c.w;
-    else if (c.vx < 0) c.x = p.x + p.w;
-    c.vx = 0;
+    if (SOLIDOS.has(p.tipo)) {
+      if (!solapa(c, p)) continue;
+      const lado = c.vx > 0 ? 1 : c.vx < 0 ? -1 : 0;
+      if (lado > 0) c.x = p.x - c.w;
+      else if (lado < 0) c.x = p.x + p.w;
+      c.vx = 0;
+      if (!c.enSuelo && lado !== 0 && lado === dir) c.pared = lado;
+    } else if (p.pared && !c.enSuelo && dir !== 0 && c.vy >= 0
+      && c.y < p.y + p.h && c.y + c.h > p.y + F.margenPared) {
+      const entraPorIzquierda = dir > 0 && xAntes + c.w <= p.x + EPS && c.x + c.w > p.x;
+      const entraPorDerecha = dir < 0 && xAntes >= p.x + p.w - EPS && c.x < p.x + p.w;
+      if (!entraPorIzquierda && !entraPorDerecha) continue;
+      c.x = entraPorIzquierda ? p.x - c.w : p.x + p.w;
+      c.vx = 0;
+      c.pared = dir;
+    }
   }
+  // Pegado a una pared se resbala despacio
+  if (c.pared !== 0 && c.vy > F.deslizarPared) c.vy = F.deslizarPared;
 
   // Eje Y: suelos, techos, plataformas de un sentido y camas elásticas
   const pieAntes = c.y + c.h;

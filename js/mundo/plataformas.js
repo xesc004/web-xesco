@@ -26,7 +26,9 @@ export function medirPlataformas(mundo) {
     const tipo = el.dataset.plataforma;
     if (!TIPOS.has(tipo) || el.offsetParent === null) return;
     const { x, y } = posicionEnMundo(el, mundo);
-    lista.push({ id: el.id || `plataforma-${i}`, x, y, w: el.offsetWidth, h: el.offsetHeight, tipo, el });
+    // Los costados de los carteles sirven para el salto de pared
+    const pared = el.classList.contains('cartel');
+    lista.push({ id: el.id || `plataforma-${i}`, x, y, w: el.offsetWidth, h: el.offsetHeight, tipo, pared, el });
   });
   lista.push({ id: 'suelo', x: -400, y: Y_SUELO, w: ANCHO_MUNDO + 800, h: 400, tipo: 'solido' });
   lista.push({ id: 'pared-izquierda', x: -200, y: -3000, w: 200, h: 6000, tipo: 'solido' });

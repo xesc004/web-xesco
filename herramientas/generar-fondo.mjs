@@ -1,4 +1,5 @@
-// Genera las cuatro capas SVG del fondo del nivel (parallax 0,1 / 0,25 / 0,5 / 0,8) en img/fondo/.
+// Genera las capas SVG del fondo del nivel (parallax 0,1 / 0,25 / 0,5 / 0,8) en img/fondo/, más las luces de la
+// aldea (mismo encuadre que aldea.svg, se encienden al anochecer) y el primer plano (parallax 1,35).
 //
 //   node herramientas/generar-fondo.mjs
 //
@@ -66,6 +67,10 @@ const COLOR = {
   farol: '#E8553A',
   farolLuz: '#F5876B',
   farolTapa: '#5E3B25',
+  // Luces del anochecer
+  luzCalida: '#FFC965',
+  luzNucleo: '#FFF1C4',
+  luzFarol: '#FF9A4D',
   cable: '#5E4532',
   noren: '#2D3C5F',
   norenNaranja: '#E2701F',
@@ -79,7 +84,14 @@ const COLOR = {
   vallaSombra: '#946234',
   hierba: '#6CAE4B',
   hierbaSombra: '#5E9E3F',
+  // Matas del primer plano (más oscuras: están más cerca y a contraluz)
+  frente: '#3F7A2B',
+  frenteSombra: '#2F6420',
+  frenteLuz: '#55953A',
 };
+
+// Ventanas y farolillos de la aldea que se iluminan de noche; capaAldea() los rellena y capaLuces() los usa.
+const LUCES = { ventanas: [], farolillos: [] };
 
 // ---------------------------------------------------------------------------------------------------------
 // Utilidades
@@ -701,6 +713,7 @@ function fachada({ x, w, y, h, ventanas = [], puerta = null, pilares = [] }) {
   for (const v of ventanas) piezas.push(v.tipo === 'redonda' ? ventanaRedonda(v.x, v.y, v.r) : ventanaReja(v.x, v.y));
   let noren = '';
   if (puerta?.tipo === 'corredera') piezas.push(puertaCorredera(puerta.x, puerta.w, puerta.h));
+  LUCES.ventanas.push(...piezas.map((p) => p.papel));
   const vigas =
     rect(x, y, 10, h) +
     rect(x + w - 10, y, 10, h) +
@@ -863,6 +876,8 @@ function capaAldea() {
   const W = 2800;
   const s = [];
   let defs = '';
+  LUCES.ventanas = [];
+  LUCES.farolillos = [];
 
   // Calle sobre la que se apoya la aldea.
   s.push(relleno(COLOR.calleBorde, rect(0, 762, W, 6)) + relleno(COLOR.calle, rect(0, 768, W, ALTO - 768)));
@@ -987,7 +1002,9 @@ function capaAldea() {
       if (lado === -25 && (i === 0 || i === 2)) {
         for (let k = 1; k <= 5; k++) {
           const [fx, fy] = puntoCuad(p0, c, p1, k / 6);
-          farolillos.push(farolillo(fx, fy, k % 2 ? 10 : 18));
+          const largo = k % 2 ? 10 : 18;
+          farolillos.push(farolillo(fx, fy, largo));
+          LUCES.farolillos.push([fx, fy + largo + 14]);
         }
       }
     }
@@ -1089,12 +1106,67 @@ function capaArboles() {
 }
 
 // ---------------------------------------------------------------------------------------------------------
+// Luces de la aldea (2800 × 900, mismo encuadre y parallax que aldea.svg): ventanas cálidas y farolillos con
+// halo. Va encima de aldea.svg y su opacidad sube al anochecer.
+// ---------------------------------------------------------------------------------------------------------
+
+function capaLuces() {
+  const W = 2800;
+  const defs =
+    '<radialGradient id="halo"><stop offset="0" stop-color="#FFB45C" stop-opacity="0.75"/>' +
+    '<stop offset="0.45" stop-color="#FF9A4D" stop-opacity="0.28"/><stop offset="1" stop-color="#FF9A4D" stop-opacity="0"/></radialGradient>';
+  const halos = LUCES.farolillos.map(([x, y]) => `<circle cx="${num(x)}" cy="${num(y)}" r="46" fill="url(#halo)"/>`).join('');
+  const cuerpos = LUCES.farolillos.map(([x, y]) => elip(x, y, 12, 15)).join('');
+  const nucleos = LUCES.farolillos.map(([x, y]) => elip(x, y, 5, 9)).join('');
+  const s = [
+    halos,
+    relleno(COLOR.luzCalida, ...LUCES.ventanas),
+    relleno(COLOR.luzFarol, cuerpos),
+    relleno(COLOR.luzNucleo, nucleos),
+  ];
+  return documento(W, s.join(''), defs);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// Primer plano (2400 × 900, parallax 1,35): matas oscuras y hierba alta delante del muñeco, solo en la franja
+// del suelo para no tapar nunca el contenido.
+// ---------------------------------------------------------------------------------------------------------
+
+function capaPrimerPlano() {
+  const W = 2400;
+  const azar = crearAzar(2400);
+  const s = [];
+  const sitios = [
+    [260, 250],
+    [430, 170],
+    [1180, 280],
+    [1900, 220],
+    [2050, 160],
+  ];
+  const matas = sitios.map(([x, ancho]) => mata(x, 955, ancho, null, azar));
+  s.push(juntar(matas, ['sombra', 'base', 'luz'], { sombra: COLOR.frenteSombra, base: COLOR.frente, luz: COLOR.frenteLuz }));
+  let hierba = '';
+  for (let x = 30; x < W - 30; x += entre(azar, 26, 60)) {
+    if (sitios.some(([m]) => Math.abs(m - x) < 120)) continue;
+    const h = entre(azar, 40, 95);
+    const inclina = entre(azar, -14, 14);
+    hierba += d`M${x - 7} 900Q${x - 2} ${900 - h * 0.6} ${x + inclina} ${900 - h}Q${x + 3} ${900 - h * 0.55} ${x + 7} 900z`;
+  }
+  s.push(relleno(COLOR.frenteSombra, hierba));
+  // Desenfoque horneado en el SVG: el navegador lo rasteriza una vez, no en cada fotograma
+  const defs = '<filter id="desenfoque" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>';
+  return documento(W, `<g filter="url(#desenfoque)">${s.join('')}</g>`, defs);
+}
+
+// ---------------------------------------------------------------------------------------------------------
 
 const CAPAS = {
   'montana.svg': capaMontana,
   'colinas.svg': capaColinas,
   'aldea.svg': capaAldea,
   'arboles.svg': capaArboles,
+  'aldea-luces.svg': capaLuces,
+  'primer-plano.svg': capaPrimerPlano,
 };
 
 mkdirSync(DESTINO, { recursive: true });
@@ -1104,6 +1176,6 @@ for (const [nombre, generar] of Object.entries(CAPAS)) {
   writeFileSync(ruta, generar());
   const bytes = statSync(ruta).size;
   total += bytes;
-  console.log(`${nombre.padEnd(12)} ${(bytes / 1024).toFixed(1).padStart(6)} KB`);
+  console.log(`${nombre.padEnd(18)} ${(bytes / 1024).toFixed(1).padStart(6)} KB`);
 }
-console.log(`${'total'.padEnd(12)} ${(total / 1024).toFixed(1).padStart(6)} KB`);
+console.log(`${'total'.padEnd(18)} ${(total / 1024).toFixed(1).padStart(6)} KB`);

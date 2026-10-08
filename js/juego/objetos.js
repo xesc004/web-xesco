@@ -1,7 +1,7 @@
 // Objetos del nivel: piezas, bloques sorpresa, yunque, cama elástica, robots, banderas, clones y meta.
 import { medirElementos } from '../mundo/plataformas.js';
 import { sonar } from '../ui/sonido.js';
-import { aplicarHoja } from './jugador.js';
+import { aplicarHoja, posicionFotograma } from './jugador.js';
 
 const CLAVE_PIEZAS = 'xesco.piezas';
 
@@ -91,6 +91,8 @@ export function actualizarObjetos(o, jugador, eventos, porId, avisos) {
     const el = porId.get(e.id)?.el;
     if (e.tipo === 'salta') {
       sonar('salto');
+    } else if (e.tipo === 'saltaPared') {
+      sonar('pared');
     } else if (e.tipo === 'golpeaTecho' && el?.classList.contains('sorpresa')) {
       abrirSorpresa(el, true);
     } else if (e.tipo === 'rebota') {
@@ -136,11 +138,10 @@ export function lanzarClones(mundo, jugador) {
   const tam = sprites.fotograma;
   for (let i = 0; i < 3; i++) {
     const clon = document.createElement('div');
-    clon.className = 'muneco clon listo';
+    clon.className = 'muneco clon';
     clon.setAttribute('aria-hidden', 'true');
     aplicarHoja(clon, sprites);
-    const indice = andar.inicio + ((i * 3) % andar.n);
-    clon.style.backgroundPosition = `${-(indice % sprites.columnas) * tam}px ${-Math.floor(indice / sprites.columnas) * tam}px`;
+    clon.style.backgroundPosition = posicionFotograma(sprites, andar.inicio + ((i * 3) % andar.n));
     clon.style.left = `${c.x + c.w / 2 - tam / 2}px`;
     clon.style.top = `${c.y + c.h - tam + sprites.pie}px`;
     clon.style.setProperty('--retraso', `${i * 0.18}s`);

@@ -196,3 +196,74 @@ html.cv #boton-cv { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .mensaje-meta { animation: none; }
 }
+
+.tactil-correr { width: 72px; height: 72px; font: 600 15px var(--fuente-titulos); }
+
+/* ── Pantalla de entrada «MUNDO 1-1 · XESCO» ── */
+.intro { display: none; }
+
+html.juego .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: radial-gradient(circle at 50% 45%, #2A3858, var(--marino) 70%);
+  color: #fff;
+  /* Red de seguridad: si el JS no llega a quitarla, se va sola */
+  animation: intro-fuera 0.4s ease-in 5s forwards;
+}
+
+html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
+
+@keyframes intro-fuera { to { opacity: 0; visibility: hidden; } }
+
+.intro-mundo {
+  font: 600 clamp(20px, 3.4vw, 30px) var(--fuente-titulos);
+  letter-spacing: 0.3em;
+  color: var(--naranja-claro);
+  animation: intro-texto 0.5s ease-out both;
+}
+
+.intro-nombre {
+  font: 600 clamp(44px, 9vw, 84px) var(--fuente-titulos);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--naranja);
+  text-shadow: 0 5px 0 var(--naranja-oscuro);
+  animation: intro-texto 0.45s cubic-bezier(0.2, 1.5, 0.5, 1) 1s both;
+}
+
+@keyframes intro-texto { from { opacity: 0; transform: translateY(14px) scale(0.9); } }
+
+/* El muñeco se monta como una minifigura: piernas, torso y cabeza caen y encajan */
+.intro-muneco {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.intro-pieza {
+  position: absolute;
+  left: 0;
+  width: 200px;
+  background: url("../img/personaje/muneco.webp") no-repeat;
+  background-size: 1600px 1000px;
+  animation: intro-pieza 0.42s cubic-bezier(0.3, 1.35, 0.6, 1) both;
+}
+
+.intro-piernas { top: 147.5px; height: 52.5px; background-position: 0 -147.5px; animation-delay: 0.15s; }
+.intro-torso { top: 72.5px; height: 75px; background-position: 0 -72.5px; animation-delay: 0.45s; }
+.intro-cabeza { top: 0; height: 72.5px; background-position: 0 0; animation-delay: 0.75s; }
+
+@keyframes intro-pieza {
+  from { opacity: 0; transform: translateY(-120px); }
+  60% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-mundo, .intro-nombre, .intro-pieza { animation: none; }
+}

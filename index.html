@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <script>if (!/[?&]cv(=|&|$)/.test(location.search)) document.documentElement.classList.replace('cv', 'juego');</script>
+  <script>if (!/[?&]cv(=|&|$)/.test(location.search)) { document.documentElement.classList.replace('cv', 'juego'); document.documentElement.classList.add('intro-activa'); }</script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QXF2EDSVY"></script>
@@ -37,12 +37,25 @@
 <body>
   <a class="saltar-cv" href="?cv" data-i18n="hud.saltar">Saltar al CV</a>
 
+  <div class="intro" id="intro" aria-hidden="true">
+    <p class="intro-mundo" data-i18n="intro.mundo">MUNDO 1-1</p>
+    <div class="intro-muneco">
+      <span class="intro-pieza intro-piernas"></span>
+      <span class="intro-pieza intro-torso"></span>
+      <span class="intro-pieza intro-cabeza"></span>
+    </div>
+    <p class="intro-nombre">XESCO</p>
+  </div>
+
   <div class="escena" aria-hidden="true">
     <div class="cielo"></div>
+    <div class="estrellas"></div>
     <div class="capa capa-montana" data-parallax="0.1" data-proporcion="4" style="--proporcion:4"></div>
     <div class="capa capa-colinas" data-parallax="0.25" data-proporcion="2.6667" style="--proporcion:2.6667"></div>
     <div class="capa capa-aldea" data-parallax="0.5" data-proporcion="3.1111" style="--proporcion:3.1111"></div>
+    <div class="capa capa-luces" data-parallax="0.5" data-proporcion="3.1111" style="--proporcion:3.1111"></div>
     <div class="capa capa-arboles" data-parallax="0.8" data-proporcion="2.2222" style="--proporcion:2.2222"></div>
+    <div class="hojas hojas-fondo"></div>
   </div>
 
   <header class="hud">
@@ -80,8 +93,9 @@
 
     <section class="zona" id="inicio" data-zona="inicio" style="--x:0;--ancho:1500">
       <div class="cartel pista" data-plataforma="unSentido" style="--x:40;--y:500;--w:300">
-        <p class="solo-raton" data-i18n="inicio.pista.raton">Muévete con ← →, salta con Espacio y arrastra al muñeco con el ratón.</p>
-        <p class="solo-tactil" data-i18n="inicio.pista.tactil">Usa ◀ ▶ y Saltar, o arrastra al muñeco con el dedo.</p>
+        <p class="solo-raton" data-i18n="inicio.pista.raton">Muévete con ← →, salta con Espacio, corre como un ninja con Shift y arrastra al muñeco con el ratón.</p>
+        <p class="solo-tactil" data-i18n="inicio.pista.tactil">Usa ◀ ▶ y Saltar, mantén Ninja para correr o arrastra al muñeco con el dedo.</p>
+        <p class="pista-truco" data-i18n="inicio.pista.pared">Truco: cae contra el lado de un cartel y salta para rebotar.</p>
       </div>
       <div class="escalon decor" data-plataforma="unSentido" style="--x:380;--y:640;--w:120"></div>
       <div class="escalon decor" data-plataforma="unSentido" style="--x:470;--y:520;--w:110"></div>
@@ -441,16 +455,70 @@
       <span class="pieza decor" style="--x:385;--y:200"></span>
       <span class="pieza decor" style="--x:1420;--y:600"></span>
       <span class="pieza decor" style="--x:1560;--y:400"></span>
+      <span class="luciernaga decor" style="--x:60;--y:620;--retraso:0s"></span>
+      <span class="luciernaga decor" style="--x:180;--y:470;--retraso:1.3s"></span>
+      <span class="luciernaga decor" style="--x:300;--y:700;--retraso:2.1s"></span>
+      <span class="luciernaga decor" style="--x:450;--y:560;--retraso:0.6s"></span>
+      <span class="luciernaga decor" style="--x:640;--y:140;--retraso:1.8s"></span>
+      <span class="luciernaga decor" style="--x:900;--y:120;--retraso:0.9s"></span>
+      <span class="luciernaga decor" style="--x:1180;--y:150;--retraso:2.6s"></span>
+      <span class="luciernaga decor" style="--x:1380;--y:560;--retraso:0.3s"></span>
+      <span class="luciernaga decor" style="--x:1450;--y:300;--retraso:1.6s"></span>
+      <span class="luciernaga decor" style="--x:1520;--y:690;--retraso:2.3s"></span>
+      <span class="luciernaga decor" style="--x:1600;--y:470;--retraso:1.1s"></span>
+      <span class="luciernaga decor" style="--x:1660;--y:240;--retraso:2.9s"></span>
+      <span class="luciernaga decor" style="--x:760;--y:700;--retraso:1.5s"></span>
+      <span class="luciernaga decor" style="--x:1100;--y:690;--retraso:0.4s"></span>
     </section>
 
-    <div id="muneco" class="muneco" role="img" aria-label="Minifigura de Xesco. Arrástrala con el ratón" data-i18n-attr="aria-label:muneco.etiqueta"></div>
+    <div id="muneco" class="jugador" role="img" aria-label="Minifigura de Xesco. Arrástrala con el ratón" data-i18n-attr="aria-label:muneco.etiqueta">
+      <span class="premio-aura"></span>
+      <span class="premio-capa"></span>
+      <span class="muneco jugador-sprite"></span>
+      <span class="premio-bandana"><span class="bandana-placa"></span></span>
+    </div>
+    <div id="bocadillo" class="bocadillo" aria-hidden="true" hidden><p class="bocadillo-globo"></p></div>
   </main>
+
+  <div class="primer-plano" aria-hidden="true">
+    <div class="capa capa-frente" data-parallax="1.35" data-proporcion="2.6667" style="--proporcion:2.6667"></div>
+    <div class="hojas hojas-frente"></div>
+  </div>
+
+  <p id="bocadillo-anuncio" class="sr" aria-live="polite"></p>
+
+  <!-- Frases del muñeco (bocadillos). Se muestran de una en una en el juego; aquí se traducen con data-i18n. -->
+  <div id="frases" hidden>
+    <p data-frase="zona.inicio" data-i18n="frase.inicio">¡Hola! Soy Xesco. Este portfolio se juega: ve hacia la derecha →</p>
+    <p data-frase="zona.perfil" data-i18n="frase.perfil">El de la foto soy yo. Estudio 3.º de Ingeniería Informática.</p>
+    <p data-frase="zona.formacion" data-i18n="frase.formacion">Primero hice DAM en el CEU; ahora estoy en la UPV, en Alcoi.</p>
+    <p data-frase="zona.experiencia" data-i18n="frase.experiencia">En Premea automaticé la generación de documentos.</p>
+    <p data-frase="zona.proyectos" data-i18n="frase.proyectos">Aquí empiezan mis apps. Golpea los bloques desde abajo.</p>
+    <p data-frase="zona.aldiax" data-i18n="frase.aldiax">Aldiax: un agente crea niveles nuevos cada día con las noticias de IA.</p>
+    <p data-frase="zona.yunque" data-i18n="frase.yunque">Yunque guarda todo en tu móvil: ni cuentas ni servidores. ¡Salta al yunque!</p>
+    <p data-frase="zona.chatadn" data-i18n="frase.chatadn">ChatADN analiza tus chats sin que salgan del móvil.</p>
+    <p data-frase="zona.una-neurona" data-i18n="frase.neurona">Una Neurona: 100 minijuegos para picarte con tus amigos. ¡Prueba la cama elástica!</p>
+    <p data-frase="zona.habilidades" data-i18n="frase.habilidades">Súbete a las torres: cuanto más alta, mejor lo domino.</p>
+    <p data-frase="zona.metodologia" data-i18n="frase.metodologia">Así trabajo: un agente orquestador reparte el trabajo entre sus clones.</p>
+    <p data-frase="zona.charlas" data-i18n="frase.charlas">En noviembre hablo de IA en educación al profesorado del IES San Vicente Ferrer.</p>
+    <p data-frase="zona.idiomas" data-i18n="frase.idiomas">Hablo español, valenciano e inglés. Y tengo el carnet B.</p>
+    <p data-frase="zona.contacto" data-i18n="frase.contacto">¿Hablamos? Te respondo en menos de 24 h.</p>
+    <p data-frase="risa" data-i18n="frase.risa">¡Jajaja! ¡Cosquillas no!</p>
+    <p data-frase="espera" data-i18n="frase.espera">¿Seguimos? Aún queda mucho nivel a la derecha.</p>
+    <p data-frase="espera2" data-i18n="frase.espera2">Puedes cogerme y lanzarme, ¿eh?</p>
+    <p data-frase="ninja" data-i18n="frase.ninja">¡Carrera ninja!</p>
+    <p data-frase="pared" data-i18n="frase.pared">¡Salto de pared!</p>
+    <p data-frase="premio.bandana" data-i18n="frase.premio.bandana">12 piezas: ¡bandana de la Hoja conseguida!</p>
+    <p data-frase="premio.capa" data-i18n="frase.premio.capa">24 piezas: ¡ya tengo capa de Hokage!</p>
+    <p data-frase="premio.aura" data-i18n="frase.premio.aura">¡Las 36 piezas! Modo chakra activado.</p>
+  </div>
 
   <p id="mensaje-meta" class="mensaje-meta" role="status" hidden data-plantilla="¡Nivel completado! Has encontrado {n} de {total} piezas." data-i18n-attr="data-plantilla:meta.mensaje"></p>
 
   <div class="tactil" aria-hidden="true">
     <button type="button" class="tactil-boton" data-control="izquierda" tabindex="-1">◀</button>
     <button type="button" class="tactil-boton" data-control="derecha" tabindex="-1">▶</button>
+    <button type="button" class="tactil-boton tactil-correr" data-control="correr" tabindex="-1" data-i18n="tactil.correr">Ninja</button>
     <button type="button" class="tactil-boton tactil-saltar" data-control="saltar" tabindex="-1" data-i18n="tactil.saltar">Saltar</button>
   </div>
 </body>

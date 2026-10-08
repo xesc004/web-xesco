@@ -1,9 +1,10 @@
-// Entrada del jugador: teclado, controles táctiles y rueda → estado { izquierda, derecha, saltar, saltoPulsado, bajar }.
+// Entrada del jugador: teclado, controles táctiles y rueda → estado { izquierda, derecha, saltar, saltoPulsado, bajar, correr }.
 const MAPA = {
   ArrowLeft: 'izquierda', KeyA: 'izquierda',
   ArrowRight: 'derecha', KeyD: 'derecha',
   Space: 'saltar', ArrowUp: 'saltar', KeyW: 'saltar',
   ArrowDown: 'bajar', KeyS: 'bajar',
+  ShiftLeft: 'correr', ShiftRight: 'correr',
 };
 
 function esCampoDeTexto(el) {
@@ -39,7 +40,8 @@ export function crearEntrada(objetivo = window) {
     if (!activa || !accion || e.ctrlKey || e.metaKey || e.altKey || esCampoDeTexto(e.target)) return;
     // Espacio sobre un botón o enlace enfocado lo activa en vez de saltar
     if (e.code === 'Space' && esActivable(e.target)) return;
-    e.preventDefault();
+    // Shift no se cancela para no estropear Shift+Tab
+    if (accion !== 'correr') e.preventDefault();
     pulsar(accion);
   });
   objetivo.addEventListener('keyup', (e) => {
@@ -67,6 +69,7 @@ export function crearEntrada(objetivo = window) {
         saltar: flancoSaltar,
         saltoPulsado: pulsadas.has('saltar'),
         bajar: flancoBajar,
+        correr: pulsadas.has('correr'),
       };
       flancoSaltar = false;
       flancoBajar = false;

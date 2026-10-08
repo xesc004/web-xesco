@@ -30,6 +30,86 @@
 .capa-colinas { background-image: url("../img/fondo/colinas.svg"); }
 .capa-aldea { background-image: url("../img/fondo/aldea.svg"); }
 .capa-arboles { background-image: url("../img/fondo/arboles.svg"); }
+.capa-frente { background-image: url("../img/fondo/primer-plano.svg"); }
+
+/* Anochecer: cada capa se tiñe con su propia silueta como máscara (solo cambia la opacidad, --noche va de 0 a 1).
+   Las URL van escritas en cada regla: dentro de una variable CSS obligan a volver a rasterizar en cada fotograma. */
+.capa-montana::after, .capa-colinas::after, .capa-aldea::after, .capa-arboles::after, .capa-frente::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #161D45;
+  -webkit-mask-position: left bottom;
+  mask-position: left bottom;
+  -webkit-mask-size: auto 100%;
+  mask-size: auto 100%;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  opacity: calc(var(--noche, 0) * var(--oscurece));
+}
+
+.capa-montana::after { -webkit-mask-image: url("../img/fondo/montana.svg"); mask-image: url("../img/fondo/montana.svg"); --oscurece: 0.62; }
+.capa-colinas::after { -webkit-mask-image: url("../img/fondo/colinas.svg"); mask-image: url("../img/fondo/colinas.svg"); --oscurece: 0.6; }
+.capa-aldea::after { -webkit-mask-image: url("../img/fondo/aldea.svg"); mask-image: url("../img/fondo/aldea.svg"); --oscurece: 0.55; }
+.capa-arboles::after { -webkit-mask-image: url("../img/fondo/arboles.svg"); mask-image: url("../img/fondo/arboles.svg"); --oscurece: 0.58; }
+.capa-frente::after { -webkit-mask-image: url("../img/fondo/primer-plano.svg"); mask-image: url("../img/fondo/primer-plano.svg"); --oscurece: 0.6; }
+
+/* Ventanas y farolillos de la aldea: se encienden al anochecer */
+.capa-luces {
+  background-image: url("../img/fondo/aldea-luces.svg");
+  opacity: var(--noche, 0);
+}
+
+.estrellas {
+  position: absolute;
+  inset: 0 0 35% 0;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 27% 8%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 41% 26%, #FFF4D6 50%, transparent 51%),
+    radial-gradient(1px 1px at 55% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 68% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 79% 6%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 90% 20%, #FFF4D6 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 40%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 34% 44%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 62% 48%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 85% 42%, #fff 50%, transparent 51%);
+  background-size: 640px 100%;
+  opacity: calc((var(--noche, 0) - 0.4) * 1.6);
+}
+
+/* Hojas: una capa detrás del mundo (dentro de .escena) y otra delante, en el primer plano */
+.hojas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hoja {
+  position: absolute;
+  left: -16px;
+  top: -16px;
+  width: 32px;
+  height: 32px;
+  will-change: transform;
+}
+
+.hojas-fondo .hoja { opacity: 0.85; }
+.hoja-0 { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2Q28 14 16 26Q4 14 16 2z' fill='%235E9E3F'/%3E%3Cpath d='M16 5V30' stroke='%23000' stroke-opacity='.22' stroke-width='1.4'/%3E%3C/svg%3E"); }
+.hoja-1 { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2Q28 14 16 26Q4 14 16 2z' fill='%2373B353'/%3E%3Cpath d='M16 5V30' stroke='%23000' stroke-opacity='.22' stroke-width='1.4'/%3E%3C/svg%3E"); }
+.hoja-2 { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2Q28 14 16 26Q4 14 16 2z' fill='%238CC06E'/%3E%3Cpath d='M16 5V30' stroke='%23000' stroke-opacity='.22' stroke-width='1.4'/%3E%3C/svg%3E"); }
+.hoja-3 { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2Q28 14 16 26Q4 14 16 2z' fill='%23B9C25A'/%3E%3Cpath d='M16 5V30' stroke='%23000' stroke-opacity='.22' stroke-width='1.4'/%3E%3C/svg%3E"); }
+.hoja-4 { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2Q28 14 16 26Q4 14 16 2z' fill='%23E2A23A'/%3E%3Cpath d='M16 5V30' stroke='%23000' stroke-opacity='.22' stroke-width='1.4'/%3E%3C/svg%3E"); }
+
+/* Primer plano: matas desenfocadas delante del muñeco, más rápidas que el mundo */
+.primer-plano {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
 
 /* ── Mundo ─────────────────────────────────────────────── */
 .mundo {
@@ -176,6 +256,7 @@
 .subtitular { margin-top: 6px; font-size: 21px; color: var(--texto-suave); }
 
 .pista { font-size: 17px; font-weight: 600; color: var(--marino); }
+.pista-truco { margin-top: 8px; font-size: 15px; font-weight: 400; color: var(--texto-suave); }
 
 /* ── Perfil ── */
 .foto { text-align: center; }
@@ -654,32 +735,205 @@
 .boton-enviar:disabled { opacity: 0.6; cursor: progress; }
 .form-exito { color: #2E7D32; font-weight: 600; }
 
-/* ── Muñeco y clones ── */
+/* ── Muñeco, premios, estela y clones ── */
+/* .muneco dibuja un fotograma de la hoja; el jugador es un contenedor con el sprite y sus premios encima */
 .muneco {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 160px;
+  height: 160px;
+  background-image: url("../img/personaje/muneco.webp");
+  background-repeat: no-repeat;
+  background-size: calc(var(--columnas, 8) * 160px) calc(var(--filas, 5) * 160px);
+  pointer-events: none;
+}
+
+.jugador {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 10;
   width: 160px;
   height: 160px;
-  background-image: url("../img/personaje/muneco.webp");
-  background-repeat: no-repeat;
-  background-size: calc(var(--columnas, 8) * 160px) calc(var(--filas, 5) * 160px);
-  transform-origin: 50% 14%;
+  /* Gira sobre los pies (carrera ninja, risa); colgado del ratón, sobre la cabeza */
+  transform-origin: 50% 96%;
   cursor: grab;
   touch-action: none;
   visibility: hidden;
+  --cabeza: 10px;
+  --vaiven: 0deg;
 }
 
-.muneco.listo { visibility: visible; }
-.muneco.agarrado { cursor: grabbing; }
-.muneco.humo { animation: humo 0.45s ease-out; }
+.jugador.listo { visibility: visible; }
+.jugador.agarrado { cursor: grabbing; transform-origin: 50% 14%; }
+.jugador.humo { animation: humo 0.45s ease-out; }
+.jugador.premiado .jugador-sprite { animation: premiado 0.6s ease-out; }
 
 @keyframes humo { from { opacity: 0; filter: blur(6px); } }
+@keyframes premiado { 40% { filter: brightness(1.8) drop-shadow(0 0 12px #FFD36B); } }
+
+.jugador > span { position: absolute; pointer-events: none; display: none; }
+.jugador > .jugador-sprite { display: block; }
+
+/* Bandana de la Hoja (12 piezas): cinta azul en la frente con placa metálica y dos colas por detrás */
+.con-bandana > .premio-bandana {
+  display: block;
+  left: 55px;
+  top: calc(var(--cabeza) + 15px);
+  width: 51px;
+  height: 9px;
+  border-radius: 4px;
+  background: #24314F;
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.25);
+}
+
+.bandana-placa {
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 24px;
+  height: 14px;
+  margin-left: -12px;
+  border-radius: 3px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 14'%3E%3Cpath d='M12 3.2a3.8 3.8 0 1 0 3.8 3.8c0-1.4-1-2.4-2.3-2.4a1.6 1.6 0 1 0 1.5 1.7M15.8 7l3.2-3.6' fill='none' stroke='%2353606F' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100%,
+    linear-gradient(#EEF2F6, #A9B4C2);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.3);
+}
+
+.premio-bandana::before, .premio-bandana::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  width: 18px;
+  height: 6px;
+  border-radius: 3px;
+  background: #24314F;
+  transform-origin: 100% 50%;
+  display: none;
+}
+
+/* De perfil la placa va delante (a la derecha en la hoja) y las colas ondean detrás */
+.jugador[data-vista="perfil"] .bandana-placa { left: 82%; }
+.jugador[data-vista="perfil"] .premio-bandana::before,
+.jugador[data-vista="perfil"] .premio-bandana::after { display: block; left: -15px; }
+.jugador[data-vista="perfil"] .premio-bandana::before { transform: rotate(calc(-10deg - var(--vaiven) * 0.5)); }
+.jugador[data-vista="perfil"] .premio-bandana::after { transform: rotate(calc(18deg - var(--vaiven) * 0.3)); }
+
+/* Capa de Hokage (24 piezas): detrás del cuerpo, blanca con llamas rojas; se echa hacia atrás al correr */
+.con-capa > .premio-capa {
+  display: block;
+  left: 36px;
+  top: 58px;
+  width: 88px;
+  height: 92px;
+  transform-origin: 50% 0;
+  transform: rotate(var(--vaiven));
+  clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
+  background:
+    linear-gradient(transparent 78%, #D8402B 78%),
+    linear-gradient(90deg, #E9E4DA, #FFFFFF 30% 70%, #E9E4DA);
+  -webkit-mask: radial-gradient(9px 14px at 9px 100%, transparent 98%, #000) 0 0 / 18px 100%;
+  mask: radial-gradient(9px 14px at 9px 100%, transparent 98%, #000) 0 0 / 18px 100%;
+}
+
+.jugador[data-vista="perfil"] > .premio-capa { left: 24px; }
+
+/* Aura de chakra (36 piezas): resplandor naranja que late y contorno brillante */
+.con-aura > .premio-aura {
+  display: block;
+  left: 10px;
+  top: 0;
+  width: 140px;
+  height: 160px;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(closest-side, rgb(255 190 80 / 0.55), rgb(244 123 32 / 0.3) 60%, transparent);
+  animation: chakra 1.1s ease-in-out infinite alternate;
+}
+
+.con-aura > .jugador-sprite { filter: drop-shadow(0 0 3px #FFE08A) drop-shadow(0 0 8px rgb(244 123 32 / 0.8)); }
+
+@keyframes chakra {
+  from { transform: scale(0.92); opacity: 0.7; }
+  to { transform: scale(1.06); opacity: 1; }
+}
+
+/* Imágenes residuales de la carrera ninja */
+.estela {
+  z-index: 9;
+  transform-origin: 50% 96%;
+  animation: estela 0.32s ease-out forwards;
+}
+
+@keyframes estela {
+  from { opacity: 0.45; }
+  to { opacity: 0; }
+}
+
+/* Bocadillo: sigue la cabeza del muñeco; el globo cuelga hacia arriba desde ese punto */
+.bocadillo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 12;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.bocadillo-globo {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  width: max-content;
+  max-width: 360px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--marino);
+  font: 600 19px/1.35 var(--fuente-titulos);
+  text-align: center;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 0 var(--crema-sombra), 0 12px 24px rgb(29 40 64 / 0.22);
+}
+
+.bocadillo-globo::after {
+  content: "";
+  position: absolute;
+  left: calc(50% + var(--cola, 0px));
+  bottom: -12px;
+  margin-left: -10px;
+  border: 10px solid transparent;
+  border-bottom: 0;
+  border-top: 13px solid #fff;
+}
+
+.bocadillo-globo.aparece { animation: globo 0.32s cubic-bezier(0.2, 1.4, 0.5, 1); }
+
+@keyframes globo { from { opacity: 0; scale: 0.6; translate: 0 14px; } }
+
+/* Luciérnagas del contacto: aparecen de noche */
+.luciernaga {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFF3A0;
+  box-shadow: 0 0 10px 4px rgb(255 228 92 / 0.65);
+  opacity: calc(var(--noche, 0) * 0.95);
+  animation: luciernaga 5s ease-in-out var(--retraso, 0s) infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes luciernaga {
+  0% { translate: 0 0; scale: 1; }
+  30% { translate: 26px -18px; scale: 0.5; }
+  65% { translate: -14px -40px; scale: 1.1; }
+  100% { translate: 18px -12px; scale: 0.7; }
+}
 
 .clon {
   z-index: 9;
-  pointer-events: none;
   animation: clon 1.3s ease-in var(--retraso, 0s) both;
 }
 
@@ -699,6 +953,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pieza, .robot.saluda, .capturas, .clon, .letra.pisada, .sorpresa.golpeado, .cama-elastica.rebota,
-  .forja.clang .chispas, .muneco.humo { animation: none; }
+  .forja.clang .chispas, .jugador.humo, .con-aura > .premio-aura, .luciernaga, .bocadillo-globo.aparece,
+  .jugador.premiado .jugador-sprite { animation: none; }
   .bandera::after { transition: none; }
 }

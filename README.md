@@ -33,12 +33,22 @@ npm test                           # tests de física, escala, cámara y cielo
 ```
 
 - `?cv` abre el modo CV rápido; `?depurar` dibuja los colisionadores y expone `window.__juego`.
-- Controles: ← → (o A D) para andar, Espacio para saltar, ↓ para bajar de una plataforma; el muñeco se puede
-  coger y lanzar con el ratón o el dedo; la rueda del ratón lo hace correr.
+- Controles: ← → (o A D) para andar, Espacio para saltar, ↓ para bajar de una plataforma y Shift (o el botón
+  «Ninja» en móvil) para la carrera ninja. Cayendo contra el costado de un cartel o de un sólido se resbala y
+  se puede saltar hacia el otro lado. El muñeco se puede coger y lanzar con el ratón o el dedo; la rueda del
+  ratón lo hace correr.
+- El muñeco comenta cada zona con un bocadillo (frases en `#frases` de `index.html`, traducidas en
+  `i18n/en.json`), mira hacia el ratón, se ríe si se le pasa por encima y saluda tras 8 s quieto.
+- Premios por piezas: bandana de la Hoja (12), capa de Hokage (24) y aura de chakra (36).
+- Ambiente: hojas que caen y se arremolinan al correr, matas desenfocadas en primer plano, cielo que va de la
+  mañana a la noche con los farolillos encendiéndose y luciérnagas en el contacto, y la pantalla de entrada
+  «MUNDO 1-1». Todo se apaga con `prefers-reduced-motion`.
+- Si se añade una animación `sentado` a la hoja de sprites, el muñeco la usará al esperar en vez de saludar.
 
 ## Regenerar recursos
 
-- Fondo: `node herramientas/generar-fondo.mjs` (escribe `img/fondo/*.svg`).
+- Fondo: `node herramientas/generar-fondo.mjs` (escribe `img/fondo/*.svg`, incluidas las luces de la aldea y el
+  primer plano).
 - Imágenes de las apps y foto: `herramientas/preparar_imagenes.py` dentro de Blender 5.1 (vía el MCP de
   Blender Lab).
 - Muñeco: `minifigura/scripts/mf_build.py` (modelo) y `minifigura/scripts/mf_sprites.py` (hoja de sprites)

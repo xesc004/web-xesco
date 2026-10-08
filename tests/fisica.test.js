@@ -116,3 +116,41 @@ test('desatascar saca al muñeco de un sólido hacia arriba', () => {
   desatascar(c, [suelo, caja]);
   assert.equal(c.y + c.h, 600);
 });
+
+test('con correr (Shift) alcanza más velocidad y al soltarlo frena poco a poco', () => {
+  const c = crearCuerpo({ x: 0, y: 640, w: 60, h: 140 });
+  simular(c, [suelo], 1, { ...nada, derecha: true, correr: true });
+  assert.ok(c.vx > 600);
+  paso(c, { ...nada, derecha: true }, [suelo], DT);
+  assert.ok(c.vx > 600, 'no se recorta de golpe');
+  simular(c, [suelo], 1, { ...nada, derecha: true });
+  assert.ok(Math.abs(c.vx - 380) < 1);
+});
+
+test('cayendo contra el costado de un cartel se resbala y puede saltar hacia el otro lado', () => {
+  const cartel = { id: 'cartel', x: 300, y: 300, w: 400, h: 260, tipo: 'unSentido', pared: true };
+  const c = crearCuerpo({ x: 200, y: 260, w: 60, h: 140 });
+  c.vy = 100;
+  const eventos = simular(c, [suelo, cartel], 0.4, { ...nada, derecha: true });
+  assert.equal(c.x + c.w, 300);
+  assert.equal(c.pared, 1);
+  assert.ok(c.vy <= 240, 'se resbala despacio');
+  assert.ok(!eventos.some((e) => e.tipo === 'aterriza'));
+  const salto = simular(c, [suelo, cartel], 0.05, (i) => ({ ...nada, derecha: true, saltar: i === 0, saltoPulsado: true }));
+  assert.ok(salto.some((e) => e.tipo === 'saltaPared' && e.lado === 1));
+  assert.ok(c.vx < 0 && c.vy < 0);
+});
+
+test('subiendo, el costado de un cartel se atraviesa como antes', () => {
+  const cartel = { id: 'cartel', x: 300, y: 620, w: 400, h: 100, tipo: 'unSentido', pared: true };
+  const c = crearCuerpo({ x: 220, y: 640, w: 60, h: 140 });
+  simular(c, [suelo, cartel], 1.2, (i) => ({ ...nada, derecha: i < 50, saltar: i === 0, saltoPulsado: true }));
+  assert.equal(c.y + c.h, 620, 'acaba encima del cartel');
+});
+
+test('en el suelo, empujar un sólido no cuenta como pared', () => {
+  const muro = { id: 'muro', x: 300, y: 500, w: 100, h: 280, tipo: 'solido' };
+  const c = crearCuerpo({ x: 100, y: 640, w: 60, h: 140 });
+  simular(c, [suelo, muro], 1, { ...nada, derecha: true });
+  assert.equal(c.pared, 0);
+});
