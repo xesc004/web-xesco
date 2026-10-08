@@ -40,6 +40,11 @@ npm test                           # tests de física, escala, cámara y cielo
   ratón lo hace correr.
 - El muñeco comenta cada zona con un bocadillo (frases en `#frases` de `index.html`, traducidas en
   `i18n/en.json`), mira hacia el ratón, se ríe si se le pasa por encima y saluda tras 8 s quieto.
+- Sensación de juego: el muñeco se estira al saltar, se aplasta al aterrizar (más cuanto más alto cae) y se echa
+  hacia atrás al frenar; polvo al correr y aterrizar, chispas en el yunque, piezas de LEGO en los bloques
+  sorpresa, temblor suave de pantalla, «+1» con la pieza volando al contador, flotación en la cima del salto,
+  y estela y pataleo al cogerlo y lanzarlo. El salto ya perdonaba 0,1 s tras dejar un borde, recordaba la
+  pulsación 0,12 s antes de aterrizar y era más alto cuanto más se mantenía Espacio.
 - Premios por piezas: bandana de la Hoja (12), capa de Hokage (24) y aura de chakra (36).
 - Ambiente: hojas que caen y se arremolinan al correr, matas desenfocadas en primer plano, cielo que va de la
   mañana a la noche con los farolillos encendiéndose y luciérnagas en el contacto, y la pantalla de entrada

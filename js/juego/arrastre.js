@@ -59,6 +59,9 @@ export function activarArrastre({ jugador, mundo, obtenerEscala, obtenerColision
     c.sobre = null;
     c.saltando = false;
     c.tiempoAire = 1;
+    // Lanzado con fuerza: deja estela hasta que aterriza
+    jugador.lanzado = Math.hypot(c.vx, c.vy) > 450;
+    jugador.agitacion = 0;
     desatascar(c, obtenerColisionadores());
     jugador.angulo = 0;
     velocidadAngular = 0;
@@ -80,6 +83,8 @@ export function activarArrastre({ jugador, mundo, obtenerEscala, obtenerColision
       const a = muestras[Math.max(0, muestras.length - 3)];
       const vx = b && a && ahora - b.t < 100 && b.t > a.t ? (b.x - a.x) / ((b.t - a.t) / 1000) : 0;
       const objetivo = Math.max(-35, Math.min(35, vx * 0.04));
+      // Cuanto más se zarandea, más patalea (se suaviza para que no dé tirones)
+      jugador.agitacion += (Math.min(1, Math.abs(vx) / 900) - jugador.agitacion) * Math.min(1, dt * 8);
       velocidadAngular += (objetivo - jugador.angulo) * 120 * dt;
       velocidadAngular *= Math.max(0, 1 - 6 * dt);
       jugador.angulo += velocidadAngular * dt;

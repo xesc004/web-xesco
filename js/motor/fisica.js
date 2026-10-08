@@ -7,6 +7,9 @@ export const FISICA = {
   controlAereo: 0.6,
   salto: 1000,
   corteSalto: 0.45,
+  // Cerca del punto más alto, con el salto pulsado, la gravedad se suaviza: el muñeco «flota» un instante
+  flotacion: 0.6,
+  velocidadCima: 140,
   caidaMax: 1400,
   margenSalto: 0.1,
   memoriaSalto: 0.12,
@@ -118,7 +121,9 @@ export function paso(c, entrada, colisionadores, dt) {
     if (c.tiempoAtravesar <= 0) c.atravesando = null;
   }
 
-  c.vy = Math.min(c.vy + F.gravedad * dt, F.caidaMax);
+  const enCima = c.saltando && entrada.saltoPulsado && Math.abs(c.vy) < F.velocidadCima;
+  c.vy = Math.min(c.vy + F.gravedad * (enCima ? F.flotacion : 1) * dt, F.caidaMax);
+  const vyAntes = c.vy;
 
   // Eje X: choques laterales con sólidos y con los costados de los carteles (data-pared).
   // Un cartel solo hace de pared al caer y empujando contra él: subiendo se atraviesa como siempre.
@@ -176,7 +181,8 @@ export function paso(c, entrada, colisionadores, dt) {
       }
     }
   }
-  if (c.enSuelo && !estabaEnSuelo) eventos.push({ tipo: 'aterriza', id: c.sobre.id });
+  // impacto: velocidad de caída al tocar el suelo (para aplastar al muñeco, el polvo y el temblor)
+  if (c.enSuelo && !estabaEnSuelo) eventos.push({ tipo: 'aterriza', id: c.sobre.id, impacto: Math.max(0, vyAntes) });
   return eventos;
 }
 

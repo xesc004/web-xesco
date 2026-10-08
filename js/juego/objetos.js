@@ -107,7 +107,7 @@ export function actualizarObjetos(o, jugador, eventos, porId, avisos) {
     p.el.classList.add('recogida');
     guardarRecogidas(o.recogidas);
     sonar('pieza');
-    avisos.piezas(o.recogidas.size, o.piezas.length);
+    avisos.piezas(o.recogidas.size, o.piezas.length, p);
   }
 
   const s = o.secreta;

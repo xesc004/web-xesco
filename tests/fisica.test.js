@@ -154,3 +154,26 @@ test('en el suelo, empujar un sólido no cuenta como pared', () => {
   simular(c, [suelo, muro], 1, { ...nada, derecha: true });
   assert.equal(c.pared, 0);
 });
+
+test('el aterrizaje informa de la velocidad del impacto', () => {
+  const alto = crearCuerpo({ x: 0, y: 0, w: 60, h: 140 });
+  const bajo = crearCuerpo({ x: 0, y: 600, w: 60, h: 140 });
+  const a = simular(alto, [suelo], 2).find((e) => e.tipo === 'aterriza');
+  const b = simular(bajo, [suelo], 2).find((e) => e.tipo === 'aterriza');
+  assert.ok(a.impacto > 1000 && b.impacto < 500);
+});
+
+test('manteniendo el salto, el muñeco flota un poco en la cima', () => {
+  const pulsado = crearCuerpo({ x: 0, y: 640, w: 60, h: 140 });
+  const sinFlotar = crearCuerpo({ x: 0, y: 640, w: 60, h: 140 });
+  let aire = 0;
+  let aireSin = 0;
+  for (let i = 0; i < 200; i++) {
+    paso(pulsado, { ...nada, saltar: i === 0, saltoPulsado: true }, [suelo], DT);
+    // Soltar justo en la cima no corta el salto (ya no sube) pero tampoco flota
+    paso(sinFlotar, { ...nada, saltar: i === 0, saltoPulsado: sinFlotar.vy < -150 || i === 0 }, [suelo], DT);
+    if (!pulsado.enSuelo) aire++;
+    if (!sinFlotar.enSuelo) aireSin++;
+  }
+  assert.ok(aire > aireSin);
+});

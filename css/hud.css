@@ -89,6 +89,21 @@
   color: var(--marino);
 }
 
+#contador-piezas { display: inline-block; }
+.hud-piezas.bote .hud-pieza, .hud-piezas.bote #contador-piezas { animation: bote 0.35s cubic-bezier(0.3, 1.6, 0.6, 1); }
+
+@keyframes bote { 40% { transform: scale(1.35) translateY(-3px); } }
+
+/* Pieza que vuela desde el nivel hasta el contador */
+.pieza-vuela {
+  position: fixed;
+  z-index: 25;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #FFE08A 0 25%, #F5B731 28% 42%, #D18A12 45%);
+  box-shadow: 0 0 12px rgb(255 210 90 / 0.8);
+  pointer-events: none;
+}
+
 .hud-pieza {
   width: 18px;
   height: 18px;

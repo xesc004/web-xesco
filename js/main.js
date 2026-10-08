@@ -7,8 +7,9 @@ import { crearFondo, medirFondo, actualizarFondo } from './mundo/fondo.js';
 import { crearHojas, redimensionarHojas, moverHojas, dibujarHojas } from './mundo/hojas.js';
 import {
   crearJugador, actualizarJugador, dibujarJugador, cambiarEstado, reaparecer, ponerPremios, quitarPremios, reir,
-  dejarEstela,
+  dejarEstela, derrapando,
 } from './juego/jugador.js';
+import { crearParticulas, emitir, actualizarParticulas } from './juego/particulas.js';
 import { crearResumen } from './juego/resumen.js';
 import { crearKonami, SECRETOS } from './juego/secretos.js';
 import { crearBocadillo, decir, callar, actualizarBocadillo } from './juego/bocadillo.js';
@@ -79,6 +80,41 @@ function activarControlesTactiles(entrada) {
 
 const ESPERA_AYUDA = 4;
 
+// La pieza recogida vuela desde su sitio hasta el contador de arriba, que da un saltito al recibirla
+function volarAlContador(pieza) {
+  const destino = document.querySelector('.hud-pieza');
+  if (!destino) return;
+  const a = pieza.getBoundingClientRect();
+  const b = destino.getBoundingClientRect();
+  const vuela = document.createElement('span');
+  vuela.className = 'pieza-vuela';
+  vuela.setAttribute('aria-hidden', 'true');
+  Object.assign(vuela.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
+  document.body.appendChild(vuela);
+  const dx = b.left + b.width / 2 - (a.left + a.width / 2);
+  const dy = b.top + b.height / 2 - (a.top + a.height / 2);
+  const final = b.width / Math.max(1, a.width);
+  const animacion = vuela.animate([
+    { transform: 'translate(0, 0) scale(1.2)' },
+    { transform: `translate(${dx * 0.3}px, ${dy * 0.3 - 70}px) scale(1.1)`, offset: 0.35 },
+    { transform: `translate(${dx}px, ${dy}px) scale(${final})` },
+  ], { duration: 650, easing: 'cubic-bezier(0.5, 0, 0.75, 0.4)' });
+  animacion.onfinish = () => {
+    vuela.remove();
+    reanimar(document.querySelector('.hud-piezas'), 'bote');
+  };
+}
+
+function masUno(mundo, x, y) {
+  const el = document.createElement('span');
+  el.className = 'mas-uno';
+  el.textContent = '+1';
+  el.setAttribute('aria-hidden', 'true');
+  el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  el.addEventListener('animationend', () => el.remove());
+  mundo.appendChild(el);
+}
+
 function crearJuego(sprites) {
   const entrada = crearEntrada();
   const camara = crearCamara();
@@ -88,6 +124,7 @@ function crearJuego(sprites) {
   const objetos = crearObjetos(mundo);
   const jugador = crearJugador(document.getElementById('muneco'), sprites, { x: 150, y: Y_SUELO });
   const bocadillo = crearBocadillo(document.getElementById('bocadillo'), document.getElementById('bocadillo-anuncio'));
+  const particulas = movimientoReducido.matches ? null : crearParticulas(mundo);
   const hojas = movimientoReducido.matches
     ? null
     : crearHojas(document.querySelector('.hojas-fondo'), document.querySelector('.hojas-frente'),
@@ -105,6 +142,9 @@ function crearJuego(sprites) {
     ultimoDibujo: performance.now(),
     camaraAnterior: 0,
     estela: 0,
+    polvo: 0,
+    // Temblor de pantalla: amplitud (px) y cuándo acaba
+    temblor: { amplitud: 0, desde: 0, hasta: 0 },
     // Cronómetro de la partida: empieza con la primera tecla o toque
     inicioPartida: null,
     // Ayuda «→ / Espacio»: aparece tras 4 s sin moverse hasta que se ha usado andar y saltar
@@ -114,6 +154,49 @@ function crearJuego(sprites) {
   const ayuda = document.getElementById('ayuda');
   const tactil = document.querySelector('.tactil');
   const hud = crearHud({ alViajar: viajar, alSonido: alternarSonido, sonidoInicial: sonidoActivo() });
+  function temblar(amplitud, duracion = 0.25) {
+    if (movimientoReducido.matches || amplitud < estado.temblor.amplitud) return;
+    const ahora = performance.now();
+    estado.temblor = { amplitud, desde: ahora, hasta: ahora + duracion * 1000 };
+  }
+
+  // Polvo, chispas, piezas y temblores según lo que haya pasado en este paso de física
+  function efectos(eventos, e, dt) {
+    const c = jugador.cuerpo;
+    const pies = { x: c.x + c.w / 2, y: c.y + c.h };
+    for (const ev of eventos) {
+      const el = estado.porId.get(ev.id)?.el;
+      if (ev.tipo === 'salta') {
+        emitir(particulas, 'polvo', pies.x, pies.y, { cantidad: 2, velocidad: 90, abanico: 2.2, tam: 0.8 });
+      } else if (ev.tipo === 'aterriza') {
+        const fuerza = Math.min(1, ev.impacto / 1400);
+        emitir(particulas, 'polvo', pies.x, pies.y, { cantidad: 3 + Math.round(fuerza * 6), velocidad: 110 + 160 * fuerza, abanico: 2.6, tam: 0.8 + fuerza * 0.5 });
+        if (el?.classList.contains('forja')) {
+          emitir(particulas, 'chispa', pies.x, pies.y, { cantidad: 12, velocidad: 650, abanico: 2.4 });
+          temblar(3);
+        } else if (ev.impacto > 1150) {
+          temblar(2 + Math.min(2, (ev.impacto - 1150) / 150), 0.22);
+        }
+      } else if (ev.tipo === 'golpeaTecho' && el?.classList.contains('sorpresa')) {
+        const b = estado.porId.get(ev.id);
+        emitir(particulas, 'lego', b.x + b.w / 2, b.y, { cantidad: 6, velocidad: 700, abanico: 1.6 });
+        temblar(2, 0.15);
+      }
+    }
+    // Polvo al correr (más a menudo en la carrera ninja) y al derrapar
+    const corre = c.enSuelo && Math.abs(c.vx) > 300;
+    const derrapa = derrapando(jugador, e);
+    estado.polvo = corre || derrapa ? estado.polvo + dt : 0;
+    const cada = derrapa ? 0.04 : jugador.corriendo ? 0.05 : 0.11;
+    if (estado.polvo >= cada) {
+      estado.polvo = 0;
+      const atras = -Math.sign(c.vx);
+      emitir(particulas, 'polvo', pies.x + atras * 18, pies.y, {
+        velocidad: derrapa ? 140 : 80, angulo: atras > 0 ? -0.5 : -Math.PI + 0.5, abanico: 0.8, tam: derrapa ? 0.9 : 0.6,
+      });
+    }
+  }
+
   function decirUnaVez(clave, segundos) {
     if (estado.dichas.has(clave)) return;
     estado.dichas.add(clave);
@@ -121,8 +204,12 @@ function crearJuego(sprites) {
   }
 
   const avisos = {
-    piezas: (n, total) => {
+    piezas: (n, total, pieza) => {
       hud.piezas(n, total);
+      if (pieza && !movimientoReducido.matches) {
+        volarAlContador(pieza.el);
+        masUno(mundo, pieza.x, pieza.y - 10);
+      }
       const nuevos = ponerPremios(jugador, n);
       if (nuevos.length) {
         decir(bocadillo, `premio.${nuevos[nuevos.length - 1]}`, 5);
@@ -238,6 +325,7 @@ function crearJuego(sprites) {
     actualizarAyuda(e, seMueve, dt);
     const eventos = actualizarJugador(jugador, e, estado.colisionadores, dt);
     arrastre.actualizar(dt);
+    if (particulas) efectos(eventos, e, dt);
     for (const ev of eventos) {
       if (ev.tipo === 'espera') {
         decir(bocadillo, estado.dichas.has('espera') ? 'espera2' : 'espera');
@@ -273,12 +361,24 @@ function crearJuego(sprites) {
     const dt = Math.min((ahora - estado.ultimoDibujo) / 1000, 0.1);
     estado.ultimoDibujo = ahora;
     const e = estado.escala;
-    mundo.style.transform = `translate3d(${(-camara.x * e).toFixed(1)}px, 0, 0) scale(${e})`;
+    let tx = 0;
+    let ty = 0;
+    const t = estado.temblor;
+    if (ahora < t.hasta) {
+      const resto = (t.hasta - ahora) / (t.hasta - t.desde);
+      tx = Math.sin(ahora * 0.09) * t.amplitud * resto;
+      ty = Math.cos(ahora * 0.12) * t.amplitud * resto;
+    } else {
+      t.amplitud = 0;
+    }
+    mundo.style.transform = `translate3d(${(-camara.x * e + tx).toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${e})`;
     const pantallaX = (centroJugador() - camara.x) * e;
     raton.actualizar(pantallaX);
     dibujarJugador(jugador);
-    // Carrera ninja: una imagen residual cada 50 ms
-    estado.estela = jugador.corriendo && !movimientoReducido.matches ? estado.estela + dt : 0;
+    actualizarParticulas(particulas, dt);
+    // Carrera ninja o lanzado con el ratón: una imagen residual cada 50 ms
+    const conEstela = jugador.corriendo || (jugador.lanzado && jugador.estado !== 'colgado');
+    estado.estela = conEstela && !movimientoReducido.matches ? estado.estela + dt : 0;
     if (estado.estela >= 0.05) {
       estado.estela = 0;
       dejarEstela(jugador, mundo);

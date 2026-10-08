@@ -46,6 +46,12 @@ export function crearJugador(el, sprites, inicio) {
     aterrizaje: 0,
     angulo: 0,
     inclinacion: 0,
+    // Estirar y aplastar: escala con muelle (1 = normal) y su velocidad
+    escala: { x: 1, y: 1, vx: 0, vy: 0 },
+    // Agitación del arrastre (0-1): acelera el pataleo mientras cuelga
+    agitacion: 0,
+    // Lanzado con el ratón: deja estela hasta que aterriza
+    lanzado: false,
     quieto: 0,
     corriendo: false,
     premios: new Set(),
@@ -104,7 +110,12 @@ function duracionPausa(j) {
 export function actualizarJugador(j, entrada, colisionadores, dt) {
   j.tiempo += dt;
   if (j.aterrizaje > 0) j.aterrizaje -= dt;
-  if (j.estado === 'colgado') return [];
+  if (j.estado === 'colgado') {
+    // Patalea más deprisa cuanto más se le zarandea
+    j.tiempo += dt * j.agitacion * 1.8;
+    muelle(j, dt);
+    return [];
+  }
   const quiereMoverse = entrada.izquierda || entrada.derecha || entrada.saltar;
   j.quieto = quiereMoverse ? 0 : j.quieto + dt;
 
@@ -113,7 +124,8 @@ export function actualizarJugador(j, entrada, colisionadores, dt) {
     // La celebración de la meta no se interrumpe; el resto sí, en cuanto se pulsa algo
     if (j.tiempo < pausa && (j.estado === 'celebrando' || !quiereMoverse)) {
       paso(j.cuerpo, QUIETO, colisionadores, dt);
-      inclinar(j, dt);
+      inclinar(j, QUIETO, dt);
+      muelle(j, dt);
       return [];
     }
     if (j.estado !== 'saludando') cambiarEstado(j, 'parado');
@@ -124,7 +136,17 @@ export function actualizarJugador(j, entrada, colisionadores, dt) {
   if (c.pared !== 0) j.mirando = -c.pared;
   else if (entrada.derecha !== entrada.izquierda) j.mirando = entrada.derecha ? 1 : -1;
   else if (Math.abs(c.vx) > 40) j.mirando = Math.sign(c.vx);
-  if (eventos.some((e) => e.tipo === 'aterriza')) j.aterrizaje = 0.1;
+  for (const e of eventos) {
+    if (e.tipo === 'salta' || e.tipo === 'saltaPared') estirar(j, 0.84, 1.2);
+    else if (e.tipo === 'rebota') estirar(j, 0.8, 1.26);
+    else if (e.tipo === 'aterriza') {
+      j.aterrizaje = 0.1;
+      j.lanzado = false;
+      // Cuanto más fuerte cae, más se aplasta
+      const fuerza = Math.min(1, e.impacto / 1400);
+      estirar(j, 1 + 0.28 * fuerza, 1 - 0.26 * fuerza);
+    }
+  }
   j.corriendo = Boolean(entrada.correr) && Math.abs(c.vx) > VELOCIDAD_NINJA;
 
   let nuevo = 'parado';
@@ -138,15 +160,44 @@ export function actualizarJugador(j, entrada, colisionadores, dt) {
     eventos.push({ tipo: 'espera' });
   }
   cambiarEstado(j, nuevo);
-  inclinar(j, dt);
+  inclinar(j, entrada, dt);
+  muelle(j, dt);
   return eventos;
 }
 
-// Inclinación hacia delante en la carrera ninja y temblor de risa (se suma al ángulo del arrastre)
-function inclinar(j, dt) {
+export function estirar(j, x, y) {
+  j.escala.x = x;
+  j.escala.y = y;
+  j.escala.vx = 0;
+  j.escala.vy = 0;
+}
+
+// Muelle amortiguado que devuelve la escala a 1 con un pequeño rebote
+function muelle(j, dt) {
+  const e = j.escala;
+  const rigidez = 420;
+  const amortiguacion = 18;
+  e.vx += ((1 - e.x) * rigidez - e.vx * amortiguacion) * dt;
+  e.vy += ((1 - e.y) * rigidez - e.vy * amortiguacion) * dt;
+  e.x += e.vx * dt;
+  e.y += e.vy * dt;
+}
+
+// Frena (o cambia de sentido) con velocidad: el cuerpo se echa hacia atrás, como derrapando
+export function derrapando(j, entrada) {
+  const c = j.cuerpo;
+  if (!c.enSuelo || Math.abs(c.vx) < 160) return false;
+  const dir = (entrada.derecha ? 1 : 0) - (entrada.izquierda ? 1 : 0);
+  return dir !== Math.sign(c.vx);
+}
+
+// Inclinación hacia delante en la carrera ninja, hacia atrás al frenar y temblor de risa (se suma al ángulo
+// del arrastre)
+function inclinar(j, entrada, dt) {
   let objetivo = 0;
   if (j.estado === 'riendo') objetivo = Math.sin(j.tiempo * 38) * 5;
   else if (j.corriendo && j.cuerpo.enSuelo) objetivo = j.mirando * 12;
+  else if (derrapando(j, entrada)) objetivo = -Math.sign(j.cuerpo.vx) * Math.min(14, Math.abs(j.cuerpo.vx) / 40);
   j.inclinacion += (objetivo - j.inclinacion) * Math.min(1, dt * (j.estado === 'riendo' ? 40 : 10));
 }
 
@@ -208,7 +259,8 @@ export function dibujarJugador(j) {
   const tam = sprites.fotograma;
   const x = c.x + c.w / 2 - tam / 2;
   const y = c.y + c.h - tam + sprites.pie;
-  j.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${(j.angulo + j.inclinacion).toFixed(2)}deg) scaleX(${reflejo})`;
+  const { x: ex, y: ey } = j.escala;
+  j.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${(j.angulo + j.inclinacion).toFixed(2)}deg) scale(${(reflejo * ex).toFixed(3)}, ${ey.toFixed(3)})`;
 }
 
 // Imagen residual de la carrera ninja: copia del fotograma actual que se desvanece
@@ -236,5 +288,7 @@ export function reaparecer(j, punto, colisionadores) {
   desatascar(c, colisionadores);
   j.angulo = 0;
   j.inclinacion = 0;
+  j.lanzado = false;
+  estirar(j, 1, 1);
   cambiarEstado(j, 'cayendo');
 }
