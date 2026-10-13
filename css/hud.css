@@ -592,16 +592,25 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: clamp(24px, 5vw, 64px);
   min-height: 100%;
-  padding: 40px 170px 230px;
+  padding: 56px 170px 230px;
 }
 
-/* Móvil con la app: vídeo o capturas que se suceden */
-.sala-movil {
+/* Móvil con la app (vídeo o capturas que se suceden) y su galería; se queda fijo mientras se leen los detalles */
+.sala-lado {
   flex: none;
+  position: sticky;
+  top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.sala-movil {
   width: clamp(190px, 30vh, 290px);
   aspect-ratio: 9 / 19.5;
   padding: 10px;
@@ -645,6 +654,36 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   pointer-events: none;
 }
 
+.sala-galeria { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+
+.sala-miniatura {
+  position: relative;
+  width: 50px;
+  height: 68px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid rgb(255 246 236 / 0.25);
+  border-radius: 10px;
+  background: #0E1220;
+  cursor: pointer;
+}
+
+.sala-miniatura img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.sala-miniatura:hover { border-color: rgb(255 246 236 / 0.6); }
+.sala-miniatura[aria-pressed="true"] { border-color: var(--naranja); box-shadow: 0 0 0 2px var(--naranja); }
+
+.sala-miniatura.es-video::after {
+  content: "▶";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  color: #fff;
+  text-shadow: 0 1px 4px #000;
+  background: rgb(14 18 32 / 0.45);
+}
+
 .sala-toque.toca { animation: sala-toque 0.6s ease-out; }
 
 @keyframes sala-toque {
@@ -653,15 +692,12 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   100% { opacity: 0; scale: 1.6; }
 }
 
-.sala-info { max-width: 460px; }
+.sala-info { max-width: 600px; }
 .sala-antetitulo { color: var(--naranja); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 14px; }
 .sala-cabecera { display: flex; align-items: center; gap: 14px; margin: 8px 0; }
 .sala-icono { width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 4px 12px rgb(0 0 0 / 0.4); }
 .sala-info h2 { color: #fff; font-size: clamp(32px, 4vw, 46px); }
 .sala-frase { font-size: 19px; color: var(--naranja-claro); }
-.sala-puntos { margin-top: 14px; padding-left: 1.1em; line-height: 1.5; }
-.sala-puntos li + li { margin-top: 4px; }
-.sala-puntos li::marker { color: var(--naranja); }
 .sala-stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; }
 
 .sala-stack li {
@@ -674,13 +710,13 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
   font-weight: 600;
 }
 
-.sala-tienda .boton-tienda { background: var(--naranja); color: var(--marino); box-shadow: 0 4px 0 var(--naranja-oscuro); margin-top: 18px; }
+.sala-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+.sala-tienda .boton-tienda { background: var(--naranja); color: var(--marino); box-shadow: 0 4px 0 var(--naranja-oscuro); }
 .sala-tienda .boton-tienda:hover { background: #FF9447; }
 .sala-tienda .boton-tienda.proximamente { background: #6B7285; box-shadow: 0 4px 0 #4C5262; }
-.sala-pista { margin-top: 18px; font-size: 14px; color: rgb(255 246 236 / 0.7); }
+.sala-pista { margin-top: 14px; font-size: 14px; color: rgb(255 246 236 / 0.7); }
 
 .sala-salir {
-  margin-top: 12px;
   padding: 10px 18px;
   border: 2px solid rgb(255 246 236 / 0.5);
   border-radius: 12px;
@@ -692,9 +728,46 @@ html.juego .intro.saliendo { animation: intro-fuera 0.4s ease-in forwards; }
 
 .sala-salir:hover { border-color: var(--naranja); color: #fff; }
 
+/* Detalles del proyecto: el reto, cómo está hecha, problemas resueltos y cifras */
+.sala-detalle { display: grid; gap: 14px; margin-top: 26px; }
+.sala-bloques { display: contents; }
+
+.sala-bloque {
+  padding: 16px 20px 18px;
+  border: 1px solid rgb(255 246 236 / 0.1);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.05);
+}
+
+.sala-bloque h3 { margin-bottom: 8px; font: 600 19px var(--fuente-titulos); color: var(--naranja-claro); }
+.sala-bloque p, .sala-bloque li { font-size: 15.5px; line-height: 1.55; }
+.sala-bloque ul { margin: 0; padding-left: 1.1em; }
+.sala-bloque li + li { margin-top: 6px; }
+.sala-bloque li::marker { color: var(--naranja); }
+
+.sala-bloque .cifras {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.sala-bloque .cifras li { margin: 0; padding: 10px 12px; border-radius: 10px; background: rgb(0 0 0 / 0.22); font-size: 14px; line-height: 1.35; }
+.sala-bloque .cifras strong { display: block; font: 600 28px/1.1 var(--fuente-titulos); color: var(--naranja); }
+
+/* Ventanas bajas: el móvil no cabe fijo, se desplaza con lo demás */
+@media (max-height: 640px) {
+  .sala-lado { position: static; }
+}
+
 @media (max-width: 760px) {
   .sala { --sala-escala: 0.6; }
-  .sala-contenido { flex-direction: column; gap: 18px; padding: 24px 20px 190px; text-align: left; }
+  .sala-contenido { flex-direction: column; align-items: center; gap: 18px; padding: 24px 20px 190px; text-align: left; }
+  .sala-lado { position: static; }
+  .sala-info { width: 100%; }
+  .sala-bloque { padding: 14px 16px 16px; }
+  .sala-bloque .cifras strong { font-size: 24px; }
   .sala-movil { width: min(46vw, 190px); padding: 7px; border-radius: 28px; }
   .sala-pantalla { border-radius: 22px; }
   .sala-info h2 { font-size: 28px; }

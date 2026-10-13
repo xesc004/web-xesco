@@ -5,7 +5,7 @@ test.describe('idioma, modo CV y formulario', () => {
     await abrirJuego(page);
     await page.locator('#boton-idioma').click();
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.locator('.titular')).toHaveText('Computer Engineering student');
+    await expect(page.locator('.titular')).toHaveText('Computer Science student');
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
@@ -25,6 +25,14 @@ test.describe('idioma, modo CV y formulario', () => {
     await page.goto('/?cv');
     await expect(page.locator('html')).toHaveClass(/cv/);
     await expect(page.locator('.boton-pdf')).toBeVisible();
+    // Habilidades con pruebas de uso, sin escala de puntos
+    await expect(page.locator('.torre-prueba')).toHaveCount(7);
+    await expect(page.locator('.torre-nivel')).toHaveCount(0);
+    // Detalles de cada proyecto, plegados
+    const detalle = page.locator('#app-yunque .app-detalle');
+    await expect(detalle.locator('h4').first()).toBeHidden();
+    await detalle.locator('summary').click();
+    await expect(detalle.locator('h4').first()).toBeVisible();
     for (const pdf of ['cv/Francisco-Alabau-Calatayud-CV.pdf', 'cv/Francisco-Alabau-Calatayud-CV-en.pdf']) {
       expect((await request.get(`/${pdf}`)).ok()).toBe(true);
     }

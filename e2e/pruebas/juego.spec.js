@@ -76,6 +76,15 @@ test.describe('juego', () => {
     await expect(sala.locator('#sala-titulo')).toHaveText('Aldiax');
     await expect(sala.locator('.sala-stack li')).not.toHaveCount(0);
     await expect(sala.locator('.sala-tienda a')).toHaveAttribute('href', /apps\.apple\.com/);
+    // Detalles: «En resumen», los cuatro bloques de Aldiax y «Mi papel»
+    await expect(sala.locator('.sala-bloque h3')).toHaveCount(6);
+    await expect(sala.locator('.sala-bloque .cifras li')).toHaveCount(4);
+    // Galería: al elegir una captura se queda en la pantalla del móvil
+    const miniaturas = sala.locator('.sala-miniatura');
+    await expect(miniaturas).toHaveCount(3);
+    await miniaturas.nth(2).click();
+    await expect(miniaturas.nth(2)).toHaveAttribute('aria-pressed', 'true');
+    await expect(sala.locator('.sala-pantalla img.actual')).toHaveAttribute('src', /captura-3/);
     await sala.locator('.sala-salir').click();
     await expect(sala).toBeHidden({ timeout: 8_000 });
     await expect.poll(async () => (await estadoJugador(page)).sobre, { timeout: 4_000 }).toBe('salida-aldiax');

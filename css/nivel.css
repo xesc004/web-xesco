@@ -495,16 +495,13 @@
   text-shadow: 0 1px 0 rgb(255 255 255 / 0.35);
 }
 
-.torre-detalle { font-size: 13px; line-height: 1.35; }
+.torre-detalle { font-size: 13px; line-height: 1.35; font-weight: 600; }
 
-.torre-nivel {
-  margin-top: auto;
-  font-size: 15px;
-  letter-spacing: 2px;
-  color: rgb(29 40 64 / 0.4);
-}
+/* Dónde la he usado: la prueba de cada habilidad, en vez de una nota */
+.torre-prueba { font-size: 13px; line-height: 1.4; }
 
-.torre-nivel .lleno { color: var(--marino); }
+/* Detalles de cada app: en el juego se ven al entrar por la tubería (sala.js); en el CV, desplegables */
+.app-detalle { display: none; }
 
 /* ── Decorados de las apps ── */
 .robot { height: auto; transform-origin: 50% 100%; }

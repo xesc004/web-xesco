@@ -1,74 +1,123 @@
 // Sala de cada app: se entra por una tubería del nivel. Muestra la app funcionando (su vídeo si el artículo tiene
-// data-demo; si no, sus capturas animadas dentro de un móvil), su enlace a la tienda y su stack.
+// data-demo; si no, sus capturas animadas dentro de un móvil), una galería para elegir qué se ve, su enlace a la
+// tienda, su stack y sus detalles (el reto, cómo está hecha, problemas resueltos, cifras).
 // El muñeco cae por la tubería del techo y, con la misma física que el nivel, tiene que saltar encima de la del
 // suelo y meterse con ↓.
 import { aplicarHoja, posicionFotograma } from './jugador.js';
 import { crearCuerpo, paso } from '../motor/fisica.js';
 
 const CAMBIO_PANTALLA = 2600;
+const VIDEO = -1;
 const reducido = matchMedia('(prefers-reduced-motion: reduce)');
 
 function vaciar(el) {
   while (el.firstChild) el.firstChild.remove();
 }
 
-// Capturas que se van sucediendo con un toque simulado antes de cada cambio, como si alguien usara la app
-function montarCapturas(pantalla, capturas) {
-  const imagenes = capturas.map((c, i) => {
-    const img = document.createElement('img');
-    img.src = c.currentSrc || c.src;
-    img.alt = c.alt;
-    img.className = i === 0 ? 'actual' : '';
-    pantalla.appendChild(img);
-    return img;
-  });
+function imagen(src, alt) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = alt;
+  return img;
+}
+
+// Pantalla del móvil y su galería. Con demo (data-demo del artículo, lo pone herramientas/preparar_demo.py) se ve
+// el vídeo; sin él, o si no carga, las capturas se suceden con un toque simulado, como si alguien usara la app.
+// Al elegir una miniatura se para la rotación y se queda esa. Devuelve la función que lo para todo.
+function montarPantalla(pantalla, galeria, demo, capturas) {
+  vaciar(pantalla);
+  vaciar(galeria);
+  const fuentes = capturas.map((c) => c.currentSrc || c.src);
+  const imagenes = capturas.map((c, i) => pantalla.appendChild(imagen(fuentes[i], c.alt)));
   const toque = document.createElement('span');
   toque.className = 'sala-toque';
   toque.setAttribute('aria-hidden', 'true');
   pantalla.appendChild(toque);
-  if (reducido.matches || imagenes.length < 2) return () => {};
-  let i = 0;
-  const avanzar = () => {
-    toque.style.left = `${25 + Math.random() * 50}%`;
-    toque.style.top = `${45 + Math.random() * 40}%`;
-    toque.classList.remove('toca');
-    void toque.offsetWidth;
-    toque.classList.add('toca');
-    setTimeout(() => {
-      imagenes[i].classList.remove('actual');
-      i = (i + 1) % imagenes.length;
-      imagenes[i].classList.add('actual');
-    }, 350);
-  };
-  const reloj = setInterval(avanzar, CAMBIO_PANTALLA);
-  return () => clearInterval(reloj);
-}
+  const miniaturas = new Map();
+  let video = null;
+  let actual = null;
+  let reloj = 0;
+  let espera = 0;
 
-// demo: ruta del vídeo (data-demo del artículo, lo pone herramientas/preparar_demo.py); sin él, capturas animadas
-function montarDemo(pantalla, demo, capturas) {
-  vaciar(pantalla);
-  if (!demo) return montarCapturas(pantalla, capturas);
-  let parar = () => {};
-  const video = document.createElement('video');
-  Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', autoplay: !reducido.matches });
-  video.setAttribute('aria-label', capturas[0]?.alt ?? '');
-  if (capturas[0]) video.poster = capturas[0].currentSrc || capturas[0].src;
-  // MP4 (H.264) y, al lado, WebM (VP9) para navegadores sin H.264. Si ninguno carga (el error llega en la
-  // última <source>), se pasa a las capturas animadas
-  for (const [src, type] of [[demo, 'video/mp4'], [demo.replace(/\.mp4$/, '.webm'), 'video/webm']]) {
-    const fuente = document.createElement('source');
-    Object.assign(fuente, { src, type });
-    video.appendChild(fuente);
+  function ver(i) {
+    imagenes[actual]?.classList.remove('actual');
+    actual = i;
+    imagenes[i]?.classList.add('actual');
+    if (video) {
+      video.hidden = i !== VIDEO;
+      if (i !== VIDEO) video.pause();
+      else if (!reducido.matches) video.play().catch(() => {});
+    }
+    for (const [j, boton] of miniaturas) boton.setAttribute('aria-pressed', String(j === i));
   }
-  video.lastElementChild.addEventListener('error', () => {
-    video.remove();
-    parar = montarCapturas(pantalla, capturas);
-  }, { once: true });
-  if (reducido.matches) video.controls = true;
-  pantalla.appendChild(video);
+
+  function parar() {
+    clearInterval(reloj);
+    clearTimeout(espera);
+  }
+
+  function rotar() {
+    if (reducido.matches || imagenes.length < 2) return;
+    reloj = setInterval(() => {
+      toque.style.left = `${25 + Math.random() * 50}%`;
+      toque.style.top = `${45 + Math.random() * 40}%`;
+      toque.classList.remove('toca');
+      void toque.offsetWidth;
+      toque.classList.add('toca');
+      espera = setTimeout(() => ver((actual + 1) % imagenes.length), 350);
+    }, CAMBIO_PANTALLA);
+  }
+
+  function miniatura(i, src, etiqueta) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = i === VIDEO ? 'sala-miniatura es-video' : 'sala-miniatura';
+    boton.setAttribute('aria-label', etiqueta);
+    boton.appendChild(imagen(src, ''));
+    boton.addEventListener('click', () => {
+      parar();
+      ver(i);
+    });
+    galeria.appendChild(boton);
+    miniaturas.set(i, boton);
+  }
+
+  if (demo) {
+    video = document.createElement('video');
+    Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', autoplay: !reducido.matches });
+    video.setAttribute('aria-label', galeria.dataset.video ?? '');
+    if (fuentes[0]) video.poster = fuentes[0];
+    // MP4 (H.264) y, al lado, WebM (VP9) para navegadores sin H.264. Si ninguno carga (el error llega en la
+    // última <source>), se quita el vídeo y quedan las capturas
+    for (const [src, type] of [[demo, 'video/mp4'], [demo.replace(/\.mp4$/, '.webm'), 'video/webm']]) {
+      const fuente = document.createElement('source');
+      Object.assign(fuente, { src, type });
+      video.appendChild(fuente);
+    }
+    video.lastElementChild.addEventListener('error', () => {
+      const viendolo = actual === VIDEO;
+      video.remove();
+      video = null;
+      miniaturas.get(VIDEO)?.remove();
+      miniaturas.delete(VIDEO);
+      if (viendolo && imagenes.length) {
+        ver(0);
+        rotar();
+      }
+    }, { once: true });
+    if (reducido.matches) video.controls = true;
+    pantalla.appendChild(video);
+    miniatura(VIDEO, fuentes[0] ?? '', galeria.dataset.video ?? '');
+  }
+  capturas.forEach((c, i) => miniatura(i, fuentes[i], c.alt));
+  if (video) ver(VIDEO);
+  else if (imagenes.length) {
+    ver(0);
+    rotar();
+  }
   return () => {
     parar();
-    video.pause();
+    video?.pause();
   };
 }
 
@@ -95,6 +144,21 @@ function rellenarInfo(dialogo, articulo) {
   vaciar(tienda);
   const boton = articulo.querySelector('.boton-tienda');
   if (boton) tienda.appendChild(boton.cloneNode(true));
+  // Detalles del proyecto: los mismos bloques que el desplegable del CV. Allí cuelgan del h3 de la app (h4);
+  // aquí, del h2 de la sala (h3). Ya vienen traducidos, así que se les quita data-i18n
+  const bloques = dialogo.querySelector('.sala-bloques');
+  vaciar(bloques);
+  articulo.querySelectorAll('.app-detalle > section').forEach((seccion) => {
+    const bloque = seccion.cloneNode(true);
+    bloque.className = 'sala-bloque';
+    bloque.querySelectorAll('h4').forEach((h4) => {
+      const h3 = document.createElement('h3');
+      h3.textContent = h4.textContent;
+      h4.replaceWith(h3);
+    });
+    bloque.querySelectorAll('[data-i18n]').forEach((n) => n.removeAttribute('data-i18n'));
+    bloques.appendChild(bloque);
+  });
 }
 
 // Física real dentro de la sala, en las mismas unidades que el nivel (px de pantalla / escala de la sala):
@@ -113,6 +177,8 @@ export function crearSala({ sprites, alSalir, alSonar }) {
   const sprite = muneco.querySelector('.muneco');
   const techo = dialogo.querySelector('.sala-tuberia-techo');
   const salida = dialogo.querySelector('.sala-tuberia-suelo');
+  const pantalla = dialogo.querySelector('.sala-pantalla');
+  const galeria = dialogo.querySelector('.sala-galeria');
   aplicarHoja(sprite, sprites);
   const pulsadas = new Set();
   let flancoSaltar = false;
@@ -303,6 +369,8 @@ export function crearSala({ sprites, alSalir, alSonar }) {
     salir();
   });
   dialogo.querySelector('.sala-salir').addEventListener('click', salir);
+  // Tras elegir una miniatura con el ratón, el foco vuelve a la escena para que Espacio siga saltando
+  galeria.addEventListener('click', (e) => { if (e.detail > 0) escena.focus({ preventScroll: true }); });
   salida.addEventListener('click', salir);
   addEventListener('resize', () => { if (dialogo.open) medir(); });
 
@@ -313,8 +381,9 @@ export function crearSala({ sprites, alSalir, alSonar }) {
       if (!articulo) return;
       m.app = app;
       rellenarInfo(dialogo, articulo);
-      parar = montarDemo(dialogo.querySelector('.sala-pantalla'), articulo.dataset.demo, [...articulo.querySelectorAll('.capturas img')]);
+      parar = montarPantalla(pantalla, galeria, articulo.dataset.demo, [...articulo.querySelectorAll('.capturas img')]);
       dialogo.showModal();
+      escena.scrollTop = 0;
       // El foco va a la escena (no al botón) para que Espacio salte; Tab llega a los botones
       escena.focus({ preventScroll: true });
       medir();

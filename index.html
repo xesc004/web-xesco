@@ -261,6 +261,41 @@
           <img src="img/apps/aldiax/captura-2.webp" loading="lazy" width="128" height="277" alt="Aldiax: ejercicio resuelto" data-i18n-attr="alt:aldiax.c2" />
           <img src="img/apps/aldiax/captura-3.webp" loading="lazy" width="128" height="277" alt="Aldiax: noticias de IA del día" data-i18n-attr="alt:aldiax.c3" />
         </div>
+        <details class="app-detalle">
+          <summary data-i18n="detalle.mas">Más detalles del proyecto</summary>
+          <section>
+            <h4 data-i18n="detalle.reto">El reto</h4>
+            <p data-i18n="aldiax.d.reto">Enseñar a usar la IA cuando cambia cada semana: el contenido no puede quedarse viejo y los puntos no se pueden trampear.</p>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.como">Cómo está hecha</h4>
+            <ul>
+              <li data-i18n="aldiax.d.como1">App en Expo y React Native, con Expo Router y TypeScript.</li>
+              <li data-i18n="aldiax.d.como2">Supabase (Postgres) con RLS: cada usuario solo puede leer sus propias filas.</li>
+              <li data-i18n="aldiax.d.como3">Corrige el servidor: funciones RPC con SECURITY DEFINER puntúan cada respuesta y el móvil solo la envía.</li>
+              <li data-i18n="aldiax.d.como4">Edge Functions para el generador de preguntas con IA (la clave de la API nunca llega al móvil), el borrado de cuenta y el webhook de pagos de RevenueCat.</li>
+              <li data-i18n="aldiax.d.como5">Panel web en Next.js: la IA propone preguntas y yo las apruebo, edito o descarto antes de publicarlas.</li>
+            </ul>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.problemas">Problemas que resolví</h4>
+            <ul>
+              <li data-i18n="aldiax.d.prob1">Anti-farmeo: cada pregunta da +10 solo la primera vez que se acierta. Repetir sirve para repasar, no para inflar el perfil.</li>
+              <li data-i18n="aldiax.d.prob2">Vidas sin cron: se recalculan al vuelo desde una marca de tiempo (una cada 4 h; 3 gratis y 6 con Pro), sin regalar ni robar minutos.</li>
+              <li data-i18n="aldiax.d.prob3">Cerré un agujero del muro de pago: borrar y volver a crear el perfil daba Pro de por vida. Ahora el cliente no puede insertar ni borrar perfiles.</li>
+              <li data-i18n="aldiax.d.prob4">Racha con congelación automática y sin culpa: si se rompe, «Empecemos de nuevo».</li>
+            </ul>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.cifras">En cifras</h4>
+            <ul class="cifras">
+              <li><strong>4</strong> <span data-i18n="aldiax.d.cifra1">tipos de ejercicio: opción múltiple, relacionar, ordenar y rellenar el hueco</span></li>
+              <li><strong>2</strong> <span data-i18n="aldiax.d.cifra2">itinerarios: Conocimiento y Herramientas al día</span></li>
+              <li><strong>3</strong> <span data-i18n="aldiax.d.cifra3">Edge Functions en producción</span></li>
+              <li><strong>14</strong> <span data-i18n="aldiax.d.cifra4">migraciones SQL versionadas</span></li>
+            </ul>
+          </section>
+        </details>
         <img class="robot decor" src="img/apps/aldiax/robot.svg" alt="" style="--x:1100;--y:630;--w:150" />
         <span class="pieza decor" style="--x:420;--y:280"></span>
         <span class="pieza decor" style="--x:960;--y:360"></span>
@@ -294,10 +329,44 @@
         </div>
         <div class="tuberia tuberia-salida decor" id="salida-yunque" data-plataforma="solido" style="--x:1258;--y:650;--w:70"></div>
         <div class="capturas" id="capturas-yunque" hidden style="--x:860;--y:80;--w:440">
-          <img src="img/apps/yunque/captura-1.webp" loading="lazy" width="128" height="277" alt="Yunque: captura 1" data-i18n-attr="alt:yunque.c1" />
-          <img src="img/apps/yunque/captura-2.webp" loading="lazy" width="128" height="277" alt="Yunque: captura 2" data-i18n-attr="alt:yunque.c2" />
-          <img src="img/apps/yunque/captura-3.webp" loading="lazy" width="128" height="277" alt="Yunque: captura 3" data-i18n-attr="alt:yunque.c3" />
+          <img src="img/apps/yunque/captura-1.webp" loading="lazy" width="128" height="277" alt="Yunque: pantalla Hoy con el Índice Basal y los hábitos del día" data-i18n-attr="alt:yunque.c1" />
+          <img src="img/apps/yunque/captura-2.webp" loading="lazy" width="128" height="277" alt="Yunque: la prioridad de la semana, con su etiqueta de evidencia" data-i18n-attr="alt:yunque.c2" />
+          <img src="img/apps/yunque/captura-3.webp" loading="lazy" width="128" height="277" alt="Yunque: progreso con el radar del Índice Basal" data-i18n-attr="alt:yunque.c3" />
         </div>
+        <details class="app-detalle">
+          <summary data-i18n="detalle.mas">Más detalles del proyecto</summary>
+          <section>
+            <h4 data-i18n="detalle.reto">El reto</h4>
+            <p data-i18n="yunque.d.reto">Todo el nicho vive de vender suplementos. Yunque no vende ninguno, y por eso puede decir sin rodeos qué funciona y qué no.</p>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.como">Cómo está hecha</h4>
+            <ul>
+              <li data-i18n="yunque.d.como1">Local-first: SQLite y Drizzle en el propio móvil. Sin backend, sin cuentas y sin login.</li>
+              <li data-i18n="yunque.d.como2">Índice Basal: 28 preguntas puntúan 6 palancas (sueño, composición corporal, entrenamiento, nutrición, estrés y luz, y entorno) y se dibujan en un radar.</li>
+              <li data-i18n="yunque.d.como3">Cada método lleva una etiqueta de evidencia: sólido, prometedor, especulativo, desmontado o riesgo.</li>
+              <li data-i18n="yunque.d.como4">El contenido son datos: fichas en Markdown y un catálogo de hábitos.</li>
+            </ul>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.problemas">Problemas que resolví</h4>
+            <ul>
+              <li data-i18n="yunque.d.prob1">Pasar la revisión de Apple (guidelines 1.4.1 y 1.4.2): cero promesas numéricas de resultado hormonal y ninguna calculadora de dosis.</li>
+              <li data-i18n="yunque.d.prob2">Honestidad en pantalla: el resultado dice literalmente «No mide tu testosterona. Mide cuántas de las palancas conocidas estás usando.»</li>
+              <li data-i18n="yunque.d.prob3">Rachas y zonas horarias: un hábito marcado a las 00:30 no puede contar para el día anterior. Los tests fijan TZ=Europe/Madrid porque en UTC el fallo pasaría inadvertido.</li>
+              <li data-i18n="yunque.d.prob4">Tests que protegen de verdad: los compruebo por mutación, rompiendo el código a propósito para ver que fallan.</li>
+            </ul>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.cifras">En cifras</h4>
+            <ul class="cifras">
+              <li><strong>193</strong> <span data-i18n="yunque.d.cifra1">tests en 23 suites</span></li>
+              <li><strong>3</strong> <span data-i18n="yunque.d.cifra2">comprobaciones en CI en cada push: tests, tipos y empaquetado de iOS</span></li>
+              <li><strong>70</strong> <span data-i18n="yunque.d.cifra3">fichas y 52 hábitos</span></li>
+              <li><strong>0</strong> <span data-i18n="yunque.d.cifra4">servidores: todo vive en el móvil</span></li>
+            </ul>
+          </section>
+        </details>
         <div class="forja decor" id="forja" data-plataforma="solido" style="--x:1050;--y:690;--w:200"><span class="forja-forma"></span><span class="chispas"></span></div>
         <span class="pieza decor" style="--x:420;--y:280"></span>
         <span class="pieza decor" style="--x:960;--y:360"></span>
@@ -331,10 +400,25 @@
         </div>
         <div class="tuberia tuberia-salida decor" id="salida-chatadn" data-plataforma="solido" style="--x:1258;--y:650;--w:70"></div>
         <div class="capturas" id="capturas-chatadn" hidden style="--x:860;--y:80;--w:440">
-          <img src="img/apps/chatadn/captura-1.webp" loading="lazy" width="128" height="277" alt="ChatADN: captura 1" data-i18n-attr="alt:chatadn.c1" />
-          <img src="img/apps/chatadn/captura-2.webp" loading="lazy" width="128" height="277" alt="ChatADN: captura 2" data-i18n-attr="alt:chatadn.c2" />
-          <img src="img/apps/chatadn/captura-3.webp" loading="lazy" width="128" height="277" alt="ChatADN: captura 3" data-i18n-attr="alt:chatadn.c3" />
+          <img src="img/apps/chatadn/captura-1.webp" loading="lazy" width="128" height="277" alt="ChatADN: pantalla de inicio" data-i18n-attr="alt:chatadn.c1" />
+          <img src="img/apps/chatadn/captura-2.webp" loading="lazy" width="128" height="277" alt="ChatADN: importar un chat exportado de WhatsApp" data-i18n-attr="alt:chatadn.c2" />
+          <img src="img/apps/chatadn/captura-3.webp" loading="lazy" width="128" height="277" alt="ChatADN: el chat en cifras, listo para compartir" data-i18n-attr="alt:chatadn.c3" />
         </div>
+        <details class="app-detalle">
+          <summary data-i18n="detalle.mas">Más detalles del proyecto</summary>
+          <section>
+            <h4 data-i18n="detalle.funciona">Cómo funciona</h4>
+            <ul>
+              <li data-i18n="chatadn.d.func1">En WhatsApp exportas el chat «sin archivos multimedia» y abres el .txt o el .zip en ChatADN.</li>
+              <li data-i18n="chatadn.d.func2">La app reconoce el formato de la exportación y saca las cifras: mensajes, participantes, días activos, tiempos de respuesta, palabras y emojis.</li>
+              <li data-i18n="chatadn.d.func3">El resultado se cuenta como una historia, pantalla a pantalla, con tarjetas para compartir.</li>
+            </ul>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.privacidad">Privacidad por diseño</h4>
+            <p data-i18n="chatadn.d.privacidad">El análisis se hace entero en el móvil, sin servidores. Se guardan las estadísticas, nunca el texto del chat.</p>
+          </section>
+        </details>
         <div class="burbuja decor" data-plataforma="unSentido" style="--x:1060;--y:650;--w:140"></div>
         <div class="burbuja decor" data-plataforma="unSentido" style="--x:1110;--y:530;--w:140"></div>
         <div class="burbuja decor" data-plataforma="unSentido" style="--x:1060;--y:410;--w:140"></div>
@@ -374,6 +458,20 @@
           <img src="img/apps/una-neurona/captura-2.webp" loading="lazy" width="128" height="277" alt="Una Neurona: 100 minijuegos" data-i18n-attr="alt:neurona.c2" />
           <img src="img/apps/una-neurona/captura-3.webp" loading="lazy" width="128" height="277" alt="Una Neurona: resultado final" data-i18n-attr="alt:neurona.c3" />
         </div>
+        <details class="app-detalle">
+          <summary data-i18n="detalle.mas">Más detalles del proyecto</summary>
+          <section>
+            <h4 data-i18n="detalle.idea">La idea</h4>
+            <p data-i18n="neurona.d.idea">Un juego para quedadas en el que cada uno juega desde su móvil y, al final, se sabe quién es el más tonto del grupo.</p>
+          </section>
+          <section>
+            <h4 data-i18n="detalle.como">Cómo está hecha</h4>
+            <ul>
+              <li data-i18n="neurona.d.como1">Monorepo con Expo y React Native.</li>
+              <li data-i18n="neurona.d.como2">Las salas se sincronizan en tiempo real con Supabase, para hasta 8 jugadores a la vez.</li>
+            </ul>
+          </section>
+        </details>
         <div class="cama-elastica decor" id="neurona-cama" data-plataforma="elastico" style="--x:1060;--y:620;--w:180"></div>
         <span class="pieza decor" style="--x:420;--y:280"></span>
         <span class="pieza decor" style="--x:960;--y:360"></span>
@@ -386,43 +484,43 @@
       <div class="bandera decor" style="--x:30;--y:520"></div>
       <div class="rotulo" style="--x:250;--y:150;--w:900">
         <h2 data-i18n="habilidades.titulo">Habilidades</h2>
-        <p data-i18n="habilidades.texto">Cada torre mide mi nivel en esa habilidad, sobre 7. Súbete a ellas.</p>
+        <p><span data-i18n="habilidades.texto">Sin puntuarme a mí mismo: en cada habilidad, dónde la he usado de verdad.</span> <span class="solo-juego" data-i18n="habilidades.altura">La altura de las torres es solo para saltar.</span></p>
       </div>
       <div class="escalon decor" data-plataforma="unSentido" style="--x:110;--y:650;--w:110"></div>
       <ul class="torres" style="--x:0;--y:0;--w:1500">
         <li class="torre" data-plataforma="solido" style="--x:250;--y:540;--w:150;--h:240">
           <span class="torre-nombre" data-i18n="habilidad.programacion">Programación</span>
           <span class="torre-detalle">Python · Java · C/C++ · JavaScript/TypeScript</span>
-          <span class="torre-nivel" role="img" aria-label="4 de 7" data-i18n-attr="aria-label:nivel.4"><span class="lleno">●●●●</span>○○○</span>
+          <span class="torre-prueba" data-i18n="prueba.programacion">TypeScript en mis apps y en el panel web de Aldiax (Next.js).</span>
         </li>
         <li class="torre" data-plataforma="solido" style="--x:415;--y:480;--w:150;--h:300">
           <span class="torre-nombre" data-i18n="habilidad.apps">Desarrollo de apps</span>
-          <span class="torre-nivel" role="img" aria-label="5 de 7" data-i18n-attr="aria-label:nivel.5"><span class="lleno">●●●●●</span>○○</span>
+          <span class="torre-prueba" data-i18n="prueba.apps">4 apps propias con React Native y Expo; 3 ya están en la App Store.</span>
         </li>
-        <li class="torre" data-plataforma="solido" style="--x:580;--y:480;--w:150;--h:300">
+        <li class="torre" data-plataforma="solido" style="--x:580;--y:420;--w:150;--h:360">
           <span class="torre-nombre" data-i18n="habilidad.arquitectura">Arquitectura de agentes y orquestación</span>
-          <span class="torre-nivel" role="img" aria-label="5 de 7" data-i18n-attr="aria-label:nivel.5"><span class="lleno">●●●●●</span>○○</span>
+          <span class="torre-prueba" data-i18n="prueba.arquitectura">Un agente orquestador reparte el trabajo entre subagentes más baratos para ahorrar tokens.</span>
         </li>
         <li class="torre" data-plataforma="solido" style="--x:745;--y:480;--w:150;--h:300">
           <span class="torre-nombre" data-i18n="habilidad.despliegue">Despliegue de productos digitales</span>
-          <span class="torre-nivel" role="img" aria-label="5 de 7" data-i18n-attr="aria-label:nivel.5"><span class="lleno">●●●●●</span>○○</span>
+          <span class="torre-prueba" data-i18n="prueba.despliegue">App Store, Supabase (base de datos y Edge Functions) y Vercel, donde vive esta web.</span>
         </li>
         <li class="torre" data-plataforma="solido" style="--x:910;--y:420;--w:150;--h:360">
           <span class="torre-nombre" data-i18n="habilidad.agentes">Agentes de IA para desarrollo de software</span>
-          <span class="torre-nivel" role="img" aria-label="6 de 7" data-i18n-attr="aria-label:nivel.6"><span class="lleno">●●●●●●</span>○</span>
+          <span class="torre-prueba" data-i18n="prueba.agentes">Programo con agentes de código y reglas propias en cada repo (AGENTS.md). Esta web, incluida.</span>
         </li>
-        <li class="torre" data-plataforma="solido" style="--x:1075;--y:420;--w:150;--h:360">
+        <li class="torre" data-plataforma="solido" style="--x:1075;--y:480;--w:150;--h:300">
           <span class="torre-nombre" data-i18n="habilidad.automatizacion">Automatización de procesos</span>
-          <span class="torre-nivel" role="img" aria-label="6 de 7" data-i18n-attr="aria-label:nivel.6"><span class="lleno">●●●●●●</span>○</span>
+          <span class="torre-prueba" data-i18n="prueba.automatizacion">En Premea automaticé la generación de documentos.</span>
         </li>
-        <li class="torre" data-plataforma="solido" style="--x:1240;--y:420;--w:150;--h:360">
+        <li class="torre" data-plataforma="solido" style="--x:1240;--y:540;--w:150;--h:240">
           <span class="torre-nombre" data-i18n="habilidad.prompt">Prompt engineering</span>
-          <span class="torre-nivel" role="img" aria-label="6 de 7" data-i18n-attr="aria-label:nivel.6"><span class="lleno">●●●●●●</span>○</span>
+          <span class="torre-prueba" data-i18n="prueba.prompt">El generador de preguntas con IA de Aldiax: la IA propone y yo reviso antes de publicar.</span>
         </li>
       </ul>
-      <span class="pieza decor" style="--x:620;--y:420"></span>
-      <span class="pieza decor" style="--x:1110;--y:360"></span>
-      <span class="pieza decor" style="--x:1300;--y:360"></span>
+      <span class="pieza decor" style="--x:620;--y:360"></span>
+      <span class="pieza decor" style="--x:950;--y:360"></span>
+      <span class="pieza decor" style="--x:1300;--y:480"></span>
     </section>
 
     <section class="zona" id="metodologia" data-zona="metodologia" style="--x:12900;--ancho:1300">
@@ -571,7 +669,7 @@
     <p data-frase="zona.yunque" data-i18n="frase.yunque">Yunque guarda todo en tu móvil: ni cuentas ni servidores. ¡Salta al yunque!</p>
     <p data-frase="zona.chatadn" data-i18n="frase.chatadn">ChatADN analiza tus chats sin que salgan del móvil.</p>
     <p data-frase="zona.una-neurona" data-i18n="frase.neurona">Una Neurona: 100 minijuegos para picarte con tus amigos. ¡Prueba la cama elástica!</p>
-    <p data-frase="zona.habilidades" data-i18n="frase.habilidades">Súbete a las torres: cuanto más alta, mejor lo domino.</p>
+    <p data-frase="zona.habilidades" data-i18n="frase.habilidades">Las torres no puntúan nada: en cada una te cuento dónde he usado esa habilidad.</p>
     <p data-frase="zona.metodologia" data-i18n="frase.metodologia">Así trabajo: un agente orquestador reparte el trabajo entre sus clones.</p>
     <p data-frase="zona.charlas" data-i18n="frase.charlas">En noviembre hablo de IA en educación al profesorado del IES San Vicente Ferrer.</p>
     <p data-frase="zona.idiomas" data-i18n="frase.idiomas">Hablo español, valenciano e inglés. Y tengo el carnet B.</p>
@@ -595,16 +693,31 @@
       <div class="sala-tuberia sala-tuberia-suelo" aria-hidden="true"><span class="sala-flecha">↓</span></div>
       <div class="sala-muneco" aria-hidden="true"><span class="muneco"></span></div>
       <div class="sala-contenido">
-        <div class="sala-movil"><div class="sala-pantalla"></div></div>
+        <div class="sala-lado">
+          <div class="sala-movil"><div class="sala-pantalla"></div></div>
+          <div class="sala-galeria" role="group" aria-label="Capturas de la app" data-video="Vídeo de la app" data-i18n-attr="aria-label:sala.galeria;data-video:sala.video"></div>
+        </div>
         <div class="sala-info">
           <p class="sala-antetitulo" data-i18n="sala.antetitulo">Sala secreta · la app por dentro</p>
           <div class="sala-cabecera"><img class="sala-icono" src="" alt="" width="64" height="64" /><h2 id="sala-titulo"></h2></div>
           <p class="sala-frase"></p>
-          <ul class="sala-puntos"></ul>
           <ul class="sala-stack" aria-label="Tecnologías" data-i18n-attr="aria-label:sala.stack"></ul>
-          <div class="sala-tienda"></div>
+          <div class="sala-acciones">
+            <div class="sala-tienda"></div>
+            <button type="button" class="sala-salir" data-i18n="sala.salir">Salir por la tubería</button>
+          </div>
           <p class="sala-pista solo-raton" data-i18n="sala.pista">← → para andar · Espacio para saltar · ↓ encima de la tubería verde para salir</p>
-          <button type="button" class="sala-salir" data-i18n="sala.salir">Salir por la tubería</button>
+          <div class="sala-detalle">
+            <section class="sala-bloque">
+              <h3 data-i18n="sala.resumen">En resumen</h3>
+              <ul class="sala-puntos"></ul>
+            </section>
+            <div class="sala-bloques"></div>
+            <section class="sala-bloque">
+              <h3 data-i18n="sala.papel.titulo">Mi papel</h3>
+              <p data-i18n="sala.papel">Proyecto propio, de la idea a la tienda: producto, diseño, código y publicación, con agentes de IA como equipo.</p>
+            </section>
+          </div>
         </div>
       </div>
       <div class="sala-tactil" aria-hidden="true">
